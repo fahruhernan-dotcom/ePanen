@@ -32,15 +32,6 @@ Thumbs.db
 logs/
 *.log
 
-# Docker & VPS deployment (not needed for Railway)
-docker-compose.yml
-Dockerfile
-*.sh
-DEPLOYMENT_GUIDE.md
-DOMAIN_SETUP_GUIDE.md
-VPS_DEPLOYMENT.md
-frontend/nginx.conf
-frontend/nginx-ssl.conf
+# Docker & VPS deployment
 frontend/ssl/
-get-docker.sh
-deploy-automated.ps1
+
