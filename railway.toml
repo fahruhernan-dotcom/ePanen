@@ -1,15 +1,11 @@
 # ePanen - Railway Configuration
-# This is a monorepo with backend (Node.js) and frontend (Vue.js)
+# Optimized for monorepo using root package.json
 
 [build]
-# Use Nixpacks for auto-detection
 builder = "NIXPACKS"
 
 [deploy]
-# Auto-detect services from folders with package.json
-# Railway will deploy backend and frontend as separate services
-
-# Health check
 healthcheckPath = "/api/health"
-healthcheckTimeout = 300
+healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
+

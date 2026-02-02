@@ -2,8 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { initializeDatabase } from './config/supabase.js';
 import routes from './routes/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 // Load environment variables
 dotenv.config();
@@ -34,24 +40,40 @@ app.use((req, res, next) => {
 app.use('/api', routes);
 
 // Root endpoint
-app.get('/', (req, res) => {
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date() });
+});
+
+// Serve frontend in production
+const frontendPath = path.join(__dirname, '../../frontend/dist');
+app.use(express.static(frontendPath));
+
+// Root endpoint redirect or health check
+app.get('/api', (req, res) => {
   res.json({
     name: 'ePanen API',
     version: '1.0.0',
     description: 'API platform untuk petani Indonesia - Powered by Supabase + OpenRouter',
     database: 'Supabase PostgreSQL',
-    ai: 'OpenRouter (Grok 4.1 Fast)',
-    endpoints: {
-      auth: '/api/auth',
-      chat: '/api/chat',
-      articles: '/api/articles',
-      market: '/api/market',
-      discussions: '/api/discussions',
-      admin: '/api/admin',
-      webhook: '/api/webhook'
+    ai: 'OpenRouter (Grok 4.1 Fast)'
+  });
+});
+
+// For any other request, serve index.html (SPA support)
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
+    if (err) {
+      // If index.html is missing, it means frontend wasn't built
+      res.status(404).json({
+        success: false,
+        message: 'Frontend not built or path incorrect',
+        path: frontendPath
+      });
     }
   });
 });
+
 
 // 404 handler
 app.use((req, res) => {
