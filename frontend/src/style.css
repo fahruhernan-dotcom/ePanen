@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #f5f5f5;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#app {
+  width: 100%;
+  margin: 0;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #52A446;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2D5A27;
+}
+
+/* ePanen brand colors */
+.bg-epanen-primary { background-color: #2D5A27; }
+.bg-epanen-secondary { background-color: #52A446; }
+.bg-epanen-accent { background-color: #A8D5A2; }
+.bg-epanen-light { background-color: #E8F5E9; }
+
+.text-epanen-primary { color: #2D5A27; }
+.text-epanen-secondary { color: #52A446; }
+.text-epanen-accent { color: #A8D5A2; }
+
+.border-epanen-primary { border-color: #2D5A27; }
+.border-epanen-secondary { border-color: #52A446; }
+
+/* Utilities */
+.container-custom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Chat styles */
+.chat-container {
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.chat-message {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  max-width: 80%;
+}
+
+.chat-message.user {
+  background-color: #52A446;
+  color: white;
+  margin-left: auto;
+  border-bottom-right-radius: 2px;
+}
+
+.chat-message.assistant {
+  background-color: #E8F5E9;
+  color: #1a1a1a;
+  margin-right: auto;
+  border-bottom-left-radius: 2px;
+}
+
+/* Admin specific styles */
+.admin-header {
+  background: linear-gradient(135deg, #2D5A27 0%, #52A446 100%);
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Fade transition */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+/* Disable PrimeVue backdrops */
+.p-dialog-mask {
+  display: none !important;
+}
+
+.p-overlay-mask {
+  display: none !important;
+}
+
+/* Ensure Toast doesn't create backdrop */
+.p-toast {
+  pointer-events: none !important;
+}
+
+.p-toast-message {
+  pointer-events: auto !important;
+}

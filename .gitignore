@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Database
+*.db
+*.db-journal
+database/*.db
+
+# Build output
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Docker & VPS deployment (not needed for Railway)
+docker-compose.yml
+Dockerfile
+*.sh
+DEPLOYMENT_GUIDE.md
+DOMAIN_SETUP_GUIDE.md
+VPS_DEPLOYMENT.md
+frontend/nginx.conf
+frontend/nginx-ssl.conf
+frontend/ssl/
+get-docker.sh
+deploy-automated.ps1
