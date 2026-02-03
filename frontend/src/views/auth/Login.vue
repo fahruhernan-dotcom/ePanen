@@ -34,6 +34,40 @@
       </router-link>
     </div>
 
+    <!-- Success/Error Notification Toast -->
+    <transition name="toast">
+      <div v-if="notification" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[100] w-[90%] max-w-sm">
+        <div 
+          :class="[
+            'px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 backdrop-blur-xl border border-white border-opacity-30 transition-all duration-300',
+            notification.type === 'success' ? 'bg-white bg-opacity-90' : 'bg-red-500 bg-opacity-95'
+          ]"
+        >
+          <div 
+            :class="[
+              'w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0',
+              notification.type === 'success' ? 'bg-epanen-light text-epanen-primary' : 'bg-white bg-opacity-20 text-white'
+            ]"
+          >
+            <svg v-if="notification.type === 'success'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 :class="['font-black text-sm uppercase tracking-widest', notification.type === 'success' ? 'text-epanen-primary' : 'text-white']">
+              {{ notification.type === 'success' ? 'Berhasil' : 'Gagal' }}
+            </h3>
+            <p :class="['text-xs font-bold leading-tight mt-0.5', notification.type === 'success' ? 'text-gray-600' : 'text-red-50']">
+              {{ notification.message }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </transition>
+
     <div class="max-w-md w-full relative z-10">
       <!-- Logo Section with Animation -->
       <div class="text-center mb-8">
@@ -193,6 +227,14 @@ const authStore = useAuthStore();
 
 const email = ref('');
 const password = ref('');
+const notification = ref(null);
+
+const showNotification = (message, type = 'success') => {
+  notification.value = { message, type };
+  setTimeout(() => {
+    notification.value = null;
+  }, 4000);
+};
 
 const handleLogin = async () => {
   const result = await authStore.login({
@@ -201,12 +243,35 @@ const handleLogin = async () => {
   });
 
   if (result.success) {
-    // Redirect based on role
-    if (authStore.isAdmin()) {
-      router.push('/admin');
-    } else {
-      router.push('/');
-    }
+    showNotification('Halo Petani! Login berhasil, mengalihkan...', 'success');
+    
+    // Smooth delay for user to read the success message
+    setTimeout(() => {
+      if (authStore.isAdmin()) {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
+    }, 1500);
+  } else {
+    showNotification(result.message || 'Email atau password salah. Silakan coba lagi.', 'error');
   }
 };
 </script>
+
+<style scoped>
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translate(-50%, -20px);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translate(-50%, 20px);
+}
+</style>

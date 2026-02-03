@@ -61,6 +61,11 @@ export const isAdmin = (req, res, next) => {
  * Check if user is farmer
  */
 export const isFarmer = (req, res, next) => {
+  // Allow if user is farmer, regular user, or admin (admins should have access to user features)
+  if (req.user.role === 'admin' || req.user.type === 'admin') {
+    return next();
+  }
+
   if (req.user.role !== 'farmer' && req.user.type !== 'user') {
     return res.status(403).json({
       success: false,

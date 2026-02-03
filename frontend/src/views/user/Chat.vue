@@ -243,10 +243,10 @@
                   </div>
                   <div
                     :class="[
-                      'px-4 md:px-5 py-3 rounded-2xl text-left shadow-md',
+                      'px-4 md:px-6 py-3.5 rounded-[2rem] text-left shadow-lg backdrop-blur-sm transition-all hover:shadow-xl',
                       msg.role === 'user'
-                        ? 'bg-gradient-to-br from-epanen-primary to-epanen-secondary text-white rounded-tr-sm'
-                        : 'bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-epanen-accent text-gray-800 rounded-tl-sm'
+                        ? 'bg-gradient-to-br from-epanen-primary to-epanen-secondary text-white rounded-tr-sm user-message'
+                        : 'bg-white bg-opacity-80 border border-white text-gray-800 rounded-tl-sm assistant-message'
                     ]"
                   >
                     <div class="text-sm md:text-base leading-relaxed message-content" v-html="renderMarkdown(msg.message)"></div>
@@ -278,19 +278,17 @@
           </div>
         </div>
 
-        <!-- Input Area with Agricultural Theme -->
-        <div class="border-t-2 border-gray-200 bg-white px-3 md:px-4 py-3 md:py-4 shadow-lg">
+        <!-- Input Area with Premium Agricultural Theme -->
+        <div class="px-3 md:px-6 py-4 md:py-6 bg-transparent relative z-10">
           <div class="max-w-4xl mx-auto">
             <!-- Guest Limit Notice -->
             <div
               v-if="!isAuthenticated && guestMessageCount >= GUEST_MESSAGE_LIMIT"
-              class="mb-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-epanen-primary rounded-xl text-center"
+              class="mb-4 p-4 bg-white bg-opacity-60 backdrop-blur-md border border-white rounded-2xl text-center shadow-xl animate-fade-in"
             >
-              <p class="text-xs md:text-sm text-epanen-primary font-bold flex items-center justify-center">
-                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                Daftar sekarang untuk chat tanpa batas dengan AI Pakar Pertanian!
+              <p class="text-xs md:text-sm text-epanen-primary font-black uppercase tracking-widest flex items-center justify-center">
+                <span class="w-2 h-2 bg-epanen-primary rounded-full mr-2 animate-pulse"></span>
+                Daftar sekarang untuk chat tanpa batas!
               </p>
             </div>
 
@@ -299,58 +297,47 @@
               v-else-if="!isAuthenticated && guestMessageCount < GUEST_MESSAGE_LIMIT"
               class="mb-3 text-center"
             >
-              <p class="text-xs text-gray-500 flex items-center justify-center">
-                <svg class="w-4 h-4 mr-1 text-epanen-primary" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                {{ GUEST_MESSAGE_LIMIT - guestMessageCount }} pertanyaan gratis tersedia
+              <p class="text-[10px] uppercase font-black tracking-widest text-gray-400 flex items-center justify-center">
+                {{ GUEST_MESSAGE_LIMIT - guestMessageCount }} Kuota Tanya Gratis Tersedia
               </p>
             </div>
 
-            <form @submit.prevent="sendMessage" class="relative">
-              <div class="flex items-end space-x-2 md:space-x-3">
+            <form @submit.prevent="sendMessage" class="relative group">
+              <div class="flex items-end space-x-2 md:space-x-4 bg-white p-2 rounded-[2rem] shadow-2xl border border-white transition-all focus-within:ring-4 focus-within:ring-epanen-primary focus-within:ring-opacity-10">
                 <div class="flex-1 relative">
                   <textarea
                     v-model="newMessage"
                     rows="1"
-                    placeholder="Tanya apa saja tentang pertanian... 🌾"
-                    class="w-full px-4 py-3 pr-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-epanen-primary focus:border-epanen-primary resize-none text-sm shadow-sm"
+                    placeholder="Tanya apa saja tentang pertanian..."
+                    class="w-full px-6 py-4 bg-transparent border-none focus:ring-0 resize-none text-sm md:text-base font-bold text-gray-700 placeholder-gray-400"
                     :disabled="isLoading || (!isAuthenticated && guestMessageCount >= GUEST_MESSAGE_LIMIT)"
                     @keydown.enter.prevent="handleEnter"
                     @input="autoResize"
-                    style="max-height: 120px; min-height: 44px;"
+                    style="max-height: 150px; min-height: 56px;"
                     ref="textarea"
                   ></textarea>
-                  <!-- Wheat icon decoration -->
-                  <div class="absolute right-3 bottom-3 text-gray-400 pointer-events-none">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2C8 6 4 10 4 14c0 4 3.5 8 8 8s8-4 8-8c0-4-4-8-8-12z" opacity="0.3"/>
-                    </svg>
-                  </div>
                 </div>
                 <button
                   type="submit"
                   :disabled="!newMessage.trim() || isLoading || (!isAuthenticated && guestMessageCount >= GUEST_MESSAGE_LIMIT)"
-                  class="flex-shrink-0 w-11 h-11 md:w-12 md:h-12 bg-gradient-to-br from-epanen-primary to-epanen-secondary text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md hover:shadow-xl transform hover:scale-105"
+                  class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-epanen-primary to-epanen-secondary text-white rounded-[1.5rem] hover:shadow-2xl transition-all disabled:opacity-30 disabled:grayscale flex items-center justify-center shadow-lg transform hover:scale-105 active:scale-95 shadow-epanen-primary/20"
                 >
-                  <svg v-if="!isLoading" class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 9 9-2zm0 0v-8" />
+                  <svg v-if="!isLoading" class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 9 9-2zm0 0v-8" />
                   </svg>
-                  <svg v-else class="animate-spin w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24">
+                  <svg v-else class="animate-spin w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                 </button>
               </div>
-              <p class="text-[10px] md:text-xs text-gray-400 mt-2 text-center flex items-center justify-center">
-                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Tekan <kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600 font-mono text-[10px] border border-gray-300">Enter</kbd> untuk kirim
+              <p class="text-[10px] font-black text-gray-400 mt-4 text-center uppercase tracking-widest opacity-60">
+                Pakar Pertanian AI ePanen • Yakin Kita Bisa
               </p>
             </form>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -586,16 +573,17 @@ const renderMarkdown = (text) => {
   html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm text-red-600">$1</code>');
 
   // Bold (with emphasis)
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>');
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>');
 
   // Italic
-  html = html.replace(/\*(.*?)\*/g, '<em class="italic text-gray-700">$1</em>');
+  html = html.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
 
   // Headers
-  html = html.replace(/^#### (.*$)/gm, '<h4 class="text-base font-bold text-gray-800 mt-3 mb-2">$1</h4>');
-  html = html.replace(/^### (.*$)/gm, '<h3 class="text-lg font-bold text-epanen-primary mt-4 mb-2">$1</h3>');
-  html = html.replace(/^## (.*$)/gm, '<h2 class="text-xl font-bold text-epanen-primary mt-5 mb-3 pb-2 border-b-2 border-epanen-accent">$1</h2>');
-  html = html.replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold text-epanen-primary mt-5 mb-4 pb-2 border-b-2 border-epanen-accent">$1</h1>');
+  html = html.replace(/^#### (.*$)/gm, '<h4 class="text-base font-bold mt-3 mb-2">$1</h4>');
+  html = html.replace(/^### (.*$)/gm, '<h3 class="text-lg font-bold mt-4 mb-2">$1</h3>');
+  html = html.replace(/^## (.*$)/gm, '<h2 class="text-xl font-bold mt-5 mb-3 pb-2 border-b-2 border-epanen-accent">$1</h2>');
+  html = html.replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold mt-5 mb-4 pb-2 border-b-2 border-epanen-accent">$1</h1>');
+
 
   // Process tables line by line
   const lines = html.split('\n');
@@ -705,15 +693,16 @@ const renderMarkdown = (text) => {
       if (listItems.length > 0) {
         if (listType === 'ul') {
           result2.push('<ul class="list-disc list-inside my-3 ml-6 space-y-1">');
-          listItems.forEach(item => result2.push(`<li class="text-gray-700">${item}</li>`));
+          listItems.forEach(item => result2.push(`<li>${item}</li>`));
           result2.push('</ul>');
         } else {
           result2.push('<ol class="list-decimal list-inside my-3 ml-6 space-y-1">');
-          listItems.forEach(item => result2.push(`<li class="text-gray-700">${item}</li>`));
+          listItems.forEach(item => result2.push(`<li>${item}</li>`));
           result2.push('</ol>');
         }
         listItems = [];
       }
+
     }
 
     result2.push(line);
@@ -722,12 +711,13 @@ const renderMarkdown = (text) => {
   html = result2.join('\n');
 
   // Line breaks and paragraphs
-  html = html.replace(/\n\n+/g, '</p><p class="my-2 text-gray-700 leading-relaxed">');
-  html = '<p class="my-2 text-gray-700 leading-relaxed">' + html + '</p>';
+  html = html.replace(/\n\n+/g, '</p><p class="my-2 leading-relaxed">');
+  html = '<p class="my-2 leading-relaxed">' + html + '</p>';
 
   // Clean up empty paragraphs
-  html = html.replace(/<p class="my-2 text-gray-700 leading-relaxed"><\/p>/g, '');
-  html = html.replace(/<p class="my-2 text-gray-700 leading-relaxed">\s*<\/p>/g, '');
+  html = html.replace(/<p class="my-2 leading-relaxed"><\/p>/g, '');
+  html = html.replace(/<p class="my-2 leading-relaxed">\s*<\/p>/g, '');
+
 
   // Remove extra line breaks within paragraphs
   html = html.replace(/\n(?=<\/p>)/g, '');
@@ -756,6 +746,24 @@ onMounted(() => {
 .message-content {
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+.user-message .message-content :deep(*) {
+  color: white !important;
+}
+
+.assistant-message .message-content :deep(*) {
+  color: #1f2937 !important; /* text-gray-800 */
+}
+
+.assistant-message .message-content :deep(strong) {
+  color: #111827 !important; /* text-gray-900 */
+}
+
+.assistant-message .message-content :deep(h1),
+.assistant-message .message-content :deep(h2),
+.assistant-message .message-content :deep(h3) {
+  color: #2D5A27 !important; /* epanen-primary */
 }
 
 .message-content :deep(table) {

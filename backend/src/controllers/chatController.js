@@ -148,14 +148,19 @@ export const getChatStats = async (req, res) => {
       .map(([category, count]) => ({ category, count }))
       .sort((a, b) => b.count - a.count);
 
-    // Active users (users who sent messages in last 7 days)
+    // Active users (unique users who sent messages in last 7 days)
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const { count: activeUsers } = await supabase
+    const { data: activeUserData } = await supabase
       .from('epanen_chat_messages')
-      .select('user_id', { count: 'exact', head: true })
+      .select('user_id')
       .gte('created_at', sevenDaysAgo.toISOString());
+
+    // Count unique user IDs using a Set
+    const uniqueUserIds = new Set((activeUserData || []).map(msg => msg.user_id));
+    const activeUsers = uniqueUserIds.size;
+
 
     // Messages per day (last 7 days)
     const { data: messagesPerDay } = await supabase

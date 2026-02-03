@@ -54,17 +54,41 @@ body {
 }
 
 /* ePanen brand colors */
-.bg-epanen-primary { background-color: #2D5A27; }
-.bg-epanen-secondary { background-color: #52A446; }
-.bg-epanen-accent { background-color: #A8D5A2; }
-.bg-epanen-light { background-color: #E8F5E9; }
+.bg-epanen-primary {
+  background-color: #2D5A27;
+}
 
-.text-epanen-primary { color: #2D5A27; }
-.text-epanen-secondary { color: #52A446; }
-.text-epanen-accent { color: #A8D5A2; }
+.bg-epanen-secondary {
+  background-color: #52A446;
+}
 
-.border-epanen-primary { border-color: #2D5A27; }
-.border-epanen-secondary { border-color: #52A446; }
+.bg-epanen-accent {
+  background-color: #A8D5A2;
+}
+
+.bg-epanen-light {
+  background-color: #E8F5E9;
+}
+
+.text-epanen-primary {
+  color: #2D5A27;
+}
+
+.text-epanen-secondary {
+  color: #52A446;
+}
+
+.text-epanen-accent {
+  color: #A8D5A2;
+}
+
+.border-epanen-primary {
+  border-color: #2D5A27;
+}
+
+.border-epanen-secondary {
+  border-color: #52A446;
+}
 
 /* Utilities */
 .container-custom {
@@ -128,7 +152,9 @@ body {
 
 /* Loading spinner */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner {
@@ -136,15 +162,52 @@ body {
 }
 
 /* Fade transition */
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
-/* Disable PrimeVue backdrops */
+/* Custom scrollbar for sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+/* Fix PrimeVue Blocking UI */
 .p-dialog-mask {
   display: none !important;
 }
@@ -153,7 +216,6 @@ body {
   display: none !important;
 }
 
-/* Ensure Toast doesn't create backdrop */
 .p-toast {
   pointer-events: none !important;
 }

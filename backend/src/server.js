@@ -109,6 +109,7 @@ async function startServer() {
     }
 
     // Start server
+    console.log('🚀 Server is starting/restarting...');
     app.listen(PORT, () => {
       console.log(`
 ╔══════════════════════════════════════════════════════════╗

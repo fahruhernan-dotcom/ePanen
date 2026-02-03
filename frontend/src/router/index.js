@@ -120,8 +120,17 @@ const router = createRouter({
 });
 
 // Navigation guards
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+
+  // Attempt to restore session if token exists but not authenticated yet (e.g. on page reload)
+  if (authStore.token && !authStore.isAuthenticated) {
+    try {
+      await authStore.checkAuth();
+    } catch (error) {
+      console.error('Session restoration failed:', error);
+    }
+  }
 
   // Check if route requires authentication
   if (to.meta.requiresAuth) {

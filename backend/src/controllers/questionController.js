@@ -45,14 +45,18 @@ export const sendMessage = async (req, res) => {
     });
 
     // Get chat history for context (last 10 messages)
-    const { data: chatHistory } = await supabaseQuery.many('epanen_chat_messages', {
+    const { data: chatHistoryRes } = await supabaseQuery.many('epanen_chat_messages', {
       where: [{ column: 'user_id', value: userId }],
-      order: { column: 'created_at', ascending: true },
+      order: { column: 'created_at', ascending: false }, // Get newest first
       limit: 10
     });
 
+    // Reverse history to maintain chronological order for AI
+    const history = (chatHistoryRes.data || []).reverse();
+
     // Call AI service
-    const aiResult = await aiService.askAI(message, chatHistory.data || []);
+    const aiResult = await aiService.askAI(message, history);
+
 
     // Save AI response
     await supabaseQuery.insert('epanen_chat_messages', {
