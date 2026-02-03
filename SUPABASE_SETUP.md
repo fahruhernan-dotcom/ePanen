@@ -60,15 +60,39 @@ CREATE TABLE IF NOT EXISTS epanen_admins (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Chat sessions to group messages
+CREATE TABLE IF NOT EXISTS epanen_chat_sessions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  title TEXT DEFAULT 'Pesan Baru',
+  context_summary TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE
+);
+
 -- Chat messages (farmer-AI conversations)
 CREATE TABLE IF NOT EXISTS epanen_chat_messages (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   user_id BIGINT NOT NULL,
+  session_id UUID,
   role TEXT NOT NULL CHECK(role IN ('user', 'assistant')),
   message TEXT NOT NULL,
   category TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE,
+  FOREIGN KEY (session_id) REFERENCES epanen_chat_sessions(id) ON DELETE CASCADE
+);
+
+-- User-specific AI Memory (Long-term context)
+CREATE TABLE IF NOT EXISTS epanen_ai_memory (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  key TEXT NOT NULL,
+  value TEXT NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE,
+  UNIQUE(user_id, key)
 );
 
 -- Categories for articles
@@ -147,11 +171,10 @@ CREATE TABLE IF NOT EXISTS epanen_activity_logs (
 
 -- Indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_chat_messages_user_id ON epanen_chat_messages(user_id);
+CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON epanen_chat_messages(session_id);
 CREATE INDEX IF NOT EXISTS idx_chat_messages_created_at ON epanen_chat_messages(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_discussions_user_id ON epanen_discussions(user_id);
-CREATE INDEX IF NOT EXISTS idx_replies_discussion_id ON epanen_replies(discussion_id);
-CREATE INDEX IF NOT EXISTS idx_articles_status ON epanen_articles(status);
-CREATE INDEX IF NOT EXISTS idx_activity_logs_user_id ON epanen_activity_logs(user_id);
+CREATE INDEX IF NOT EXISTS idx_chat_sessions_user_id ON epanen_chat_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_ai_memory_user_id ON epanen_ai_memory(user_id);
 
 -- Insert seed data
 INSERT INTO epanen_categories (name, slug, type) VALUES

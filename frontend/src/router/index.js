@@ -18,13 +18,11 @@ const router = createRouter({
       meta: { guest: true }
     },
 
-    // Chat route - full screen, accessible to everyone (guest included)
     {
       path: '/chat',
       name: 'Chat',
       component: () => import('../views/user/Chat.vue')
     },
-
     // Home & User routes - public layout, some pages require auth
     {
       path: '/',
@@ -35,6 +33,7 @@ const router = createRouter({
           name: 'Home',
           component: () => import('../views/user/Home.vue')
         },
+        // Removed Chat from here
         {
           path: 'articles',
           name: 'Articles',

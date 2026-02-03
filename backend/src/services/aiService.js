@@ -18,17 +18,26 @@ class AIService {
    * Ask AI a question with chat history for context
    * @param {string} question - User's question
    * @param {Array} chatHistory - Previous messages in the conversation
+   * @param {Array} userMemory - Long-term context memory
    * @returns {Promise<object>} AI response
    */
-  async askAI(question, chatHistory = []) {
+  async askAI(question, chatHistory = [], userMemory = []) {
     try {
       const category = detectCategory(question);
 
-      // Build messages array with system prompt and chat history
+      // Intelligent Memory Context
+      let memoryPrompt = "";
+      if (userMemory.length > 0) {
+        memoryPrompt = `\n\n[MEMORI KONTEKS PENGGUNA]\n` +
+          userMemory.map(m => `- ${m.key.toUpperCase().replace(/_/g, ' ')}: ${m.value}`).join('\n') +
+          `\n\nCATATAN: Gunakan memori di atas untuk memberikan jawaban yang lebih personal dan relevan. Jika user menggunakan kata ganti ("itu", "tadi", "yang kemarin"), rujuklah ke memori ini.`;
+      }
+
+      // Build messages array
       const messages = [
         {
           role: 'system',
-          content: aiConfig.systemPrompt
+          content: aiConfig.systemPrompt + memoryPrompt
         },
         ...chatHistory.map(msg => ({
           role: msg.role === 'assistant' ? 'assistant' : 'user',
@@ -58,13 +67,16 @@ class AIService {
       };
 
     } catch (error) {
-      console.error('AI Service Error:', error.response?.data || error.message);
+      console.error('AI SERVICE CRITICAL ERROR:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        stack: error.stack
+      });
 
       // If it's an OpenRouter specific error
       if (error.response?.status === 401) {
-        console.error('❌ OpenRouter API Key invalid. Check your AI_API_KEY in .env');
-      } else if (error.response?.status === 429) {
-        console.error('❌ OpenRouter rate limit exceeded. Consider upgrading your plan.');
+        console.error('❌ OpenRouter API Key invalid.');
       }
 
       // Fallback response if AI service fails

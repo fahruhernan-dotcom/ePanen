@@ -1,4 +1,4 @@
-import { getDatabase } from '../config/database.js';
+import { supabase } from '../config/supabase.js';
 
 /**
  * Get commodity prices
@@ -6,33 +6,30 @@ import { getDatabase } from '../config/database.js';
 export const getCommodityPrices = async (req, res) => {
   try {
     const { category, location, search } = req.query;
-    const db = getDatabase();
 
-    let query = 'SELECT * FROM commodity_prices WHERE 1=1';
-    const params = [];
+    let query = supabase
+      .from('epanen_commodity_prices')
+      .select('*');
 
     if (category) {
-      query += ' AND category = ?';
-      params.push(category);
+      query = query.eq('category', category);
     }
 
     if (location) {
-      query += ' AND location LIKE ?';
-      params.push(`%${location}%`);
+      query = query.ilike('location', `%${location}%`);
     }
 
     if (search) {
-      query += ' AND name LIKE ?';
-      params.push(`%${search}%`);
+      query = query.ilike('name', `%${search}%`);
     }
 
-    query += ' ORDER BY date DESC';
+    const { data: prices, error } = await query.order('date', { ascending: false });
 
-    const prices = await db.all(query, params);
+    if (error) throw error;
 
     // Group by commodity name for latest prices
     const latestPrices = {};
-    prices.forEach(price => {
+    (prices || []).forEach(price => {
       if (!latestPrices[price.name] || new Date(price.date) > new Date(latestPrices[price.name].date)) {
         latestPrices[price.name] = price;
       }
@@ -59,15 +56,22 @@ export const getCommodityPrices = async (req, res) => {
 export const updateCommodityPrice = async (req, res) => {
   try {
     const { name, category, price, unit, location, trend = 'stable' } = req.body;
-    const db = getDatabase();
 
-    const result = await db.run(
-      `INSERT INTO commodity_prices (name, category, price, unit, location, trend, date)
-       VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE)`,
-      [name, category, price, unit, location || null, trend]
-    );
+    const { data: newPrice, error } = await supabase
+      .from('epanen_commodity_prices')
+      .insert({
+        name,
+        category,
+        price,
+        unit,
+        location: location || null,
+        trend,
+        date: new Date().toISOString().split('T')[0]
+      })
+      .select()
+      .single();
 
-    const newPrice = await db.get('SELECT * FROM commodity_prices WHERE id = ?', [result.lastID]);
+    if (error) throw error;
 
     res.status(201).json({
       success: true,
@@ -89,9 +93,13 @@ export const updateCommodityPrice = async (req, res) => {
 export const deleteCommodityPrice = async (req, res) => {
   try {
     const { id } = req.params;
-    const db = getDatabase();
 
-    await db.run('DELETE FROM commodity_prices WHERE id = ?', [id]);
+    const { error } = await supabase
+      .from('epanen_commodity_prices')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
 
     res.json({
       success: true,
@@ -113,20 +121,22 @@ export const getPriceTrends = async (req, res) => {
   try {
     const { name } = req.params;
     const { days = 30 } = req.query;
-    const db = getDatabase();
 
-    const trends = await db.all(
-      `SELECT date, price, location
-       FROM commodity_prices
-       WHERE name = ?
-       AND date >= date('now', '-${days} days')
-       ORDER BY date ASC`,
-      [name]
-    );
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - parseInt(days));
+
+    const { data: trends, error } = await supabase
+      .from('epanen_commodity_prices')
+      .select('date, price, location')
+      .eq('name', name)
+      .gte('date', startDate.toISOString().split('T')[0])
+      .order('date', { ascending: true });
+
+    if (error) throw error;
 
     res.json({
       success: true,
-      data: { trends }
+      data: { trends: trends || [] }
     });
   } catch (error) {
     console.error('Get price trends error:', error);

@@ -42,6 +42,7 @@ router.get('/articles/:id', optionalAuth, contentController.getArticleById);
 router.get('/categories', optionalAuth, contentController.getAllCategories);
 
 // Content management (admin only)
+router.get('/admin/articles', authenticate, isAdmin, contentController.getAllArticles);
 router.post('/admin/articles', authenticate, isAdmin, validate, validationRules.createArticle, contentController.createArticle);
 router.put('/admin/articles/:id', authenticate, isAdmin, contentController.updateArticle);
 router.delete('/admin/articles/:id', authenticate, isAdmin, contentController.deleteArticle);
@@ -59,10 +60,13 @@ router.get('/discussions', optionalAuth, discussionController.getAllDiscussions)
 router.get('/discussions/:id', optionalAuth, discussionController.getDiscussionById);
 
 // Discussion management (authenticated users)
+router.get('/discussions/me/stats', authenticate, discussionController.getMyDiscussionStats);
 router.post('/discussions', authenticate, isFarmer, validate, validationRules.createDiscussion, discussionController.createDiscussion);
+router.put('/discussions/:id', authenticate, discussionController.updateDiscussion);
 router.post('/discussions/:id/reply', authenticate, discussionController.addReply);
 
 // Discussion moderation (admin only)
+router.get('/admin/discussions', authenticate, isAdmin, discussionController.getAllDiscussions);
 router.delete('/admin/discussions/:id', authenticate, isAdmin, discussionController.deleteDiscussion);
 router.delete('/admin/replies/:id', authenticate, isAdmin, discussionController.deleteReply);
 

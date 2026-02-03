@@ -1,343 +1,178 @@
 <template>
-  <div class="h-screen flex flex-col bg-gradient-to-b from-green-50 via-emerald-50 to-amber-50">
-    <!-- Agricultural Themed Header -->
-    <div class="bg-gradient-to-r from-epanen-primary via-epanen-secondary to-epanen-primary text-white shadow-lg relative overflow-hidden">
-      <!-- Decorative farm pattern -->
-      <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" viewBox="0 0 1200 80" preserveAspectRatio="none">
-          <!-- Rice field waves -->
-          <path d="M0,40 Q150,20 300,40 T600,40 T900,40 T1200,40 V80 H0 Z" fill="currentColor"/>
-          <path d="M0,50 Q150,30 300,50 T600,50 T900,50 T1200,50 V80 H0 Z" fill="currentColor" opacity="0.5"/>
-          <!-- Wheat dots -->
-          <g fill="currentColor">
-            <circle cx="100" cy="25" r="4"/>
-            <circle cx="300" cy="20" r="5"/>
-            <circle cx="500" cy="28" r="4"/>
-            <circle cx="700" cy="22" r="5"/>
-            <circle cx="900" cy="26" r="4"/>
-            <circle cx="1100" cy="24" r="5"/>
-          </g>
-        </svg>
-      </div>
-
-      <div class="relative px-4 md:px-6 py-3 md:py-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2 md:space-x-3">
-            <router-link to="/" class="flex items-center space-x-2 md:space-x-3 group">
-              <div class="relative">
-                <div class="w-10 h-10 md:w-12 md:h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:bg-opacity-30 transition-all shadow-lg">
-                  <svg class="w-6 h-6 md:w-7 md:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                  </svg>
-                </div>
-                <!-- Small wheat decoration -->
-                <div class="absolute -top-1 -right-1 w-4 h-4 bg-epanen-accent rounded-full flex items-center justify-center shadow-md">
-                  <svg class="w-2.5 h-2.5 text-epanen-primary" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C8 6 4 10 4 14c0 4 3.5 8 8 8s8-4 8-8c0-4-4-8-8-12z"/>
-                  </svg>
-                </div>
-              </div>
-              <div>
-                <h1 class="text-base md:text-lg font-bold">Nella AI</h1>
-                <p class="text-[10px] md:text-xs text-epanen-accent hidden sm:block">Asisten Pertanian Cerdas</p>
-              </div>
-            </router-link>
-          </div>
-
-          <div class="flex items-center space-x-1 md:space-x-2">
-            <router-link
-              to="/"
-              class="text-xs md:text-sm text-white hover:text-epanen-accent px-2 md:px-3 py-1.5 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all flex items-center"
-            >
-              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-              <span class="hidden sm:inline">Beranda</span>
-            </router-link>
-            <button
-              @click="clearChat"
-              class="text-xs md:text-sm text-white hover:text-epanen-accent px-2 md:px-3 py-1.5 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all flex items-center"
-            >
-              <svg class="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              </svg>
-              <svg class="w-4 h-4 hidden sm:block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <span class="hidden sm:inline">Chat Baru</span>
-            </button>
-            <router-link
-              v-if="!isAuthenticated"
-              to="/login"
-              class="text-xs md:text-sm bg-white text-epanen-primary px-3 md:px-4 py-1.5 rounded-xl hover:bg-gray-100 transition-all font-bold shadow-md hover:shadow-lg"
-            >
-              Masuk
-            </router-link>
+  <div :class="['h-screen flex flex-col transition-colors duration-300 overflow-hidden', themeStore.isDarkMode ? 'dark bg-[#060D06]' : 'bg-[#F8FAF8]']">
+    
+    <!-- Custom Header for Standalone Chat -->
+    <header class="glass-panel relative z-50 shadow-xl border-b border-white/10 flex-shrink-0">
+      <div class="container-custom h-16 md:h-20 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <router-link to="/" class="p-2.5 bg-epanen-primary/10 hover:bg-epanen-primary/20 rounded-xl transition-all text-epanen-primary dark:text-epanen-accent" title="Kembali ke Beranda">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </router-link>
+          <div class="flex items-center space-x-3">
+             <div class="w-10 h-10 bg-epanen-primary rounded-xl flex items-center justify-center shadow-lg">
+                <img src="/src/assets/images/ai-avatar.png" class="w-8 h-8 object-contain" />
+             </div>
+             <div>
+                <h1 class="text-lg md:text-xl font-black text-gray-900 dark:text-white leading-none">Nella AI</h1>
+                <p class="text-[10px] md:text-xs text-epanen-primary dark:text-epanen-accent font-black uppercase tracking-widest mt-1">Pakar Pertanian Digital</p>
+             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Chat Area -->
-    <div class="flex-1 overflow-hidden flex">
-      <div class="flex-1 flex flex-col">
-        <!-- Messages -->
-        <div ref="messagesContainer" class="flex-1 overflow-y-auto">
-          <div class="max-w-4xl mx-auto px-3 md:px-4 py-4 md:py-6">
-            <!-- Welcome / Quick Questions -->
-            <div v-if="messages.length === 0 && !isLoading" class="text-center py-8 md:py-12">
-              <!-- AI Avatar with Agricultural Theme -->
-              <div class="mb-6 md:mb-8">
-                <div class="relative inline-block">
-                  <div class="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-epanen-primary to-epanen-secondary rounded-3xl flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-2xl relative overflow-hidden">
-                    <!-- Decorative pattern -->
-                    <div class="absolute inset-0 opacity-20">
-                      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <circle cx="20" cy="20" r="15" fill="currentColor"/>
-                        <circle cx="80" cy="20" r="12" fill="currentColor"/>
-                        <circle cx="50" cy="80" r="18" fill="currentColor"/>
-                        <path d="M10,50 Q50,30 90,50" stroke="currentColor" stroke-width="3" fill="none"/>
-                      </svg>
-                    </div>
-                    <svg class="w-10 h-10 md:w-12 md:h-12 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" opacity="0.3"/>
+        <div class="flex items-center space-x-3">
+           <button @click="themeStore.toggleDarkMode" class="p-2.5 bg-white/50 dark:bg-white/5 hover:bg-white/80 dark:hover:bg-white/10 rounded-xl transition-all border border-black/5 dark:border-white/5">
+              <svg v-if="!themeStore.isDarkMode" class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+              <svg v-else class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+           </button>
+           <div class="w-10 h-10 bg-gradient-to-br from-epanen-primary to-epanen-secondary rounded-xl flex items-center justify-center text-white font-black shadow-md border border-white/20">
+              {{ authStore.user?.name?.charAt(0).toUpperCase() || 'P' }}
+           </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Chat Viewport -->
+    <main class="flex-1 relative overflow-hidden bg-transparent">
+      <!-- Decor Blobs -->
+      <div class="absolute top-20 right-[-5%] w-96 h-96 bg-epanen-accent/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div class="absolute bottom-20 left-[-5%] w-80 h-80 bg-emerald-100/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <div ref="messagesContainer" class="h-full overflow-y-auto custom-scrollbar scroll-smooth">
+        <div class="max-w-4xl mx-auto px-4 py-8 space-y-10 pb-32">
+          
+          <!-- Empty State / Welcome -->
+          <div v-if="messages.length === 0 && !isLoading" class="text-center py-20 space-y-8 animate-slide-up">
+            <div class="relative inline-block animate-float">
+               <div class="w-32 h-32 md:w-48 md:h-48 bg-white/70 shadow-2xl dark:bg-emerald-950/20 rounded-[4rem] p-4 mx-auto mb-6 relative overflow-hidden backdrop-blur-xl border border-white/20">
+                  <img src="/src/assets/images/ai-avatar.png" alt="Nella" class="w-full h-full object-contain filter drop-shadow-2xl" />
+               </div>
+               <div class="absolute -bottom-2 -right-2 bg-white dark:bg-epanen-dark p-3 rounded-2xl shadow-lg border border-gray-100 dark:border-white/5">
+                  <span class="flex h-4 w-4 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
+                  </span>
+               </div>
+            </div>
+
+            <div class="space-y-4">
+              <h2 class="text-4xl md:text-6xl font-black text-gray-900 dark:text-gray-100 tracking-tight italic">Halo, saya Nella! 🌾</h2>
+              <p class="text-gray-600 dark:text-gray-300 font-black max-w-xl mx-auto text-xl leading-relaxed">Pakar pertanian Anda siap membantu. Tanyakan apa saja tentang teknik tanam, hama, hingga harga pasar terbaru.</p>
+            </div>
+
+            <!-- Quick Suggestions -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto pt-10">
+              <button 
+                v-for="(q, i) in quickQuestions" 
+                :key="i"
+                @click="sendQuickQuestion(q.text)"
+                class="glass-card text-left p-6 rounded-[2.5rem] hover:border-epanen-primary transition-all group shadow-xl border-2 border-transparent hover:shadow-epanen-primary/10 hover:bg-white dark:hover:bg-white/5 active:scale-95"
+              >
+                <div class="flex items-center space-x-5">
+                  <div class="w-14 h-14 bg-epanen-primary rounded-2xl flex-shrink-0 flex items-center justify-center text-white group-hover:bg-epanen-dark transition-all shadow-md">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                   </div>
-                  <!-- Status indicator -->
-                  <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-md flex items-center justify-center">
-                    <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  </div>
+                  <span class="text-base font-black text-gray-700 dark:text-gray-200 leading-tight">{{ q.label }}</span>
                 </div>
-
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Halo! Saya Nella 🌾</h2>
-                <p class="text-sm md:text-base text-gray-600 mb-4">Ada yang bisa saya bantu hari ini? Tanya apa saja tentang pertanian!</p>
-                <p v-if="!isAuthenticated" class="text-xs md:text-sm text-epanen-primary mt-2 font-medium inline-flex items-center px-4 py-2 bg-green-50 rounded-xl border border-green-200">
-                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
-                  {{ GUEST_MESSAGE_LIMIT - guestMessageCount }} pertanyaan gratis tersedia
-                </p>
-              </div>
-
-              <!-- Quick Questions with Agricultural Theme -->
-              <div class="text-left max-w-2xl mx-auto">
-                <p class="text-xs md:text-sm font-bold text-gray-700 mb-3 flex items-center">
-                  <svg class="w-4 h-4 md:w-5 md:h-5 mr-1 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  Pertanyaan Populer:
-                </p>
-                <div class="grid grid-cols-1 gap-2 md:gap-3">
-                  <button
-                    v-for="(q, i) in quickQuestions"
-                    :key="i"
-                    @click="sendQuickQuestion(q.text)"
-                    :disabled="!isAuthenticated && guestMessageCount >= GUEST_MESSAGE_LIMIT"
-                    class="group text-left px-4 md:px-5 py-3 md:py-4 bg-white border-2 border-gray-200 rounded-xl hover:border-epanen-primary hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
-                  >
-                    <!-- Hover background gradient -->
-                    <div class="absolute inset-0 bg-gradient-to-r from-green-50 to-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="relative flex items-center space-x-3">
-                      <span class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-epanen-light to-emerald-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
-                        <svg class="w-4 h-4 md:w-5 md:h-5 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                      </span>
-                      <span class="text-xs md:text-sm font-semibold text-gray-700 group-hover:text-gray-900 flex-1">{{ q.label }}</span>
-                      <svg class="w-5 h-5 text-gray-400 group-hover:text-epanen-primary group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </button>
-                </div>
-              </div>
+              </button>
             </div>
+          </div>
 
-            <!-- Messages List -->
-            <div v-else class="space-y-4 md:space-y-6">
-              <!-- Guest Limit Warning -->
-              <div
-                v-if="!isAuthenticated && guestMessageCount >= GUEST_MESSAGE_LIMIT"
-                class="bg-gradient-to-r from-epanen-primary to-epanen-secondary rounded-2xl p-5 md:p-7 text-white shadow-xl relative overflow-hidden"
-              >
-                <!-- Decorative pattern -->
-                <div class="absolute inset-0 opacity-10">
-                  <svg class="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="none">
-                    <path d="M0,100 Q100,60 200,100 T400,100 V200 H0 Z" fill="currentColor"/>
-                    <circle cx="50" cy="80" r="30" fill="currentColor" opacity="0.5"/>
-                    <circle cx="350" cy="60" r="25" fill="currentColor" opacity="0.5"/>
-                  </svg>
+          <!-- Message Bubbles -->
+          <div v-for="(msg, index) in messages" :key="index" class="space-y-4">
+            <div :class="['flex w-full', msg.role === 'user' ? 'justify-end' : 'justify-start']">
+              <div :class="['flex max-w-[95%] sm:max-w-[85%] items-end space-x-3', msg.role === 'user' ? 'flex-row-reverse space-x-reverse' : 'flex-row']">
+                <!-- Avatar Bubble -->
+                <div :class="['w-10 h-10 md:w-12 md:h-12 rounded-2xl flex-shrink-0 shadow-lg flex items-center justify-center overflow-hidden border-2', msg.role === 'user' ? 'bg-epanen-primary border-white' : 'glass-panel border-white/20 shadow-none']">
+                   <img v-if="msg.role === 'assistant'" src="/src/assets/images/ai-avatar.png" class="w-full h-full object-cover" />
+                   <svg v-else class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                   </svg>
                 </div>
-                <div class="relative flex items-start space-x-3 md:space-x-4">
-                  <div class="flex-shrink-0">
-                    <div class="w-10 h-10 md:w-12 md:h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                      <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="flex-1">
-                    <h3 class="font-bold text-base md:text-lg mb-1">Batas Pertanyaan Tercapai</h3>
-                    <p class="text-xs md:text-sm opacity-90 mb-3 md:mb-4">
-                      Anda telah menggunakan {{ GUEST_MESSAGE_LIMIT }} pertanyaan gratis. Daftar sekarang untuk chat tanpa batas dengan AI Pakar Pertanian!
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                      <router-link
-                        to="/register"
-                        class="inline-flex items-center px-4 md:px-5 py-2 bg-white text-epanen-primary rounded-xl font-bold hover:bg-gray-100 transition-all shadow-md hover:shadow-lg text-sm"
-                      >
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                        </svg>
-                        Daftar Gratis
-                      </router-link>
-                      <router-link
-                        to="/login"
-                        class="inline-flex items-center px-4 md:px-5 py-2 bg-epanen-accent text-epanen-primary rounded-xl font-bold hover:bg-opacity-80 transition-all shadow-md text-sm"
-                      >
-                        Masuk
-                      </router-link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                v-for="(msg, index) in messages"
-                :key="index"
-                :class="[
-                  'flex gap-2 md:gap-4',
-                  msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-                ]"
-              >
-                <!-- Avatar -->
-                <div
-                  :class="[
-                    'flex-shrink-0 w-9 h-9 md:w-11 md:h-11 rounded-full flex items-center justify-center shadow-md',
-                    msg.role === 'user'
-                      ? 'bg-gradient-to-br from-epanen-primary to-epanen-secondary'
-                      : 'bg-white border-2 border-gray-200'
-                  ]"
-                >
-                  <svg v-if="msg.role === 'user'" class="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  <svg v-else class="w-5 h-5 md:w-6 md:h-6 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-
-                <!-- Message Content -->
-                <div
-                  :class="[
-                    'flex-1 max-w-[85%] md:max-w-[80%]',
-                    msg.role === 'user' ? 'text-right' : 'text-left'
-                  ]"
-                >
-                  <div class="mb-1">
-                    <span class="text-[10px] md:text-xs font-semibold text-gray-700">
-                      {{ msg.role === 'user' ? 'Anda' : 'Nella' }}
-                    </span>
-                    <span class="text-[10px] md:text-xs text-gray-400 ml-2">{{ formatTime(msg.created_at) }}</span>
-                  </div>
-                  <div
+                
+                <!-- Content Bubble -->
+                <div class="space-y-1 w-full group">
+                  <div 
                     :class="[
-                      'px-4 md:px-6 py-3.5 rounded-[2rem] text-left shadow-lg backdrop-blur-sm transition-all hover:shadow-xl',
-                      msg.role === 'user'
-                        ? 'bg-gradient-to-br from-epanen-primary to-epanen-secondary text-white rounded-tr-sm user-message'
-                        : 'bg-white bg-opacity-80 border border-white text-gray-800 rounded-tl-sm assistant-message'
+                      'message-bubble px-6 py-5 rounded-[2.5rem] shadow-2xl transition-all duration-300 border-2', 
+                      msg.role === 'user' 
+                        ? 'bg-gradient-to-br from-epanen-primary to-epanen-secondary text-white rounded-tr-sm border-white/20' 
+                        : 'glass-panel rounded-tl-sm border-white/20 text-gray-900 dark:text-gray-100'
                     ]"
                   >
-                    <div class="text-sm md:text-base leading-relaxed message-content" v-html="renderMarkdown(msg.message)"></div>
+                    <div class="text-sm sm:text-lg leading-relaxed message-content font-black" v-html="renderMarkdown(msg.message)"></div>
                   </div>
-                </div>
-              </div>
-
-              <!-- Loading Indicator with Farm Theme -->
-              <div v-if="isLoading" class="flex gap-2 md:gap-4">
-                <div class="flex-shrink-0 w-9 h-9 md:w-11 md:h-11 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center shadow-md">
-                  <svg class="w-5 h-5 md:w-6 md:h-6 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div class="flex-1 max-w-[85%] md:max-w-[80%]">
-                  <div class="px-4 md:px-5 py-3 md:py-4 bg-white border-2 border-gray-200 rounded-2xl rounded-tl-sm shadow-md inline-block">
-                    <div class="flex items-center space-x-2 md:space-x-3">
-                      <div class="flex space-x-1">
-                        <div class="w-2 h-2 bg-epanen-primary rounded-full animate-bounce shadow-sm" style="animation-delay: 0ms"></div>
-                        <div class="w-2 h-2 bg-epanen-secondary rounded-full animate-bounce shadow-sm" style="animation-delay: 150ms"></div>
-                        <div class="w-2 h-2 bg-epanen-accent rounded-full animate-bounce shadow-sm" style="animation-delay: 300ms"></div>
-                      </div>
-                      <span class="text-xs md:text-sm text-gray-600 font-medium">AI sedang berpikir...</span>
-                    </div>
+                  <div :class="['flex items-center space-x-2 px-4 transition-opacity duration-300', msg.role === 'user' ? 'justify-end' : 'justify-start']">
+                     <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">{{ formatTime(msg.created_at) }}</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Input Area with Premium Agricultural Theme -->
-        <div class="px-3 md:px-6 py-4 md:py-6 bg-transparent relative z-10">
-          <div class="max-w-4xl mx-auto">
-            <!-- Guest Limit Notice -->
-            <div
-              v-if="!isAuthenticated && guestMessageCount >= GUEST_MESSAGE_LIMIT"
-              class="mb-4 p-4 bg-white bg-opacity-60 backdrop-blur-md border border-white rounded-2xl text-center shadow-xl animate-fade-in"
-            >
-              <p class="text-xs md:text-sm text-epanen-primary font-black uppercase tracking-widest flex items-center justify-center">
-                <span class="w-2 h-2 bg-epanen-primary rounded-full mr-2 animate-pulse"></span>
-                Daftar sekarang untuk chat tanpa batas!
-              </p>
+          <!-- Simulated Writing / Skeleton Loader -->
+          <div v-if="isLoading" class="flex justify-start items-end space-x-3">
+            <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl glass-panel border-2 border-white/20 shadow-lg flex items-center justify-center overflow-hidden">
+               <img src="/src/assets/images/ai-avatar.png" class="w-full h-full object-cover animate-pulse" />
             </div>
-
-            <!-- Remaining messages for guest -->
-            <div
-              v-else-if="!isAuthenticated && guestMessageCount < GUEST_MESSAGE_LIMIT"
-              class="mb-3 text-center"
-            >
-              <p class="text-[10px] uppercase font-black tracking-widest text-gray-400 flex items-center justify-center">
-                {{ GUEST_MESSAGE_LIMIT - guestMessageCount }} Kuota Tanya Gratis Tersedia
-              </p>
-            </div>
-
-            <form @submit.prevent="sendMessage" class="relative group">
-              <div class="flex items-end space-x-2 md:space-x-4 bg-white p-2 rounded-[2rem] shadow-2xl border border-white transition-all focus-within:ring-4 focus-within:ring-epanen-primary focus-within:ring-opacity-10">
-                <div class="flex-1 relative">
-                  <textarea
-                    v-model="newMessage"
-                    rows="1"
-                    placeholder="Tanya apa saja tentang pertanian..."
-                    class="w-full px-6 py-4 bg-transparent border-none focus:ring-0 resize-none text-sm md:text-base font-bold text-gray-700 placeholder-gray-400"
-                    :disabled="isLoading || (!isAuthenticated && guestMessageCount >= GUEST_MESSAGE_LIMIT)"
-                    @keydown.enter.prevent="handleEnter"
-                    @input="autoResize"
-                    style="max-height: 150px; min-height: 56px;"
-                    ref="textarea"
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                  :disabled="!newMessage.trim() || isLoading || (!isAuthenticated && guestMessageCount >= GUEST_MESSAGE_LIMIT)"
-                  class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-epanen-primary to-epanen-secondary text-white rounded-[1.5rem] hover:shadow-2xl transition-all disabled:opacity-30 disabled:grayscale flex items-center justify-center shadow-lg transform hover:scale-105 active:scale-95 shadow-epanen-primary/20"
-                >
-                  <svg v-if="!isLoading" class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 9 9-2zm0 0v-8" />
-                  </svg>
-                  <svg v-else class="animate-spin w-6 h-6 md:w-7 md:h-7" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                </button>
+            <div class="glass-panel px-8 py-8 rounded-[2.5rem] rounded-tl-sm w-full max-w-md space-y-4 shadow-2xl border-2 border-white/20">
+              <div class="skeleton-text h-3 w-3/4 rounded-full"></div>
+              <div class="skeleton-text h-3 w-full rounded-full"></div>
+              <div class="skeleton-text h-3 w-5/6 rounded-full"></div>
+              <div class="flex items-center space-x-3 pt-2">
+                 <div class="flex space-x-1.5">
+                    <div class="w-2 h-2 bg-epanen-primary rounded-full animate-bounce"></div>
+                    <div class="w-2 h-2 bg-epanen-primary rounded-full animate-bounce" style="animation-delay: 200ms"></div>
+                    <div class="w-2 h-2 bg-epanen-primary rounded-full animate-bounce" style="animation-delay: 400ms"></div>
+                 </div>
+                 <span class="text-[10px] font-black text-epanen-primary dark:text-epanen-accent uppercase tracking-[0.2em]">Nella sedang berpikir...</span>
               </div>
-              <p class="text-[10px] font-black text-gray-400 mt-4 text-center uppercase tracking-widest opacity-60">
-                Pakar Pertanian AI ePanen • Yakin Kita Bisa
-              </p>
-            </form>
+            </div>
           </div>
         </div>
+      </div>
+    </main>
 
+    <!-- Bottom Input Area - Floating style -->
+    <div class="fixed bottom-0 left-0 w-full p-6 md:p-8 pointer-events-none">
+      <div class="max-w-4xl mx-auto relative group pointer-events-auto">
+        <form @submit.prevent="sendMessage" class="relative group">
+          <div class="absolute inset-x-0 bottom-full h-24 bg-gradient-to-t from-[#F8FAF8] dark:from-[#060D06] to-transparent pointer-events-none"></div>
+          
+          <div class="relative flex items-end glass-panel rounded-[3rem] p-2.5 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border-2 border-white/20 transition-all focus-within:ring-[12px] focus-within:ring-epanen-primary/5">
+            <textarea
+              v-model="newMessage"
+              rows="1"
+              placeholder="Tanya Nella tentang pertanian..."
+              class="flex-1 bg-transparent border-none focus:ring-0 px-8 py-5 text-base sm:text-lg font-black text-gray-800 dark:text-gray-100 placeholder-gray-500 resize-none max-h-40 min-h-[64px] custom-scrollbar"
+              :disabled="isLoading"
+              @keydown.enter.prevent="handleEnter"
+              @input="autoResize"
+              ref="textarea"
+            ></textarea>
+            
+            <button 
+              type="submit" 
+              :disabled="!newMessage.trim() || isLoading"
+              class="w-14 h-14 sm:w-16 sm:h-16 bg-epanen-primary text-white rounded-[2rem] flex items-center justify-center transition-all disabled:opacity-30 transform hover:scale-110 active:scale-95 shadow-2xl hover:shadow-epanen-primary/40 overflow-hidden flex-shrink-0 mb-0.5 mr-0.5"
+            >
+              <svg v-if="!isLoading" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 9 9-2zm0 0v-8" />
+              </svg>
+              <svg v-else class="animate-spin w-8 h-8" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -348,18 +183,21 @@ import { ref, nextTick, watch, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useAuthStore } from '../../stores/auth';
+import { useThemeStore } from '../../stores/theme';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const themeStore = useThemeStore();
 
 const API_BASE = import.meta.env.VITE_API_BASE || '/api';
-const GUEST_MESSAGE_LIMIT = 3;
+const GUEST_MESSAGE_LIMIT = 5;
 
 const messages = ref([]);
 const newMessage = ref('');
 const isLoading = ref(false);
 const messagesContainer = ref(null);
 const textarea = ref(null);
+const currentSessionId = ref(null);
 
 const GUEST_CHAT_KEY = 'epanen_guest_chat';
 const GUEST_COUNT_KEY = 'epanen_guest_message_count';
@@ -373,12 +211,10 @@ const guestMessageCount = computed(() => {
 });
 
 const quickQuestions = [
-  { label: 'Cara menanam padi yang baik dan benar', text: 'Bagaimana cara menanam padi yang baik dan benar?' },
-  { label: 'Gejala hama wereng pada tanaman cabai', text: 'Apa saja gejala hama wereng pada tanaman cabai?' },
-  { label: 'Waktu yang tepat untuk tanam jagung', text: 'Kapan waktu yang tepat untuk tanam jagung?' },
-  { label: 'Cara membuat pupuk kompos dari limbah', text: 'Bagaimana cara membuat pupuk kompos dari limbah pertanian?' },
-  { label: 'Harga jual cabai merah saat ini', text: 'Berapa harga jual cabai merah saat ini?' },
-  { label: 'Mengendalikan hama ulat pada padi', text: 'Bagaimana cara mengendalikan hama ulat pada padi?' }
+  { label: 'Cara Menanam Padi Terbaik', text: 'Bagaimana cara menanam padi yang paling efektif untuk hasil maksimal?' },
+  { label: 'Hama Wereng & Solusi', text: 'Apa saja gejala hama wereng dan bagaimana solusi cepat menanganinya secara alami?' },
+  { label: 'Update Harga Cabai Hari Ini', text: 'Berapa rata-rata harga pasar cabai merah dan bawang merah hari ini?' },
+  { label: 'Panduan Pembuatan Kompos', text: 'Tolong beri saya panduan praktis membuat pupuk kompos dari limbah pertanian.' }
 ];
 
 const loadChatHistory = async () => {
@@ -396,196 +232,79 @@ const loadChatHistory = async () => {
   } else {
     const savedChat = localStorage.getItem(GUEST_CHAT_KEY);
     if (savedChat) {
-      try {
-        messages.value = JSON.parse(savedChat);
-      } catch (e) {
-        messages.value = [];
-      }
+      try { messages.value = JSON.parse(savedChat); } catch (e) { messages.value = []; }
     }
   }
 };
 
-const saveGuestChat = () => {
-  localStorage.setItem(GUEST_CHAT_KEY, JSON.stringify(messages.value));
-};
-
-const incrementGuestCount = () => {
-  const currentCount = guestMessageCount.value;
-  localStorage.setItem(GUEST_COUNT_KEY, (currentCount + 1).toString());
-};
+const saveGuestChat = () => localStorage.setItem(GUEST_CHAT_KEY, JSON.stringify(messages.value));
+const incrementGuestCount = () => localStorage.setItem(GUEST_COUNT_KEY, (guestMessageCount.value + 1).toString());
 
 const sendMessage = async () => {
   if (!newMessage.value.trim() || isLoading.value) return;
-
-  if (!isAuthenticated.value && guestMessageCount.value >= GUEST_MESSAGE_LIMIT) {
-    return;
-  }
 
   const userMessage = newMessage.value.trim();
   newMessage.value = '';
   isLoading.value = true;
 
-  if (textarea.value) {
-    textarea.value.style.height = '44px';
-  }
+  if (textarea.value) textarea.value.style.height = '64px';
 
-  const userMsg = {
-    role: 'user',
-    message: userMessage,
-    created_at: new Date().toISOString()
-  };
-  messages.value.push(userMsg);
-
-  if (!isAuthenticated.value) {
-    saveGuestChat();
-    incrementGuestCount();
-  }
-
+  messages.value.push({ role: 'user', message: userMessage, created_at: new Date().toISOString() });
+  if (!isAuthenticated.value) { saveGuestChat(); incrementGuestCount(); }
   scrollToBottom();
 
   try {
     let aiResponse;
-
+    const token = localStorage.getItem('epanen_token');
+    
     if (isAuthenticated.value) {
-      const token = localStorage.getItem('epanen_token');
-      const response = await axios.post(
-        `${API_BASE}/chat/message`,
-        { message: userMessage },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          timeout: 60000
-        }
+      const response = await axios.post(`${API_BASE}/chat/message`, 
+        { message: userMessage, sessionId: currentSessionId.value },
+        { headers: { Authorization: `Bearer ${token}` }, timeout: 60000 }
       );
-      aiResponse = response.data.data.aiResponse || 'Maaf, saat ini AI belum tersedia.';
+      aiResponse = response.data.data.aiResponse;
+      if (response.data.data.sessionId) currentSessionId.value = response.data.data.sessionId;
     } else {
-      const response = await axios.post(
-        `${API_BASE}/chat/guest`,
-        { message: userMessage },
-        {
-          headers: { 'Content-Type': 'application/json' },
-          timeout: 60000
-        }
-      );
-      aiResponse = response.data.data.aiResponse || 'Maaf, saat ini AI belum tersedia.';
+      const response = await axios.post(`${API_BASE}/chat/guest`, { message: userMessage }, { timeout: 60000 });
+      aiResponse = response.data.data.aiResponse;
     }
 
-    const aiMsg = {
-      role: 'assistant',
-      message: aiResponse,
-      created_at: new Date().toISOString()
-    };
-    messages.value.push(aiMsg);
-
-    if (!isAuthenticated.value) {
-      saveGuestChat();
-    }
-
+    messages.value.push({ role: 'assistant', message: aiResponse, created_at: new Date().toISOString() });
+    if (!isAuthenticated.value) saveGuestChat();
     scrollToBottom();
   } catch (error) {
-    console.error('Failed to send message:', error);
-    const errorMsg = {
-      role: 'assistant',
-      message: 'Maaf, terjadi kesalahan. Pastikan backend berjalan.',
-      created_at: new Date().toISOString()
-    };
-    messages.value.push(errorMsg);
-
-    if (!isAuthenticated.value) {
-      saveGuestChat();
-    }
-
-    scrollToBottom();
+    console.error('Chat error:', error);
+    messages.value.push({ role: 'assistant', message: 'Koneksi terganggu. Nella butuh waktu lebih lama, silakan ulangi pesan Anda.', created_at: new Date().toISOString() });
   } finally {
     isLoading.value = false;
   }
 };
 
-const sendQuickQuestion = (question) => {
-  newMessage.value = question;
-  sendMessage();
-};
+const sendQuickQuestion = (question) => { newMessage.value = question; sendMessage(); };
 
-const clearChat = () => {
-  if (confirm('Mulai chat baru?')) {
-    messages.value = [];
-    if (!isAuthenticated.value) {
-      localStorage.removeItem(GUEST_CHAT_KEY);
-      localStorage.removeItem(GUEST_COUNT_KEY);
-    }
-  }
-};
-
-const handleEnter = (e) => {
-  if (e.shiftKey) {
-    return;
-  }
-  e.preventDefault();
-  sendMessage();
-};
+const handleEnter = (e) => { if (!e.shiftKey) { e.preventDefault(); sendMessage(); } };
 
 const autoResize = () => {
   if (textarea.value) {
-    textarea.value.style.height = '44px';
-    const scrollHeight = textarea.value.scrollHeight;
-    if (scrollHeight > 44) {
-      textarea.value.style.height = Math.min(scrollHeight, 120) + 'px';
-    }
+    textarea.value.style.height = '64px';
+    textarea.value.style.height = Math.min(textarea.value.scrollHeight, 160) + 'px';
   }
 };
 
 const formatTime = (dateStr) => {
   if (!dateStr) return '';
   const date = new Date(dateStr);
-  const now = new Date();
-  const diffMs = now - date;
-  const diffMins = Math.floor(diffMs / 60000);
-
-  if (diffMins < 1) return 'Baru saja';
-  if (diffMins < 60) return `${diffMins}m`;
-
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}j`;
-
-  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+  return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 };
 
-// Render markdown to HTML
 const renderMarkdown = (text) => {
   if (!text) return '';
+  let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  html = html.replace(/^### (.*$)/gm, '<h3 class="text-xl font-black mt-6 mb-3">$1</h3>');
+  html = html.replace(/^## (.*$)/gm, '<h2 class="text-2xl font-black mt-8 mb-4 border-b-2 border-white/10 dark:border-white/10 pb-2">$1</h2>');
 
-  let html = text;
-
-  // Escape HTML first to prevent XSS
-  html = html
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-
-  // Code blocks (must be first before other processing)
-  html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
-    return `<pre class="bg-gray-800 text-green-400 p-4 rounded-lg overflow-x-auto my-3 text-sm"><code>${code}</code></pre>`;
-  });
-
-  // Inline code
-  html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm text-red-600">$1</code>');
-
-  // Bold (with emphasis)
-  html = html.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>');
-
-  // Italic
-  html = html.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
-
-  // Headers
-  html = html.replace(/^#### (.*$)/gm, '<h4 class="text-base font-bold mt-3 mb-2">$1</h4>');
-  html = html.replace(/^### (.*$)/gm, '<h3 class="text-lg font-bold mt-4 mb-2">$1</h3>');
-  html = html.replace(/^## (.*$)/gm, '<h2 class="text-xl font-bold mt-5 mb-3 pb-2 border-b-2 border-epanen-accent">$1</h2>');
-  html = html.replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold mt-5 mb-4 pb-2 border-b-2 border-epanen-accent">$1</h1>');
-
-
-  // Process tables line by line
   const lines = html.split('\n');
   let inTable = false;
   let tableHeader = '';
@@ -594,213 +313,95 @@ const renderMarkdown = (text) => {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-
-    // Check if this is a table row (contains |)
     if (line.includes('|') && line.trim().startsWith('|')) {
-      if (!inTable) {
-        inTable = true;
-        tableHeader = line;
-        tableRows = [];
-        continue;
-      }
-
-      // Check if separator row (contains dashes)
-      if (line.includes('---') || /^\|[\s\-:|]+\|$/.test(line)) {
-        continue;
-      }
-
+      if (!inTable) { inTable = true; tableHeader = line; tableRows = []; continue; }
+      if (line.includes('---')) continue;
       tableRows.push(line);
       continue;
     }
-
-    // If we were in a table and now we're not, build the table
     if (inTable) {
       inTable = false;
-
       if (tableHeader && tableRows.length > 0) {
-        let tableHtml = '<div class="overflow-x-auto my-4 rounded-lg border border-gray-200 shadow-sm">';
-
-        // Parse header
-        const headers = tableHeader.split('|')
-          .map(h => h.trim())
-          .filter(h => h);
-
-        tableHtml += '<table class="min-w-full bg-white"><thead class="bg-gradient-to-r from-epanen-primary to-epanen-secondary"><tr>';
-        headers.forEach(h => {
-          tableHtml += `<th class="px-4 py-3 text-left text-sm font-bold text-white border-b border-gray-200">${h}</th>`;
+        let tableHtml = '<div class="overflow-x-auto my-6"><table class="premium-table">';
+        const headers = tableHeader.split('|').map(h => h.trim()).filter(h => h);
+        tableHtml += '<thead><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+        tableRows.forEach((row) => {
+          const cells = row.split('|').map(c => c.trim()).filter(c => c);
+          tableHtml += '<tr>' + cells.map(cell => `<td>${cell}</td>`).join('') + '</tr>';
         });
-        tableHtml += '</tr></thead><tbody>';
-
-        // Parse rows
-        tableRows.forEach((row, idx) => {
-          const cells = row.split('|')
-            .map(c => c.trim())
-            .filter(c => c);
-
-          tableHtml += `<tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">`;
-          cells.forEach(cell => {
-            tableHtml += `<td class="px-4 py-3 text-sm text-gray-700 border-b border-gray-200">${cell}</td>`;
-          });
-          tableHtml += '</tr>';
-        });
-
         tableHtml += '</tbody></table></div>';
-
         result.push(tableHtml);
-        tableHeader = '';
-        tableRows = [];
       }
     }
-
     result.push(line);
   }
-
   html = result.join('\n');
 
-  // Process lists - bullet and numbered
-  let lines2 = html.split('\n');
+  let listLines = html.split('\n');
   let inList = false;
-  let listType = null;
-  let listItems = [];
-  let result2 = [];
-
-  for (let line of lines2) {
-    // Bullet list
+  let resultList = [];
+  for (let line of listLines) {
     const bulletMatch = line.match(/^[\s]*[-*+]\s+(.*)$/);
-    // Numbered list
-    const numberMatch = line.match(/^[\s]*(\d+)\.\s+(.*)$/);
-
-    if (bulletMatch || numberMatch) {
-      if (!inList) {
-        inList = true;
-        listType = bulletMatch ? 'ul' : 'ol';
-        listItems = [];
-      }
-
-      const content = bulletMatch ? bulletMatch[1] : numberMatch[2];
-      // Process inline formatting in list items
-      const processedContent = content
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-      listItems.push(processedContent);
+    if (bulletMatch) {
+      if (!inList) { inList = true; resultList.push('<ul class="list-disc list-inside space-y-3 my-5 font-black ml-2">'); }
+      resultList.push(`<li>${bulletMatch[1]}</li>`);
       continue;
     }
-
-    if (inList) {
-      inList = false;
-
-      if (listItems.length > 0) {
-        if (listType === 'ul') {
-          result2.push('<ul class="list-disc list-inside my-3 ml-6 space-y-1">');
-          listItems.forEach(item => result2.push(`<li>${item}</li>`));
-          result2.push('</ul>');
-        } else {
-          result2.push('<ol class="list-decimal list-inside my-3 ml-6 space-y-1">');
-          listItems.forEach(item => result2.push(`<li>${item}</li>`));
-          result2.push('</ol>');
-        }
-        listItems = [];
-      }
-
-    }
-
-    result2.push(line);
+    if (inList) { inList = false; resultList.push('</ul>'); }
+    resultList.push(line);
   }
-
-  html = result2.join('\n');
-
-  // Line breaks and paragraphs
-  html = html.replace(/\n\n+/g, '</p><p class="my-2 leading-relaxed">');
-  html = '<p class="my-2 leading-relaxed">' + html + '</p>';
-
-  // Clean up empty paragraphs
-  html = html.replace(/<p class="my-2 leading-relaxed"><\/p>/g, '');
-  html = html.replace(/<p class="my-2 leading-relaxed">\s*<\/p>/g, '');
-
-
-  // Remove extra line breaks within paragraphs
-  html = html.replace(/\n(?=<\/p>)/g, '');
-
+  html = resultList.join('\n');
+  html = html.replace(/\n\n+/g, '</p><p class="my-5">');
+  html = '<p>' + html + '</p>';
+  html = html.replace(/\n/g, '<br/>');
   return html;
 };
 
 const scrollToBottom = () => {
-  nextTick(() => {
-    if (messagesContainer.value) {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
-    }
-  });
+  nextTick(() => { if (messagesContainer.value) messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight; });
 };
 
-watch(() => messages.value, () => {
-  scrollToBottom();
-}, { deep: true });
-
+watch(() => messages.value, () => scrollToBottom(), { deep: true });
 onMounted(() => {
+  themeStore.initTheme();
   loadChatHistory();
 });
 </script>
 
 <style scoped>
-.message-content {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+.dark .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
+.message-bubble { word-wrap: break-word; overflow-wrap: break-word; }
+.message-content :deep(strong) { font-weight: 900; }
+.message-content :deep(p) { line-height: 1.8; }
+.bg-gradient-to-br .message-content :deep(*) { color: #FFFFFF !important; }
+.dark .glass-panel .message-content :deep(*) { color: #F8FAF8 !important; }
+.dark .glass-panel .message-content :deep(strong) { color: #A8D5A2 !important; }
+
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
 }
 
-.user-message .message-content :deep(*) {
-  color: white !important;
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.assistant-message .message-content :deep(*) {
-  color: #1f2937 !important; /* text-gray-800 */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.assistant-message .message-content :deep(strong) {
-  color: #111827 !important; /* text-gray-900 */
+.animate-bloom {
+  animation: bloom 8s ease-in-out infinite alternate;
 }
 
-.assistant-message .message-content :deep(h1),
-.assistant-message .message-content :deep(h2),
-.assistant-message .message-content :deep(h3) {
-  color: #2D5A27 !important; /* epanen-primary */
-}
-
-.message-content :deep(table) {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.message-content :deep(th) {
-  padding: 0.75rem;
-  text-align: left;
-  border-bottom: 2px solid #2D5A27;
-}
-
-.message-content :deep(td) {
-  padding: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.message-content :deep(tr:last-child td) {
-  border-bottom: none;
-}
-
-.message-content :deep(code) {
-  font-family: 'Courier New', monospace;
-}
-
-.message-content :deep(pre) {
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.message-content :deep(ul),
-.message-content :deep(ol) {
-  margin: 0.5rem 0;
-}
-
-.message-content :deep(li) {
-  margin: 0.25rem 0;
+@keyframes bloom {
+  0% { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(1.2); opacity: 0.6; }
 }
 </style>

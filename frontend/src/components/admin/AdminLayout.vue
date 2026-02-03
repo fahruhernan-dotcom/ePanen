@@ -134,7 +134,7 @@
     <!-- Main Content -->
     <div class="ml-72 flex-1 flex flex-col transition-all duration-300">
       <!-- Top Header -->
-      <header class="bg-white shadow-sm sticky top-0 z-50">
+      <header class="bg-white shadow-sm sticky top-0 z-[1000]">
         <div class="px-8 py-4 flex items-center justify-between">
           <div>
             <h2 class="text-xl font-semibold text-gray-800 flex items-center">

@@ -51,15 +51,41 @@ const schemas = {
     )
   `,
 
+  chat_sessions: `
+    CREATE TABLE IF NOT EXISTS epanen_chat_sessions (
+      id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      user_id BIGINT NOT NULL,
+      title TEXT DEFAULT 'Pesan Baru',
+      context_summary TEXT,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+      FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE
+    )
+  `,
+
   chat_messages: `
     CREATE TABLE IF NOT EXISTS epanen_chat_messages (
       id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
       user_id BIGINT NOT NULL,
+      session_id UUID,
       role TEXT NOT NULL CHECK(role IN ('user', 'assistant')),
       message TEXT NOT NULL,
       category TEXT,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-      FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE
+      FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE,
+      FOREIGN KEY (session_id) REFERENCES epanen_chat_sessions(id) ON DELETE CASCADE
+    )
+  `,
+
+  ai_memory: `
+    CREATE TABLE IF NOT EXISTS epanen_ai_memory (
+      id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      user_id BIGINT NOT NULL,
+      key TEXT NOT NULL,
+      value TEXT NOT NULL,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+      FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE,
+      UNIQUE(user_id, key)
     )
   `,
 
@@ -113,6 +139,7 @@ const schemas = {
       category TEXT,
       status TEXT DEFAULT 'active',
       views BIGINT DEFAULT 0,
+      is_edited BOOLEAN DEFAULT FALSE,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
       FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE

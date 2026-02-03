@@ -91,7 +91,10 @@
              <span class="px-4 py-1.5 rounded-full bg-epanen-light text-epanen-primary text-[10px] font-black uppercase tracking-widest">
                {{ discussion.category || 'Umum' }}
              </span>
-             <span class="text-xs font-bold text-gray-400">{{ formatDate(discussion.created_at) }}</span>
+             <div class="flex items-center space-x-2">
+               <span v-if="discussion.is_edited" class="text-[9px] font-black text-epanen-primary/40 uppercase tracking-tighter">(Edited)</span>
+               <span class="text-xs font-bold text-gray-400">{{ formatDate(discussion.created_at) }}</span>
+             </div>
           </div>
 
           <h3 class="text-xl md:text-2xl font-black text-gray-800 mb-3 leading-tight group-hover:text-epanen-primary transition-colors">
@@ -216,11 +219,23 @@
                    <span class="text-xs text-gray-400">{{ formatDate(selectedDiscussion.created_at) }}</span>
                 </div>
              </div>
-             <button @click="selectedDiscussion = null" class="p-2 bg-gray-50 text-gray-400 hover:text-red-500 rounded-xl transition-all">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-             </button>
+             <div class="flex items-center gap-2">
+                <button 
+                  v-if="authStore.user?.id === selectedDiscussion.user_id"
+                  @click="openEditModal(selectedDiscussion)"
+                  class="p-2 bg-epanen-light text-epanen-primary hover:bg-epanen-primary hover:text-white rounded-xl transition-all"
+                  title="Edit Diskusi"
+                >
+                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                   </svg>
+                </button>
+                <button @click="selectedDiscussion = null" class="p-2 bg-gray-50 text-gray-400 hover:text-red-500 rounded-xl transition-all">
+                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                   </svg>
+                </button>
+             </div>
           </div>
 
           <!-- Content -->
@@ -242,16 +257,67 @@
           </div>
        </div>
     </div>
+
+    <!-- Edit Discussion Modal -->
+    <div v-if="showEditDiscussion" class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-gray-900 bg-opacity-40 backdrop-blur-sm" @click="showEditDiscussion = false"></div>
+      <div class="relative bg-white rounded-[2rem] shadow-2xl max-w-lg w-full overflow-hidden animate-scale-in">
+        <div class="p-8 border-b border-gray-100">
+          <h2 class="text-2xl font-black text-gray-800">Edit Diskusi</h2>
+          <p class="text-sm text-gray-500 mt-1">Sempurnakan pertanyaan atau ide Anda.</p>
+        </div>
+        
+        <form @submit.prevent="updateDiscussion" class="p-8 space-y-6">
+          <div>
+            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Judul</label>
+            <input
+              v-model="editForm.title"
+              type="text"
+              required
+              class="w-full px-5 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none font-bold text-gray-700"
+            />
+          </div>
+          
+          <div>
+            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Kategori</label>
+             <select
+                v-model="editForm.category"
+                class="w-full px-5 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none text-sm font-bold text-gray-700 appearance-none"
+              >
+                <option v-for="cat in categories" :key="cat.slug" :value="cat.slug">{{ cat.name }}</option>
+              </select>
+          </div>
+
+          <div>
+             <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Isi Diskusi</label>
+             <textarea
+                v-model="editForm.content"
+                rows="5"
+                required
+                class="w-full px-5 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none text-sm text-gray-700 leading-relaxed resize-none"
+             ></textarea>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-4">
+             <button type="button" @click="showEditDiscussion = false" class="px-6 py-3 rounded-xl font-bold text-gray-400 hover:bg-gray-50 transition-colors uppercase text-xs tracking-widest">Batal</button>
+             <button type="submit" :disabled="submitting" class="px-8 py-3 bg-epanen-primary text-white rounded-xl font-black hover:bg-epanen-secondary transition-colors uppercase text-xs tracking-widest shadow-lg">
+               {{ submitting ? 'Menyimpan...' : 'Simpan Perubahan' }}
+             </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-// Removed specific primevue imports as we are using custom UI now to match style
+import { useAuthStore } from '../../stores/auth';
 import axios from 'axios';
 
 const router = useRouter();
+const authStore = useAuthStore();
 const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 const token = localStorage.getItem('epanen_token');
 
@@ -259,9 +325,17 @@ const discussions = ref([]);
 const searchQuery = ref('');
 const selectedCategory = ref('Semua');
 const showNewDiscussion = ref(false);
+const showEditDiscussion = ref(false);
 const submitting = ref(false);
 const loading = ref(false);
 const selectedDiscussion = ref(null);
+
+const editForm = ref({
+  id: null,
+  title: '',
+  content: '',
+  category: ''
+});
 
 const categories = ref([
   { name: 'Pasar', slug: 'pasar' },
@@ -318,6 +392,36 @@ const createDiscussion = async () => {
 
 const openDetail = (discussion) => {
    selectedDiscussion.value = discussion;
+};
+
+const openEditModal = (discussion) => {
+   editForm.value = {
+     id: discussion.id,
+     title: discussion.title,
+     content: discussion.content,
+     category: discussion.category || 'tanya-jawab'
+   };
+   showEditDiscussion.value = true;
+};
+
+const updateDiscussion = async () => {
+  submitting.value = true;
+  try {
+    await axios.put(`${API_BASE}/discussions/${editForm.value.id}`, editForm.value, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    alert('Diskusi berhasil diperbarui!');
+    showEditDiscussion.value = false;
+    if (selectedDiscussion.value?.id === editForm.value.id) {
+       selectedDiscussion.value = null;
+    }
+    loadDiscussions();
+  } catch (error) {
+    alert(error.response?.data?.message || 'Gagal memperbarui diskusi');
+  } finally {
+    submitting.value = false;
+  }
 };
 
 const formatDate = (dateStr) => {

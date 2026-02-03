@@ -5,15 +5,22 @@ import { supabase } from '../config/supabase.js';
  */
 export const getAllArticles = async (req, res) => {
   try {
-    const { category, status = 'published', page = 1, limit = 20, search } = req.query;
+    const { category, status, page = 1, limit = 20, search } = req.query;
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
     let query = supabase
       .from('epanen_articles')
-      .select('id, title, slug, excerpt, category, image, views, created_at', { count: 'exact' })
-      .eq('status', status)
-      .order('created_at', { ascending: false });
+      .select('id, title, slug, excerpt, category, image, views, created_at, status', { count: 'exact' });
+
+    if (status) {
+      query = query.eq('status', status);
+    } else if (!req.path.includes('/admin/')) {
+      // Default to published for public routes if no status specified
+      query = query.eq('status', 'published');
+    }
+
+    query = query.order('created_at', { ascending: false });
 
     if (category) {
       query = query.eq('category', category);

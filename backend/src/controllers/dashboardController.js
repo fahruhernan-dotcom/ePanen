@@ -1,4 +1,4 @@
-import { supabase } from '../config/database.js';
+import { supabase } from '../config/supabase.js';
 
 /**
  * Get dashboard statistics (Admin only)
@@ -6,164 +6,173 @@ import { supabase } from '../config/database.js';
 export const getDashboardStats = async (req, res) => {
   try {
     // Total users (farmers only)
-    const { count: totalUsers, error: usersError } = await supabase
-      .from('epanen_users')
-      .select('*', { count: 'exact', head: true })
-      .eq('role', 'farmer');
+    let totalUsers = 0;
+    try {
+      const { count } = await supabase
+        .from('epanen_users')
+        .select('*', { count: 'exact', head: true })
+        .eq('role', 'farmer');
+      totalUsers = count || 0;
+    } catch (err) { console.error('Error fetching total users:', err.message); }
 
-    if (usersError) throw usersError;
-
-    // Active users (last 7 days) - count DISTINCT user_id
+    // Active users (last 7 days)
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
-    const { data: activeUsersData, error: activeError } = await supabase
-      .from('epanen_chat_messages')
-      .select('user_id')
-      .gte('created_at', sevenDaysAgo);
-
-    if (activeError) throw activeError;
-
-    // Count unique users
-    const activeUsers = new Set(activeUsersData?.map(m => m.user_id) || []).size;
+    let activeUsers = 0;
+    try {
+      const { data: activeUsersData } = await supabase
+        .from('epanen_chat_messages')
+        .select('user_id')
+        .gte('created_at', sevenDaysAgo);
+      activeUsers = new Set(activeUsersData?.map(m => m.user_id) || []).size;
+    } catch (err) { console.error('Error fetching active users:', err.message); }
 
     // Total questions asked (user messages)
-    const { count: totalQuestions, error: questionsError } = await supabase
-      .from('epanen_chat_messages')
-      .select('*', { count: 'exact', head: true })
-      .eq('role', 'user');
-
-    if (questionsError) throw questionsError;
+    let totalQuestions = 0;
+    try {
+      const { count } = await supabase
+        .from('epanen_chat_messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('role', 'user');
+      totalQuestions = count || 0;
+    } catch (err) { console.error('Error fetching total questions:', err.message); }
 
     // Total articles published
-    const { count: totalArticles, error: articlesError } = await supabase
-      .from('epanen_articles')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'published');
-
-    if (articlesError) throw articlesError;
+    let totalArticles = 0;
+    try {
+      const { count } = await supabase
+        .from('epanen_articles')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'published');
+      totalArticles = count || 0;
+    } catch (err) { console.error('Error fetching total articles:', err.message); }
 
     // Total discussions
-    const { count: totalDiscussions, error: discussionsError } = await supabase
-      .from('epanen_discussions')
-      .select('*', { count: 'exact', head: true });
-
-    if (discussionsError) throw discussionsError;
+    let totalDiscussions = 0;
+    try {
+      const { count } = await supabase
+        .from('epanen_discussions')
+        .select('*', { count: 'exact', head: true });
+      totalDiscussions = count || 0;
+    } catch (err) { console.error('Error fetching total discussions:', err.message); }
 
     // Messages this week
-    const { count: messagesThisWeek, error: weekError } = await supabase
-      .from('epanen_chat_messages')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', sevenDaysAgo);
-
-    if (weekError) throw weekError;
+    let messagesThisWeek = 0;
+    try {
+      const { count } = await supabase
+        .from('epanen_chat_messages')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', sevenDaysAgo);
+      messagesThisWeek = count || 0;
+    } catch (err) { console.error('Error fetching weekly messages:', err.message); }
 
     // New users this month
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-
-    const { count: newUsersThisMonth, error: monthError } = await supabase
-      .from('epanen_users')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', thirtyDaysAgo)
-      .eq('role', 'farmer');
-
-    if (monthError) throw monthError;
+    let newUsersThisMonth = 0;
+    try {
+      const { count } = await supabase
+        .from('epanen_users')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', thirtyDaysAgo)
+        .eq('role', 'farmer');
+      newUsersThisMonth = count || 0;
+    } catch (err) { console.error('Error fetching monthly new users:', err.message); }
 
     // AI usage by category
-    const { data: aiByCategory, error: categoryError } = await supabase
-      .from('epanen_chat_messages')
-      .select('category')
-      .eq('role', 'assistant')
-      .not('category', 'is', null);
+    let byCategory = [];
+    try {
+      const { data: aiByCategory } = await supabase
+        .from('epanen_chat_messages')
+        .select('category')
+        .eq('role', 'assistant')
+        .not('category', 'is', null);
 
-    if (categoryError) throw categoryError;
+      const categoryCounts = {};
+      (aiByCategory || []).forEach(msg => {
+        const cat = msg.category || 'Umum';
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+      });
 
-    // Group by category manually
-    const categoryCounts = {};
-    (aiByCategory || []).forEach(msg => {
-      const cat = msg.category || 'Umum';
-      categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-    });
-
-    const byCategory = Object.entries(categoryCounts)
-      .map(([category, count]) => ({ category, count }))
-      .sort((a, b) => b.count - a.count);
-
-    // Recent activity (last 20)
-    const { data: recentActivity, error: activityError } = await supabase
-      .from('epanen_activity_logs')
-      .select(`
-        *,
-        user:epanen_users!epanen_activity_logs_user_id_fkey(name)
-      `)
-      .order('created_at', { ascending: false })
-      .limit(20);
-
-    if (activityError) throw activityError;
-
-    const formattedActivity = (recentActivity || []).map(log => ({
-      ...log,
-      user_name: log.user?.name || 'System'
-    }));
+      byCategory = Object.entries(categoryCounts)
+        .map(([category, count]) => ({ category, count }))
+        .sort((a, b) => b.count - a.count);
+    } catch (err) { console.error('Error fetching category stats:', err.message); }
 
     // Messages per day (last 7 days)
-    const { data: messagesData, error: perDayError } = await supabase
-      .from('epanen_chat_messages')
-      .select('role, created_at')
-      .gte('created_at', sevenDaysAgo)
-      .order('created_at', { ascending: true });
+    let messagesPerDayArray = [];
+    try {
+      const { data: messagesData } = await supabase
+        .from('epanen_chat_messages')
+        .select('role, created_at')
+        .gte('created_at', sevenDaysAgo)
+        .order('created_at', { ascending: true });
 
-    if (perDayError) throw perDayError;
+      const messagesPerDay = {};
+      (messagesData || []).forEach(msg => {
+        const date = new Date(msg.created_at).toISOString().split('T')[0];
+        if (!messagesPerDay[date]) {
+          messagesPerDay[date] = { date, user_messages: 0, ai_responses: 0 };
+        }
+        if (msg.role === 'user') {
+          messagesPerDay[date].user_messages++;
+        } else if (msg.role === 'assistant') {
+          messagesPerDay[date].ai_responses++;
+        }
+      });
 
-    // Group by date
-    const messagesPerDay = {};
-    (messagesData || []).forEach(msg => {
-      const date = new Date(msg.created_at).toISOString().split('T')[0];
-      if (!messagesPerDay[date]) {
-        messagesPerDay[date] = { date, user_messages: 0, ai_responses: 0 };
-      }
-      if (msg.role === 'user') {
-        messagesPerDay[date].user_messages++;
-      } else if (msg.role === 'assistant') {
-        messagesPerDay[date].ai_responses++;
-      }
-    });
-
-    const messagesPerDayArray = Object.values(messagesPerDay)
-      .sort((a, b) => new Date(b.date) - new Date(a.date));
+      messagesPerDayArray = Object.values(messagesPerDay)
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+    } catch (err) { console.error('Error fetching daily messages:', err.message); }
 
     // Top viewed articles
-    const { data: topArticles, error: topArticlesError } = await supabase
-      .from('epanen_articles')
-      .select('id, title, views, category')
-      .eq('status', 'published')
-      .order('views', { ascending: false })
-      .limit(5);
+    let topArticles = [];
+    try {
+      const { data } = await supabase
+        .from('epanen_articles')
+        .select('id, title, views, category')
+        .eq('status', 'published')
+        .order('views', { ascending: false })
+        .limit(5);
+      topArticles = data || [];
+    } catch (err) { console.error('Error fetching top articles:', err.message); }
 
-    if (topArticlesError) throw topArticlesError;
+    // Popular discussions
+    let discussionsWithReplies = [];
+    try {
+      const { data: discussionsData } = await supabase
+        .from('epanen_discussions')
+        .select('id, title, views')
+        .eq('status', 'active')
+        .order('views', { ascending: false })
+        .limit(5);
 
-    // Popular discussions with reply count
-    const { data: discussionsData, error: discussionsDataError } = await supabase
-      .from('epanen_discussions')
-      .select('id, title, views')
-      .eq('status', 'active')
-      .order('views', { ascending: false })
-      .limit(5);
+      discussionsWithReplies = await Promise.all(
+        (discussionsData || []).map(async (d) => {
+          const { count } = await supabase
+            .from('epanen_replies')
+            .select('*', { count: 'exact', head: true })
+            .eq('discussion_id', d.id);
+          return { ...d, replies: count || 0 };
+        })
+      );
+    } catch (err) { console.error('Error fetching top discussions:', err.message); }
 
-    if (discussionsDataError) throw discussionsDataError;
+    // Recent activity (last 20)
+    let formattedActivity = [];
+    try {
+      const { data: recentActivity } = await supabase
+        .from('epanen_activity_logs')
+        .select(`
+          *,
+          user:epanen_users(name)
+        `)
+        .order('created_at', { ascending: false })
+        .limit(20);
 
-    // Get reply counts for each discussion
-    const discussionsWithReplies = await Promise.all(
-      (discussionsData || []).map(async (d) => {
-        const { count } = await supabase
-          .from('epanen_replies')
-          .select('*', { count: 'exact', head: true })
-          .eq('discussion_id', d.id);
-        return {
-          ...d,
-          replies: count || 0
-        };
-      })
-    );
+      formattedActivity = (recentActivity || []).map(log => ({
+        ...log,
+        user_name: log.user?.name || 'System'
+      }));
+    } catch (err) { console.error('Error fetching recent activity:', err.message); }
 
     res.json({
       success: true,
