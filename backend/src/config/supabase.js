@@ -188,6 +188,16 @@ const schemas = {
     );
     CREATE INDEX IF NOT EXISTS idx_wa_links_user_id ON epanen_user_whatsapp_links(user_id);
     CREATE INDEX IF NOT EXISTS idx_wa_links_identity ON epanen_user_whatsapp_links(wa_identity);
+  `,
+
+  chat_history: `
+    CREATE TABLE IF NOT EXISTS chat_history (
+      id SERIAL PRIMARY KEY,
+      session_id VARCHAR(255) NOT NULL,
+      message JSONB NOT NULL,
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_chat_history_session_id ON chat_history(session_id);
   `
 };
 

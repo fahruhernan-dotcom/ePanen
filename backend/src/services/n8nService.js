@@ -155,8 +155,10 @@ class N8nService {
       if (!userId) {
         console.log('🔍 Attempting auto-link for:', whatsappNumber);
 
-        // Normalize: remove '62' or '+' and leading '0' to find common digits
-        const cleanNumber = whatsappNumber.replace(/^\+?62|^0/, '');
+        // For auto-linking, we need the raw digits to match with user profiles
+        // Handle WAHA JID format: 6282133859391:56@s.whatsapp.net -> 6282133859391
+        const rawNumber = whatsappNumber.split('@')[0].split(':')[0];
+        const cleanNumber = rawNumber.replace(/^\+?62|^0/, '');
 
         // Search in epanen_users for a matching phone
         const { data: matchedUsers } = await supabase.from('epanen_users')
@@ -183,20 +185,44 @@ class N8nService {
         if (user) userName = user.name;
       }
 
-      // 3. Save WhatsApp message to chat history
+      // 2. Extract clean text for Web Dashboard while preserving JSON for logs
+      let rawContent = message || payload; // payload contains the full object if n8n sends it
+      let displayText = "";
+      let fullJson = {};
+
+      if (typeof rawContent === 'object') {
+        fullJson = rawContent;
+        // Extract content if it exists
+        let contentStr = rawContent.content || JSON.stringify(rawContent);
+        // Smart extract: if it follows "Pesan user saat ini: '...'" pattern
+        const match = contentStr.match(/Pesan user saat ini: "([^"]+)"/i);
+        displayText = match ? match[1] : contentStr;
+      } else {
+        displayText = String(rawContent);
+        fullJson = { role: 'user', text: displayText, timestamp: new Date().toISOString() };
+      }
+
+      // 3. Save to epanen_chat_messages (Web Dashboard - Clean Text)
       const chatMessage = await supabaseQuery.insert('epanen_chat_messages', {
-        user_id: userId || 0, // 0 or specific unassigned ID if no user linked
+        user_id: userId || 0,
         customer_id: customer.id,
         role: 'user',
-        message: message,
+        message: displayText,
         category: 'whatsapp'
       });
+
+      // 4. ALSO Save to specialized WhatsApp chat_history table (Full JSON)
+      await supabaseQuery.insert('chat_history', {
+        session_id: whatsappNumber,
+        message: fullJson
+      }).catch(err => console.warn('⚠️ chat_history save failed:', err.message));
 
       return {
         success: true,
         user_id: userId,
         customer_id: customer.id,
-        message_id: chatMessage.id
+        message_id: chatMessage.id,
+        clean_text: displayText
       };
     } catch (error) {
       console.error('Error handling WhatsApp message:', error);
@@ -233,6 +259,26 @@ class N8nService {
         category: aiResult.category
       });
 
+      // Get user's primary or latest WhatsApp identity from customer table
+      const customers = await supabaseQuery.many('customer', {
+        where: [{ column: 'user_id', value: userId }],
+        limit: 1
+      });
+
+      const targetIdentity = customers.data?.[0]?.['No Whatapps'];
+
+      // ALSO Save AI Response to specialized WhatsApp chat_history table
+      if (targetIdentity) {
+        await supabaseQuery.insert('chat_history', {
+          session_id: targetIdentity,
+          message: {
+            role: 'assistant',
+            text: aiResult.response,
+            timestamp: new Date().toISOString()
+          }
+        }).catch(err => console.warn('⚠️ chat_history AI save failed:', err.message));
+      }
+
       // Update Memory Keys
       if (aiResult.memory) {
         for (const [key, value] of Object.entries(aiResult.memory)) {
@@ -254,14 +300,6 @@ class N8nService {
           });
         }
       }
-
-      // Get user's primary or latest WhatsApp identity from customer table
-      const customers = await supabaseQuery.many('customer', {
-        where: [{ column: 'user_id', value: userId }],
-        limit: 1
-      });
-
-      const targetIdentity = customers.data?.[0]?.['No Whatapps'];
 
       // Send response back to WhatsApp via n8n
       if (targetIdentity) {

@@ -5,39 +5,62 @@ import n8nService from '../services/n8nService.js';
  * Handles incoming data from external services (n8n, WAHA, etc.)
  */
 
-// Handle incoming WhatsApp message (The new mapping-based logic)
+// Handle incoming WhatsApp message (Universal Mapping Logic)
 export const handleWhatsAppWebhook = async (req, res) => {
   try {
     const payload = req.body;
-    console.log('📨 WhatsApp Webhook Received:', JSON.stringify(payload, null, 2));
+    console.log('📨 Incoming Webhook Payload:', JSON.stringify(payload, null, 2));
 
-    if (!payload.wa_identity || !payload.message) {
-      return res.status(400).json({
+    // Universal mapping for Identity (supports multiple common field names)
+    const wa_identity = payload.wa_identity ||
+      payload.phone ||
+      payload.from ||
+      payload.sender ||
+      payload.remoteJid ||
+      payload.chatId;
+
+    // Universal mapping for Message Content
+    const message = payload.message ||
+      payload.text ||
+      payload.chatInput ||
+      payload.body ||
+      payload.content ||
+      (payload.data && (payload.data.body || payload.data.text));
+
+    // Universal mapping for PushName
+    const pushName = payload.pushName ||
+      payload.senderName ||
+      payload.name ||
+      payload.fromName ||
+      (payload.data && payload.data.pushName);
+
+    if (!wa_identity || !message) {
+      console.warn('⚠️ Webhook missing required fields (identity/message). Received:', Object.keys(payload));
+      return res.status(200).json({
         success: false,
-        message: 'Payload must include wa_identity (phone) and message'
+        message: 'Missing identity or message content'
       });
     }
 
-    const result = await n8nService.handleIncomingWhatsAppMessage(payload);
+    // Adapt payload for the service
+    const adaptedPayload = {
+      wa_identity,
+      message,
+      pushName: pushName || 'User WhatsApp'
+    };
 
-    if (result.success) {
-      return res.status(200).json({
-        success: true,
-        message: 'Message processed and synced',
-        data: result
-      });
-    } else {
-      console.warn('⚠️ Webhook process result:', result.message);
-      return res.status(200).json({
-        success: false,
-        message: result.message || 'Message received but not mapped to a user'
-      });
-    }
+    const result = await n8nService.handleIncomingWhatsAppMessage(adaptedPayload);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Processing completed',
+      synced: result.success
+    });
   } catch (error) {
     console.error('❌ Webhook Controller Error:', error);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
-      message: 'Internal server error processing webhook'
+      message: 'Error processing webhook'
     });
   }
 };

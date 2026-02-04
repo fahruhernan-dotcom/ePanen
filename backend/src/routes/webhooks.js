@@ -4,7 +4,8 @@ import { receiveFromN8n, sendToN8n, webhookHealth } from '../controllers/webhook
 const router = express.Router();
 
 // Webhook endpoint for n8n to send data to ePanen
-router.post('/n8n/incoming', receiveFromN8n);
+import { handleWhatsAppWebhook } from '../controllers/webhookController.js';
+router.post('/n8n/incoming', handleWhatsAppWebhook);
 
 // Endpoint for ePanen to send data to n8n
 router.post('/n8n/send', sendToN8n);

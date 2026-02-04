@@ -196,3 +196,74 @@ export const getChatStats = async (req, res) => {
     });
   }
 };
+
+/**
+ * Get native WhatsApp chat history (Admin)
+ */
+export const getWhatsAppChatHistory = async (req, res) => {
+  try {
+    const { sessionId } = req.params; // This will be the phone number
+    const { limit = 50 } = req.query;
+
+    const { data: logs, error } = await supabase
+      .from('chat_history')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: true })
+      .limit(limit);
+
+    if (error) throw error;
+
+    res.json({
+      success: true,
+      data: {
+        sessionId,
+        logs: logs || []
+      }
+    });
+  } catch (error) {
+    console.error('Get WhatsApp chat history error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat mengambil riwayat WhatsApp'
+    });
+  }
+};
+
+/**
+ * Get all available WhatsApp sessions (Admin)
+ */
+export const getWhatsAppSessions = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('chat_history')
+      .select('session_id, created_at')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    // Unique sessions with their last message time
+    const sessionsMap = {};
+    (data || []).forEach(item => {
+      if (!sessionsMap[item.session_id]) {
+        sessionsMap[item.session_id] = item.created_at;
+      }
+    });
+
+    const sessions = Object.entries(sessionsMap).map(([sessionId, lastActive]) => ({
+      sessionId,
+      lastActive
+    }));
+
+    res.json({
+      success: true,
+      data: { sessions }
+    });
+  } catch (error) {
+    console.error('Get WhatsApp sessions error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat mengambil sesi WhatsApp'
+    });
+  }
+};

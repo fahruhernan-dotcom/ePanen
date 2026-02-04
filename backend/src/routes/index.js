@@ -84,6 +84,8 @@ router.delete('/admin/users/:id', authenticate, isAdmin, dashboardController.del
 router.get('/admin/chatlogs', authenticate, isAdmin, chatController.getAllChatLogs);
 router.get('/admin/chatlogs/user/:userId', authenticate, isAdmin, chatController.getUserChatHistory);
 router.get('/admin/chatlogs/stats', authenticate, isAdmin, chatController.getChatStats);
+router.get('/admin/chatlogs/whatsapp', authenticate, isAdmin, chatController.getWhatsAppSessions);
+router.get('/admin/chatlogs/whatsapp/:sessionId', authenticate, isAdmin, chatController.getWhatsAppChatHistory);
 
 // WhatsApp Management (admin only)
 import * as adminWhatsAppController from '../controllers/admin/whatsappController.js';
