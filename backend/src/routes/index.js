@@ -25,6 +25,7 @@ router.post('/auth/login', validate, validationRules.login, authController.login
 // Auth routes (protected)
 router.get('/auth/me', authenticate, authController.getProfile);
 router.put('/auth/profile', authenticate, authController.updateProfile);
+router.put('/auth/change-password', authenticate, validate, validationRules.changePassword, authController.changePassword);
 router.post('/auth/logout', authenticate, authController.logout);
 
 // Chat/Q&A routes (user only)
@@ -52,6 +53,7 @@ router.get('/market/prices', optionalAuth, marketController.getCommodityPrices);
 router.get('/market/prices/:name/trends', optionalAuth, marketController.getPriceTrends);
 
 // Market management (admin only)
+router.get('/admin/market/prices', authenticate, isAdmin, marketController.getCommodityPrices);
 router.post('/admin/market/prices', authenticate, isAdmin, validate, validationRules.updatePrice, marketController.updateCommodityPrice);
 router.delete('/admin/market/prices/:id', authenticate, isAdmin, marketController.deleteCommodityPrice);
 

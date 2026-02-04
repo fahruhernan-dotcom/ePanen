@@ -292,6 +292,72 @@ export const updateProfile = async (req, res) => {
 };
 
 /**
+ * Change Password
+ */
+export const changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.user.id;
+    const userType = req.user.type; // 'admin' or 'user'
+
+    const table = userType === 'admin' ? 'epanen_admins' : 'epanen_users';
+
+    // Get current user data (including password)
+    const user = await supabaseQuery.one(table, {
+      where: [{ column: 'id', value: userId }]
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Pengguna tidak ditemukan'
+      });
+    }
+
+    // Verify old password
+    const isValidPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!isValidPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password lama salah'
+      });
+    }
+
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    await supabaseQuery.update(
+      table,
+      {
+        password: hashedNewPassword,
+        updated_at: new Date().toISOString()
+      },
+      { where: [{ column: 'id', value: userId }] }
+    );
+
+    // Log activity
+    await supabaseQuery.insert('epanen_activity_logs', {
+      user_id: userId,
+      action: 'change_password',
+      entity_type: userType,
+      entity_id: userId
+    });
+
+    res.json({
+      success: true,
+      message: 'Password berhasil diperbarui'
+    });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat memperbarui password'
+    });
+  }
+};
+
+/**
  * Logout
  */
 export const logout = async (req, res) => {

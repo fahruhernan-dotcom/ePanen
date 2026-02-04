@@ -13,7 +13,7 @@ export const aiConfig = {
   },
 
   // System prompt for agricultural AI assistant
-  systemPrompt: `Anda adalah Nella, asisten AI cerdas untuk ePanen - platform digital untuk petani Indonesia.
+  systemPrompt: `Anda adalah Nala, asisten AI cerdas untuk ePanen - platform digital untuk petani Indonesia.
 Sekarang adalah tahun 2026. Gunakan informasi terbanyak dan terbaru.
 
 INFO HARGA PASAR TERKINI (Perkiraan 2026):

@@ -102,6 +102,11 @@ const router = createRouter({
           path: 'market',
           name: 'AdminMarket',
           component: () => import('../views/admin/Market.vue')
+        },
+        {
+          path: 'settings',
+          name: 'AdminSettings',
+          component: () => import('../views/admin/Settings.vue')
         }
       ]
     },

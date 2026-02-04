@@ -4,7 +4,7 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
       <div>
         <h1 class="text-3xl font-black text-gray-800 tracking-tight">Chat Logs</h1>
-        <p class="text-gray-500 font-medium tracking-wide">Monitor semua percakapan farmer dengan Nella AI</p>
+        <p class="text-gray-500 font-medium tracking-wide">Monitor semua percakapan farmer dengan Nala AI</p>
       </div>
       <div class="bg-epanen-primary bg-opacity-10 px-4 py-2 rounded-2xl border border-epanen-primary border-opacity-20 flex items-center">
         <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse mr-2"></div>
@@ -48,7 +48,7 @@
       <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all border-l-4 border-l-purple-500">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Respon Nella</p>
+            <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Respon Nala</p>
             <h3 class="text-3xl font-black text-purple-600">{{ getUserCount('assistant') }}</h3>
           </div>
           <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center">

@@ -13,7 +13,7 @@
         </div>
         <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight mb-4">Profil Saya</h1>
         <p class="text-emerald-100/70 text-lg font-bold max-w-xl leading-relaxed">
-          Kelola informasi identitas Anda dan pantau riwayat interaksi cerdas bersama Nella AI.
+          Kelola informasi identitas Anda dan pantau riwayat interaksi cerdas bersama Nala AI.
         </p>
       </div>
     </div>
@@ -136,13 +136,88 @@
             </div>
           </form>
         </div>
+    
+        <!-- Change Password Section -->
+        <div class="bg-white dark:bg-[#0D140D] rounded-[3rem] p-10 md:p-14 border-2 border-gray-100 dark:border-white/5 shadow-xl">
+          <div class="flex items-center justify-between mb-12">
+            <h3 class="text-2xl font-black text-gray-900 dark:text-white">Keamanan Akun</h3>
+            <span class="w-12 h-1 bg-epanen-primary/20 rounded-full"></span>
+          </div>
+
+          <form @submit.prevent="handleChangePassword" class="space-y-8">
+            <div class="grid md:grid-cols-2 gap-8">
+              <div class="space-y-4">
+                <label class="block text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-2">Password Lama</label>
+                <div class="relative">
+                  <InputText
+                    v-model="passwordForm.oldPassword"
+                    type="password"
+                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 !border-0 focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <svg class="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2.5"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <label class="block text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-2">Password Baru</label>
+                <div class="relative">
+                   <InputText
+                    v-model="passwordForm.newPassword"
+                    type="password"
+                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 !border-0 focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold"
+                    placeholder="Min. 6 karakter"
+                    required
+                  />
+                  <svg class="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M15 7a2 2 0 012 2m-5 0h.01M19 12a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2.5"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <label class="block text-xs font-black text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-2">Konfirmasi Password Baru</label>
+                <div class="relative">
+                   <InputText
+                    v-model="passwordForm.confirmPassword"
+                    type="password"
+                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 !border-0 focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold"
+                    placeholder="Ulangi password baru"
+                    required
+                  />
+                  <svg class="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2.5"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-6">
+              <Button
+                type="submit"
+                :loading="changingPassword"
+                class="!bg-epanen-dark !text-white !px-12 !py-5 !rounded-3xl !font-black !w-full md:!w-auto !shadow-xl hover:!scale-105 transition-all"
+              >
+                <template #default>
+                   <span class="flex items-center">
+                     Perbarui Password
+                     <svg class="w-5 h-5 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="3"/></svg>
+                   </span>
+                </template>
+              </Button>
+            </div>
+          </form>
+        </div>
 
         <!-- Professional Chat History -->
         <div class="bg-white dark:bg-[#0D140D] rounded-[3rem] p-10 border-2 border-gray-100 dark:border-white/5 shadow-xl overflow-hidden">
           <div class="flex items-center justify-between mb-10">
             <div>
               <h3 class="text-2xl font-black text-gray-900 dark:text-white">Log Interaksi</h3>
-              <p class="text-sm text-muted dark:text-gray-500 font-bold">Pantau pertanyaan terakhir Anda ke Nella AI</p>
+              <p class="text-sm text-muted dark:text-gray-500 font-bold">Pantau pertanyaan terakhir Anda ke Nala AI</p>
             </div>
             <button
               @click="clearHistory"
@@ -170,7 +245,7 @@
             >
               <div class="flex items-start justify-between mb-3">
                  <span :class="['text-[10px] font-black uppercase tracking-[0.3em]', msg.role === 'user' ? 'text-epanen-primary dark:text-epanen-accent' : 'text-gray-400']">
-                   {{ msg.role === 'user' ? 'Pertanyaan Anda' : 'Respon Nella AI' }}
+                   {{ msg.role === 'user' ? 'Pertanyaan Anda' : 'Respon Nala AI' }}
                  </span>
                  <span class="text-[9px] font-black text-gray-400 uppercase">{{ formatTime(msg.created_at) }}</span>
               </div>
@@ -210,6 +285,13 @@ const chatHistory = ref([]);
 const stats = ref({
   questions: 0,
   discussions: 0
+});
+
+const changingPassword = ref(false);
+const passwordForm = ref({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
 });
 
 const loadProfileData = async () => {

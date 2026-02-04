@@ -24,10 +24,23 @@ export const getCommodityPrices = async (req, res) => {
     }
 
     const { data: prices, error } = await query.order('date', { ascending: false });
-
     if (error) throw error;
 
-    // Group by commodity name for latest prices
+    // If it's an admin request (checked via the route but we can also check req.path or a query param)
+    // or if we explicitly want all prices, skip grouping.
+    // In this case, since we added /admin/market/prices, we should probably return everything for that route.
+    const isAdminView = req.path.includes('/admin/');
+
+    if (isAdminView) {
+      return res.json({
+        success: true,
+        data: {
+          prices: prices || []
+        }
+      });
+    }
+
+    // Group by commodity name for latest prices (for public/farmer view)
     const latestPrices = {};
     (prices || []).forEach(price => {
       if (!latestPrices[price.name] || new Date(price.date) > new Date(latestPrices[price.name].date)) {

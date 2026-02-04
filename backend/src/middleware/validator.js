@@ -88,5 +88,12 @@ export const validationRules = {
     body('unit')
       .trim()
       .notEmpty().withMessage('Satuan tidak boleh kosong')
+  ],
+
+  changePassword: [
+    body('oldPassword')
+      .notEmpty().withMessage('Password lama tidak boleh kosong'),
+    body('newPassword')
+      .isLength({ min: 6 }).withMessage('Password baru minimal 6 karakter')
   ]
 };

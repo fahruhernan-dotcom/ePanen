@@ -12,10 +12,8 @@
       <div class="container-custom relative">
         <div class="flex items-center justify-between h-16 md:h-20">
           <router-link to="/" class="flex items-center space-x-3 group">
-            <div class="w-10 h-10 md:w-12 md:h-12 bg-epanen-primary rounded-xl flex items-center justify-center shadow-lg group-hover:bg-epanen-dark transition-all">
-              <svg class="w-6 h-6 md:w-7 md:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2C7.5 2 4 6.5 4 12c0 5.5 3.5 10 8 10s8-4.5 8-10c0-5.5-3.5-10-8-10zm0 18c-3.5 0-6-3.5-6-8s2.5-8 6-8 6 3.5 6 8-2.5 8-6 8z"/>
-              </svg>
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all overflow-hidden border border-gray-100 dark:border-white/5">
+              <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-1.5" />
             </div>
             <div>
               <span class="text-xl md:text-2xl font-black tracking-tight text-gray-900 dark:text-white">ePanen</span>
@@ -55,8 +53,8 @@
                 @click="showMenu = !showMenu"
                 class="flex items-center space-x-2 bg-white dark:bg-white/5 px-2 py-1.5 md:px-3 md:py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 transition-all border border-gray-100 dark:border-white/5"
               >
-                <div class="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-br from-epanen-primary to-epanen-secondary rounded-lg flex items-center justify-center text-white font-black text-sm shadow-md">
-                   {{ authStore.user?.name?.charAt(0).toUpperCase() || 'P' }}
+                <div class="w-8 h-8 md:w-9 md:h-9 bg-white rounded-lg flex items-center justify-center text-white font-black text-sm shadow-md overflow-hidden border border-gray-100 dark:border-white/5">
+                   <img src="@/assets/images/logo.png" alt="Profile" class="w-full h-full object-contain p-1" />
                 </div>
                 <div class="hidden md:block text-left mr-1">
                    <p class="text-xs font-black tracking-tight text-gray-900 dark:text-white">{{ authStore.user?.name || 'Petani' }}</p>
@@ -151,10 +149,8 @@
         <div :class="['grid grid-cols-1 md:grid-cols-4 gap-24 border-b pb-20 mb-16', themeStore.isDarkMode ? 'border-white/10' : 'border-gray-100']">
           <div class="space-y-12 col-span-1 md:col-span-2">
             <div class="flex items-center space-x-4">
-              <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
-                <svg class="w-8 h-8 text-epanen-accent" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M12 2v20c-4.4 0-8-3.6-8-8s3.6-8 8-8zM12 2c4.4 0 8 3.6 8 8s-3.6 8-8 8V2z"/>
-                </svg>
+              <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-xl overflow-hidden border border-gray-100 dark:border-white/5">
+                <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
               </div>
               <div>
                 <h3 class="text-3xl font-black text-gray-900 dark:text-white">ePanen</h3>
@@ -169,7 +165,7 @@
           <div class="space-y-10">
             <h4 class="text-lg font-black uppercase tracking-widest text-epanen-accent border-l-4 border-epanen-accent pl-4">Solusi</h4>
             <nav class="flex flex-col space-y-8 font-bold text-emerald-50/60 text-sm">
-               <router-link to="/chat" class="hover:text-epanen-accent transition-colors">Nella AI Assistant</router-link>
+               <router-link to="/chat" class="hover:text-epanen-accent transition-colors">Nala AI Assistant</router-link>
                <router-link to="/prices" class="hover:text-epanen-accent transition-colors">Info Harga Pasar</router-link>
                <router-link to="/articles" class="hover:text-epanen-accent transition-colors">Literasi Tani</router-link>
                <router-link to="/discussions" class="hover:text-epanen-accent transition-colors">Forum Komunitas</router-link>
@@ -218,7 +214,7 @@ const menuRef = ref(null);
 
 const navLinks = [
   { to: '/', label: 'Beranda', iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>' },
-  { to: '/chat', label: 'Nella AI', iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>' },
+  { to: '/chat', label: 'Nala AI', iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>' },
   { to: '/articles', label: 'Wawasan', iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>' },
   { to: '/prices', label: 'Harga', iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' },
   { to: '/discussions', label: 'Forum', iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>' },

@@ -27,7 +27,7 @@
 
             <div class="flex flex-wrap gap-6 pt-2">
               <router-link to="/chat" class="px-10 py-5 bg-epanen-primary text-white rounded-[2rem] font-black shadow-2xl hover:bg-epanen-dark transition-all transform hover:-translate-y-2 premium-shadow flex items-center group">
-                Konsultasi Nella AI
+                Konsultasi Nala AI
                 <svg class="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -63,7 +63,7 @@
                     </svg>
                   </div>
                   <div>
-                    <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em]">Nella AI Pro</p>
+                    <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em]">Nala AI Pro</p>
                     <p class="text-lg font-black text-gray-900 dark:text-white leading-tight">Analisis Lahan Real-Time Aktif</p>
                   </div>
                 </div>
@@ -102,7 +102,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
             </div>
-            <h3 class="text-2xl font-black text-main dark:text-white mb-4">Nella AI</h3>
+            <h3 class="text-2xl font-black text-main dark:text-white mb-4">Nala AI</h3>
             <p class="text-muted dark:text-emerald-100 font-bold leading-relaxed mb-8">Konsultasi cerdas 24 jam untuk menjawab keluhan tanaman Anda.</p>
             <div class="flex items-center text-epanen-primary dark:text-epanen-accent font-black text-sm uppercase tracking-widest group-hover:translate-x-2 transition-transform">
               Mulai Tanya
@@ -191,7 +191,7 @@
               Dan <span class="text-epanen-accent underline decoration-epanen-primary/30">Penyakit?</span>
             </h2>
             <p class="text-xl text-emerald-50/70 font-bold leading-relaxed max-w-xl">
-              Nella AI dapat mengenali gejala secara presisi dan memberikan rekomendasi penanganan berbasis sains pertanian secara instan.
+              Nala AI dapat mengenali gejala secara presisi dan memberikan rekomendasi penanganan berbasis sains pertanian secara instan.
             </p>
             <div class="flex flex-col sm:flex-row gap-5">
                <div class="bg-white/10 backdrop-blur-xl px-8 py-4 rounded-3xl border border-white/20 text-white font-black flex items-center shadow-lg">
@@ -212,7 +212,7 @@
              <div class="absolute inset-0 bg-gradient-to-r from-gray-900 dark:from-[#0D140D] via-transparent to-transparent z-10 hidden lg:block"></div>
              <img 
                src="/src/assets/images/ai-avatar.png" 
-               alt="Nella AI Robot" 
+               alt="Nala AI Robot" 
                class="absolute h-full w-full object-cover object-[center_top] lg:object-center transform group-hover:scale-105 transition-transform duration-[4s]" 
              />
           </div>

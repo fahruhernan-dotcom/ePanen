@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-green-50 to-amber-50 flex">
+  <div class="h-screen bg-gradient-to-b from-green-50 to-amber-50 flex overflow-hidden">
     <!-- Sidebar -->
-    <aside class="w-72 min-w-[18rem] flex-shrink-0 bg-gradient-to-b from-epanen-primary via-epanen-secondary to-epanen-primary text-white fixed h-full shadow-2xl overflow-hidden z-20 transition-all duration-300">
+    <aside class="w-72 min-w-[18rem] flex-shrink-0 bg-gradient-to-b from-epanen-primary via-epanen-secondary to-epanen-primary text-white h-full shadow-2xl overflow-hidden z-20 relative transition-all duration-300">
       <!-- Decorative farm pattern -->
       <div class="absolute inset-0 opacity-10">
         <svg class="w-full h-full" viewBox="0 0 300 800" preserveAspectRatio="none">
@@ -23,11 +23,8 @@
         <!-- Logo Section -->
         <div class="p-8 border-b border-white border-opacity-10">
           <div class="flex items-center space-x-4 mb-2">
-            <div class="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-inner">
-              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C7.5 2 4 6.5 4 12c0 5.5 3.5 10 8 10s8-4.5 8-10c0-5.5-3.5-10-8-10zm0 18c-3.5 0-6-3.5-6-8s2.5-8 6-8 6 3.5 6 8-2.5 8-6 8z"/>
-                <path d="M12 6c-1.5 0-2.5 1.5-2.5 3s1 3 2.5 3 2.5-1.5 2.5-3-1-3-2.5-3z"/>
-              </svg>
+            <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-inner overflow-hidden">
+              <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
             </div>
             <div>
               <h1 class="text-2xl font-black tracking-tight">Nala Office</h1>
@@ -109,6 +106,19 @@
             <span class="text-sm uppercase tracking-widest font-bold">Market Prices</span>
             <div class="absolute left-0 w-1.5 h-8 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0"></div>
           </router-link>
+
+          <router-link
+            to="/admin/settings"
+            class="flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-white hover:bg-opacity-10 transition-all group relative overflow-hidden"
+            active-class="bg-white bg-opacity-20 shadow-lg text-white font-black scale-105"
+          >
+            <svg class="w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="text-sm uppercase tracking-widest font-bold">Settings</span>
+            <div class="absolute left-0 w-1.5 h-8 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0"></div>
+          </router-link>
         </nav>
 
         <!-- Logout Button -->
@@ -131,60 +141,52 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
-    <div class="ml-72 flex-1 flex flex-col transition-all duration-300">
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col min-w-0 transition-all duration-300">
       <!-- Top Header -->
-      <header class="bg-white shadow-sm sticky top-0 z-[1000]">
+      <header class="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 z-10">
         <div class="px-8 py-4 flex items-center justify-between">
           <div>
-            <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+            <h2 class="text-xl font-black text-gray-800 flex items-center tracking-tight">
               <svg class="w-5 h-5 mr-2 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               {{ pageTitle }}
             </h2>
           </div>
-          <div class="flex items-center space-x-4">
-            <div class="text-right">
-              <p class="text-sm font-medium text-gray-800">{{ authStore.user?.username }}</p>
-              <p class="text-xs text-epanen-secondary flex items-center justify-end">
-                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C8 6 4 10 4 14c0 4 3.5 8 8 8s8-4 8-8c0-4-4-8-8-12z"/>
-                </svg>
-                Administrator
-              </p>
+          <div class="flex items-center space-x-6">
+            <div class="text-right hidden sm:block">
+              <p class="text-sm font-black text-gray-900 leading-none">{{ authStore.user?.username }}</p>
+              <p class="text-[10px] text-epanen-primary font-black uppercase tracking-widest mt-1">Administrator</p>
             </div>
-            <div class="w-10 h-10 bg-gradient-to-br from-epanen-secondary to-epanen-accent rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-              {{ authStore.user?.username?.charAt(0).toUpperCase() }}
+            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg overflow-hidden border border-gray-100">
+              <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-1.5" />
             </div>
           </div>
         </div>
       </header>
 
-      <!-- Page Content -->
-      <main class="p-8">
-        <router-view />
-      </main>
+      <!-- Scrollable Area -->
+      <div class="flex-1 overflow-y-auto custom-scrollbar bg-[#F9FBF9]">
+        <main class="p-8 max-w-[1600px] mx-auto min-h-full flex flex-col">
+          <router-view />
 
-      <!-- Footer -->
-      <footer class="bg-white border-t mt-auto">
-        <div class="px-8 py-4">
-          <div class="flex flex-col md:flex-row items-center justify-between space-y-2 md:space-y-0">
-            <p class="text-sm text-gray-500 flex items-center">
-              <svg class="w-4 h-4 mr-2 text-epanen-primary" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C8 6 4 10 4 14c0 4 3.5 8 8 8s8-4 8-8c0-4-4-8-8-12z"/>
-              </svg>
-              © {{ new Date().getFullYear() }} ePanen - Nala Office
-            </p>
-            <p class="text-sm font-semibold text-epanen-secondary flex items-center">
-              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-              "Yakin Kita Bisa"
-            </p>
-          </div>
-        </div>
-      </footer>
+          <!-- Footer (Inside scrollable to feel like part of content) -->
+          <footer class="mt-auto pt-16 pb-8">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 text-gray-400">
+              <p class="text-xs font-bold uppercase tracking-widest flex items-center">
+                <svg class="w-4 h-4 mr-2 text-epanen-primary opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8 6 4 10 4 14c0 4 3.5 8 8 8s8-4 8-8c0-4-4-8-8-12z"/>
+                </svg>
+                © {{ new Date().getFullYear() }} ePanen Nala Office
+              </p>
+              <p class="text-[10px] font-black text-epanen-secondary uppercase tracking-[0.2em]">
+                Yakin Kita Bisa
+              </p>
+            </div>
+          </footer>
+        </main>
+      </div>
     </div>
   </div>
 </template>

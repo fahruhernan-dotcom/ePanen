@@ -15,7 +15,7 @@
                 <img src="/src/assets/images/ai-avatar.png" class="w-8 h-8 object-contain" />
              </div>
              <div>
-                <h1 class="text-lg md:text-xl font-black text-gray-900 dark:text-white leading-none">Nella AI</h1>
+                <h1 class="text-lg md:text-xl font-black text-gray-900 dark:text-white leading-none">Nala AI</h1>
                 <p class="text-[10px] md:text-xs text-epanen-primary dark:text-epanen-accent font-black uppercase tracking-widest mt-1">Pakar Pertanian Digital</p>
              </div>
           </div>
@@ -50,7 +50,7 @@
           <div v-if="messages.length === 0 && !isLoading" class="text-center py-20 space-y-8 animate-slide-up">
             <div class="relative inline-block animate-float">
                <div class="w-32 h-32 md:w-48 md:h-48 bg-white/70 shadow-2xl dark:bg-emerald-950/20 rounded-[4rem] p-4 mx-auto mb-6 relative overflow-hidden backdrop-blur-xl border border-white/20">
-                  <img src="/src/assets/images/ai-avatar.png" alt="Nella" class="w-full h-full object-contain filter drop-shadow-2xl" />
+                  <img src="/src/assets/images/ai-avatar.png" alt="Nala" class="w-full h-full object-contain filter drop-shadow-2xl" />
                </div>
                <div class="absolute -bottom-2 -right-2 bg-white dark:bg-epanen-dark p-3 rounded-2xl shadow-lg border border-gray-100 dark:border-white/5">
                   <span class="flex h-4 w-4 relative">
@@ -61,7 +61,7 @@
             </div>
 
             <div class="space-y-4">
-              <h2 class="text-4xl md:text-6xl font-black text-gray-900 dark:text-gray-100 tracking-tight italic">Halo, saya Nella! 🌾</h2>
+              <h2 class="text-4xl md:text-6xl font-black text-gray-900 dark:text-gray-100 tracking-tight italic">Halo, saya Nala! 🌾</h2>
               <p class="text-gray-600 dark:text-gray-300 font-black max-w-xl mx-auto text-xl leading-relaxed">Pakar pertanian Anda siap membantu. Tanyakan apa saja tentang teknik tanam, hama, hingga harga pasar terbaru.</p>
             </div>
 
@@ -132,7 +132,7 @@
                     <div class="w-2 h-2 bg-epanen-primary rounded-full animate-bounce" style="animation-delay: 200ms"></div>
                     <div class="w-2 h-2 bg-epanen-primary rounded-full animate-bounce" style="animation-delay: 400ms"></div>
                  </div>
-                 <span class="text-[10px] font-black text-epanen-primary dark:text-epanen-accent uppercase tracking-[0.2em]">Nella sedang berpikir...</span>
+                 <span class="text-[10px] font-black text-epanen-primary dark:text-epanen-accent uppercase tracking-[0.2em]">Nala sedang berpikir...</span>
               </div>
             </div>
           </div>
@@ -150,7 +150,7 @@
             <textarea
               v-model="newMessage"
               rows="1"
-              placeholder="Tanya Nella tentang pertanian..."
+               placeholder="Tanya Nala tentang pertanian..."
               class="flex-1 bg-transparent border-none focus:ring-0 px-8 py-5 text-base sm:text-lg font-black text-gray-800 dark:text-gray-100 placeholder-gray-500 resize-none max-h-40 min-h-[64px] custom-scrollbar"
               :disabled="isLoading"
               @keydown.enter.prevent="handleEnter"
@@ -274,7 +274,7 @@ const sendMessage = async () => {
     scrollToBottom();
   } catch (error) {
     console.error('Chat error:', error);
-    messages.value.push({ role: 'assistant', message: 'Koneksi terganggu. Nella butuh waktu lebih lama, silakan ulangi pesan Anda.', created_at: new Date().toISOString() });
+    messages.value.push({ role: 'assistant', message: 'Koneksi terganggu. Nala butuh waktu lebih lama, silakan ulangi pesan Anda.', created_at: new Date().toISOString() });
   } finally {
     isLoading.value = false;
   }

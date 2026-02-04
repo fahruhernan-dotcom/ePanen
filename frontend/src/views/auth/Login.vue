@@ -71,11 +71,8 @@
     <div class="max-w-md w-full relative z-10">
       <!-- Logo Section with Animation -->
       <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-3xl shadow-2xl mb-4 transform hover:scale-105 transition-transform">
-          <svg class="w-10 h-10 text-epanen-primary" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C7.5 2 4 6.5 4 12c0 5.5 3.5 10 8 10s8-4.5 8-10c0-5.5-3.5-10-8-10zm0 18c-3.5 0-6-3.5-6-8s2.5-8 6-8 6 3.5 6 8-2.5 8-6 8z"/>
-            <path d="M12 6c-1.5 0-2.5 1.5-2.5 3s1 3 2.5 3 2.5-1.5 2.5-3-1-3-2.5-3z"/>
-          </svg>
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-3xl shadow-2xl mb-4 transform hover:scale-105 transition-transform overflow-hidden">
+          <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-3" />
         </div>
         <h1 class="text-3xl font-bold text-white mb-1">ePanen</h1>
         <p class="text-sm text-epanen-accent font-medium">Solusi Tani Cerdas</p>
@@ -84,18 +81,16 @@
 
       <!-- Login Card with Glass Effect -->
       <div class="bg-white bg-opacity-95 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white border-opacity-30">
-        <!-- Card Header -->
-        <div class="bg-gradient-to-r from-epanen-primary to-epanen-secondary px-8 py-6">
-          <div class="flex items-center justify-center">
-            <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-            </svg>
-            <h2 class="text-2xl font-bold text-white">Masuk Akun</h2>
+        <div class="p-6 md:p-8">
+          <div class="flex items-center space-x-4 mb-10 group cursor-pointer" @click="router.push('/')">
+            <div class="w-14 h-14 bg-gradient-to-br from-epanen-primary to-epanen-secondary rounded-[1.25rem] flex items-center justify-center shadow-[0_10px_30px_-10px_rgba(45,90,39,0.4)] overflow-hidden group-hover:scale-110 transition-transform duration-500">
+              <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
+            </div>
+            <div>
+              <h1 class="text-2xl font-black text-gray-900 tracking-tighter leading-none">ePanen</h1>
+              <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] mt-1 opacity-60">Digital Modern</p>
+            </div>
           </div>
-          <p class="text-center text-white text-opacity-90 text-sm mt-2">Selamat datang kembali, Petani!</p>
-        </div>
-
-        <div class="p-8">
           <form @submit.prevent="handleLogin" class="space-y-5">
             <!-- Email Field -->
             <div>
@@ -187,7 +182,7 @@
                 <svg class="w-6 h-6 mx-auto mb-1 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                 </svg>
-                <p class="text-xs font-medium text-gray-700">Nella AI 24/7</p>
+                <p class="text-xs font-medium text-gray-700">Nala AI 24/7</p>
               </div>
               <div class="bg-amber-50 rounded-lg p-3">
                 <svg class="w-6 h-6 mx-auto mb-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
