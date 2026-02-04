@@ -104,6 +104,11 @@ const router = createRouter({
           component: () => import('../views/admin/Market.vue')
         },
         {
+          path: 'whatsapp',
+          name: 'AdminWhatsApp',
+          component: () => import('../views/admin/WhatsAppManager.vue')
+        },
+        {
           path: 'settings',
           name: 'AdminSettings',
           component: () => import('../views/admin/Settings.vue')

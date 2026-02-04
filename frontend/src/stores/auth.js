@@ -115,6 +115,14 @@ export const useAuthStore = defineStore('auth', {
 
     isFarmer() {
       return this.user?.role === 'farmer' || this.user?.type === 'user';
+    },
+
+    setAuth(user, token) {
+      this.user = user;
+      this.token = token;
+      this.isAuthenticated = true;
+      localStorage.setItem('epanen_token', token);
+      localStorage.setItem('epanen_user', JSON.stringify(user));
     }
   }
 });

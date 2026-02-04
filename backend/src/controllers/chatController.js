@@ -12,7 +12,7 @@ export const getAllChatLogs = async (req, res) => {
 
     let query = supabase
       .from('epanen_chat_messages')
-      .select('*, epanen_users(name, email)', { count: 'exact' });
+      .select('*, epanen_users(name, email), customer(Nama, "No Whatapps")', { count: 'exact' });
 
     if (userId) {
       query = query.eq('user_id', userId);
@@ -36,11 +36,11 @@ export const getAllChatLogs = async (req, res) => {
 
     if (error) throw error;
 
-    // Flatten user data into messages
+    // Flatten user and customer data into messages
     const flatMessages = (messages || []).map(msg => ({
       ...msg,
-      user_name: msg.epanen_users?.name || null,
-      user_email: msg.epanen_users?.email || null
+      user_name: msg.customer?.Nama || msg.epanen_users?.name || 'Anonymous',
+      user_email: msg.epanen_users?.email || msg.customer?.['No Whatapps'] || null
     }));
 
     res.json({

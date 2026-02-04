@@ -1,123 +1,81 @@
 import n8nService from '../services/n8nService.js';
 
 /**
- * Webhook endpoint for n8n
- * n8n can send WhatsApp messages, events, etc. to ePanen
+ * Webhook Controller
+ * Handles incoming data from external services (n8n, WAHA, etc.)
  */
 
-/**
- * Receive incoming message from n8n (WhatsApp → ePanen Web)
- * POST /api/webhook/n8n/incoming
- */
+// Handle incoming WhatsApp message (The new mapping-based logic)
+export const handleWhatsAppWebhook = async (req, res) => {
+  try {
+    const payload = req.body;
+    console.log('📨 WhatsApp Webhook Received:', JSON.stringify(payload, null, 2));
+
+    if (!payload.wa_identity || !payload.message) {
+      return res.status(400).json({
+        success: false,
+        message: 'Payload must include wa_identity (phone) and message'
+      });
+    }
+
+    const result = await n8nService.handleIncomingWhatsAppMessage(payload);
+
+    if (result.success) {
+      return res.status(200).json({
+        success: true,
+        message: 'Message processed and synced',
+        data: result
+      });
+    } else {
+      console.warn('⚠️ Webhook process result:', result.message);
+      return res.status(200).json({
+        success: false,
+        message: result.message || 'Message received but not mapped to a user'
+      });
+    }
+  } catch (error) {
+    console.error('❌ Webhook Controller Error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error processing webhook'
+    });
+  }
+};
+
+// Original generic handler (restored)
 export const receiveFromN8n = async (req, res) => {
   try {
-    const { type, phone, message, session_id, customer_data } = req.body;
+    const payload = req.body;
+    console.log('📥 Unified Webhook Received:', payload);
 
-    console.log('Received from n8n:', { type, phone, message });
-
-    // Handle different types of messages
-    switch (type) {
-      case 'chat_message':
-      case 'whatsapp_message':
-        // Find user by phone or create/link
-        const result = await n8nService.handleIncomingWhatsAppMessage({
-          phone,
-          message,
-          message_from: customer_data?.name,
-          session_id
-        });
-
-        if (result.success) {
-          // Process with AI and send response back via n8n
-          const aiResult = await n8nService.processWhatsAppChat(
-            result.user_id,
-            message
-          );
-
-          return res.json({
-            success: true,
-            message: 'Message processed and AI response sent',
-            ai_response: aiResult.ai_response
-          });
-        }
-        break;
-
-      case 'customer_created':
-        // Sync customer from WhatsApp to ePanen
-        // TODO: Create user in epanen_users or link to existing customer
-        return res.json({
-          success: true,
-          message: 'Customer synced to ePanen'
-        });
-
-      default:
-        return res.status(400).json({
-          success: false,
-          message: 'Unknown message type'
-        });
-    }
+    // Most n8n payloads will be handled via the specific WhatsApp logic now,
+    // but we'll retain this for other generic n8n integrations.
+    return res.status(200).json({ success: true, message: 'Data received' });
   } catch (error) {
-    console.error('Webhook error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Webhook error',
-      error: error.message
-    });
+    console.error('Webhook receive error:', error);
+    res.status(500).json({ success: false });
   }
 };
 
-/**
- * Send message from ePanen to n8n (for WhatsApp delivery)
- * POST /api/webhook/n8n/send
- */
+// Original sender (restored)
 export const sendToN8n = async (req, res) => {
   try {
-    const { type, data } = req.body;
-
-    let result;
-
-    switch (type) {
-      case 'broadcast':
-        result = await n8nService.broadcastToWhatsApp(
-          data.message,
-          data.recipients
-        );
-        break;
-
-      case 'price_alert':
-        result = await n8nService.sendPriceAlert(data.price_data);
-        break;
-
-      case 'custom':
-        result = await n8nService.sendToWhatsApp(data);
-        break;
-
-      default:
-        return res.status(400).json({
-          success: false,
-          message: 'Unknown type'
-        });
-    }
-
+    const data = req.body;
+    const result = await n8nService.sendToWhatsApp(data);
     res.json(result);
   } catch (error) {
-    console.error('Send to n8n error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to send to n8n',
-      error: error.message
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-/**
- * Health check for webhook
- * GET /api/webhook/health
- */
+// Health check (restored)
 export const webhookHealth = (req, res) => {
-  res.json({
-    status: 'ok',
-    webhook: 'n8n integration',
-    n8n_configured: !!process.env.N8N_WEBHOOK_URL
-  });
+  res.json({ status: 'ok', service: 'webhook-bridge' });
+};
+
+export default {
+  handleWhatsAppWebhook,
+  receiveFromN8n,
+  sendToN8n,
+  webhookHealth
 };

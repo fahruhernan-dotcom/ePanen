@@ -298,3 +298,37 @@ export const updateUserStatus = async (req, res) => {
     });
   }
 };
+
+/**
+ * Delete a user (Admin)
+ */
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Delete user (Related records handled by cascading constraints)
+    const { error } = await supabase
+      .from('epanen_users')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    // Cleanup: Remove reference from customer table if linked
+    await supabase
+      .from('customer')
+      .update({ user_id: null })
+      .eq('user_id', id);
+
+    res.json({
+      success: true,
+      message: 'User berhasil dihapus selamanya'
+    });
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Terjadi kesalahan saat menghapus user'
+    });
+  }
+};

@@ -1,51 +1,84 @@
-# ePanen: Web-n8n-WhatsApp Integration Plan
+# ePanen: Web-n8n-WhatsApp Integration Plan (Technical Deep-Dive)
 
-This document outlines the technical logic for synchronizing the ePanen Web Application with the n8n-powered WhatsApp chatbot using Supabase as the shared backbone.
+This document outlines the exact technical logic for synchronizing the ePanen Web Platform with the n8n-powered WhatsApp chatbot.
 
-## 1. Integration Architecture
+## 1. Core Synchronization Architecture
 
 ```mermaid
-graph TD
-    User((Farmer))
-    WA[WhatsApp / WAHA]
-    Web[ePanen Web App]
-    n8n[n8n Workflow]
-    Supa[(Supabase Database)]
-    AI[OpenRouter AI / Nala]
+sequenceDiagram
+    participant User as Farmer (WhatsApp)
+    participant WAHA as WhatsApp Gateway (WAHA)
+    participant n8n as n8n Logic
+    participant Supa as Supabase (Single Source of Truth)
+    participant Web as ePanen Web Dashboard
 
-    User -- "Chat" --> WA
-    User -- "Interaction" --> Web
-    WA -- "Webhook" --> n8n
-    n8n -- "Insert/Sync" --> Supa
-    Web -- "Insert/Sync" --> Supa
-    n8n -- "Read context/memory" --> Supa
-    Web -- "Read context/memory" --> Supa
-    n8n -- "Ask" --> AI
-    Web -- "Ask" --> AI
-    AI -- "Response" --> n8n
-    AI -- "Response" --> Web
+    User->>WAHA: Send Message
+    WAHA->>n8n: Webhook Trigger
+    n8n->>Supa: Lookup Existing n8n Identity (e.g. customer table)
+    Supa-->>n8n: Identity Found
+    n8n->>Supa: Get/Create epanen_chat_sessions
+    n8n->>Supa: Insert Incoming Message (category: whatsapp)
+    Note over n8n: AI Context: Fetch History + Shared Memory
+    n8n->>AI: Generate Response (Nala)
+    AI-->>n8n: AI Response
+    n8n->>Supa: Insert Response + Update epanen_ai_memory
+    n8n->>WAHA: Send Message to User
+    Supa-->>Web: Real-time Sync (Supabase Listener)
+    Web->>Farmer: Display WhatsApp Chat on Web Dashboard
 ```
 
-## 2. Shared Identity (Single Source of Truth)
-- **Primary Key**: Users are identified by their **Phone Number** (`epanen_users.phone`).
-- **Linking**: When a message arrives via WhatsApp (WAHA), n8n queries `epanen_users` to find the matching `user_id`.
-- **New Users**: If a phone number is unknown, n8n can create a placeholder user profile that the user can later claim on the Web.
+## 2. Shared Database Logic
 
-## 3. Communication Synchronization
-- **Table**: `epanen_chat_messages`.
-- **Flow**:
-    - **Incoming WhatsApp**: n8n receives the message -> Stores in `epanen_chat_messages` with `category: 'whatsapp'`.
-    - **Nala's Response**: n8n sends context to AI -> Receives response -> Stores in `epanen_chat_messages` -> Sends back to WA.
-- **Web Visibility**: The Web frontend queries this table, allowing the Farmer to see their WhatsApp conversation history in their Web dashboard.
+### A. Identification Logic (Non-Invasive Relation)
+- **Concept**: **n8n stays exactly as it is.** It still treats each WhatsApp number as a single permanent session/identity in its own `customer` (or similar) table.
+- **The Relation**: We create a mapping table in ePanen: `epanen_user_whatsapp_links`.
+  - `user_id`: Links to `epanen_users.id` (Web Account)
+  - `whatsapp_identity`: Links to n8n's identifier (Phone or Customer ID)
+- **Unified Sync**: 
+  1. When n8n receives a message, it updates its own tables.
+  2. The ePanen Web app uses the **Relationship Map** to pull messages from *all* linked WhatsApp identities into the user's dashboard.
+  3. This allows a user to have **Multiple WhatsApps** while n8n remains simple and unmodified.
 
-## 4. Persistent AI Context (Memory)
-- **Table**: `epanen_ai_memory`.
-- **Logic**: Nala stores insights (e.g., "User is currently planting Melon") in this table.
-- **Cross-Platform**: Because both n8n and the Web Backend read from this table, Nala recognizes the user's current situation regardless of whether they are chatting on WhatsApp or the Web Portal.
+### B. Message Synchronization (`epanen_chat_messages`)
+To ensure the Web and WhatsApp chats don't conflict, we use a `category` discriminator:
+| Column | Value (WhatsApp) | Value (Web) |
+|--------|------------------|-------------|
+| `user_id` | Linked ID | Linked ID |
+| `role` | `user` / `assistant` | `user` / `assistant` |
+| `category` | `whatsapp` | `general` / `budidaya` / etc. |
+| `session_id` | UUID (Permanent WA Sync) | UUID (Web Session) |
 
-## 5. Admin Integration (Nala Office)
-- **Live Monitoring**: The Admin "Chat Logs" will display a unified stream of both Web and WhatsApp interactions.
-- **Outreach**: Admins can trigger n8n workflows from the Web Dashboard to send broadcast alerts (e.g., price drops, weather warnings) directly to farmers' WhatsApp.
+### C. Persistent AI Context (`epanen_ai_memory`)
+Nala uses a "Key-Value" memory system stored in `epanen_ai_memory`.
+- **Sync Logic**: 
+  - If a Farmer discusses **"Melon Pests"** on WhatsApp, n8n writes: `{ key: 'pembahasan_hama', value: 'Melon' }`.
+  - When the same Farmer logins to the Web, the `chatService` reads this key.
+  - Nala (on Web) says: *"Halo! Melanjutkan diskusi kita di WhatsApp tadi tentang hama Melon..."*
+
+## 3. n8n Workflow Detail (Logic Nodes)
+
+1.  **Trigger (WAHA)**: Receives Raw JSON from WhatsApp.
+2.  **User Resolver**: n8n queries its own `customer` (or similar) table as always. n8n remains unaware of the Web account.
+3.  **Context Aggregator**:
+    - Fetch last 5 messages from `epanen_chat_messages` where `user_id = $1`.
+    - Fetch relevant entries from `epanen_ai_memory` (Context Persistence).
+4.  **AI Agent (Nala)**: Uses OpenRouter with the combined context.
+5.  **Data Sink (Supabase Node)**:
+    - Save User Message.
+    - Save AI Response.
+    - Update Memory Keys.
+6.  **Responder (WAHA Node)**: Sends the text back to WhatsApp.
+
+## 4. Edge Cases & Safety
+- **Unregistered Phone**: If user chats from a new number, n8n can either create a new identity or the user can link it manually via the Web Portal by verifying the OTP.
+- **Session Conflicts**: WhatsApp uses a single permanent session per user, while the Web can have multiple. The logic will prioritize the **latest** memory key regardless of the platform.
+
+## 5. Admin Control (Nala Office)
+- **WhatsApp Manager**: A new section in the Admin Dashboard for:
+    - **Inventory**: See all WhatsApp identities currently active in n8n.
+    - **Relationship Management**: Admins can manually link an "Unknown" WhatsApp phone to an existing ePanen Web user.
+    - **Unified Timeline**: Admins can view a single, chronological stream of both Web and WhatsApp chats for any user. Icons will indicate the source of each message.
+    - **History Viewing**: Admins can view the specific WhatsApp conversation stream for any linked identity from the central dashboard.
 
 ---
-*Created on: 2026-02-04*
+*Updated on: 2026-02-04*

@@ -167,7 +167,27 @@ const schemas = {
       entity_id BIGINT,
       details TEXT,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-    )
+    );
+    CREATE INDEX IF NOT EXISTS idx_chat_messages_user_id ON epanen_chat_messages(user_id);
+    CREATE INDEX IF NOT EXISTS idx_chat_messages_session_id ON epanen_chat_messages(session_id);
+    CREATE INDEX IF NOT EXISTS idx_chat_messages_created_at ON epanen_chat_messages(created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_chat_sessions_user_id ON epanen_chat_sessions(user_id);
+    CREATE INDEX IF NOT EXISTS idx_ai_memory_user_id ON epanen_ai_memory(user_id);
+  `,
+
+  whatsapp_links: `
+    CREATE TABLE IF NOT EXISTS epanen_user_whatsapp_links (
+      id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      user_id BIGINT NOT NULL,
+      wa_identity TEXT UNIQUE NOT NULL,
+      label TEXT,
+      status TEXT DEFAULT 'active',
+      created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+      FOREIGN KEY (user_id) REFERENCES epanen_users(id) ON DELETE CASCADE
+    );
+    CREATE INDEX IF NOT EXISTS idx_wa_links_user_id ON epanen_user_whatsapp_links(user_id);
+    CREATE INDEX IF NOT EXISTS idx_wa_links_identity ON epanen_user_whatsapp_links(wa_identity);
   `
 };
 
@@ -198,7 +218,7 @@ async function initializeDatabase() {
     for (const [name, schema] of Object.entries(schemas)) {
       const { error } = await supabase.rpc('exec_sql', { sql: schema });
       if (error && !error.message.includes('already exists')) {
-        console.log(`Note: ${name} - ${error.message}`);
+        console.log(`Note: ${name} - ${error.message} `);
       }
     }
 

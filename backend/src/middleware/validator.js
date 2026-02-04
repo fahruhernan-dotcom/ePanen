@@ -39,9 +39,14 @@ export const validationRules = {
 
   login: [
     body('email')
+      .optional()
       .trim()
       .isEmail().withMessage('Email tidak valid')
       .normalizeEmail(),
+    body('phone')
+      .optional()
+      .trim()
+      .isMobilePhone('id-ID').withMessage('Nomor telepon tidak valid'),
     body('password')
       .notEmpty().withMessage('Password tidak boleh kosong')
   ],

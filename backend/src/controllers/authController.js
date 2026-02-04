@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { supabase, supabaseQuery } from '../config/supabase.js';
+import fs from 'fs';
+import path from 'path';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d';
@@ -40,15 +42,36 @@ export const register = async (req, res) => {
       });
     }
 
+    // Check if phone already exists
+    if (phone) {
+      const cleanPhoneToCheck = phone.replace(/\D/g, '').replace(/^62|^0/, '');
+      const existingPhone = await supabaseQuery.one('epanen_users', {
+        where: [{ column: 'phone', value: cleanPhoneToCheck }]
+      });
+
+      if (existingPhone) {
+        return res.status(400).json({
+          success: false,
+          message: 'Nomor telepon sudah digunakan oleh akun lain'
+        });
+      }
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Normalize phone number if present
+    let cleanPhone = null;
+    if (phone) {
+      cleanPhone = phone.replace(/\D/g, '').replace(/^62|^0/, '');
+    }
 
     // Insert new user
     const newUser = await supabaseQuery.insert('epanen_users', {
       name,
       email,
       password: hashedPassword,
-      phone: phone || null,
+      phone: cleanPhone,
       role: 'farmer'
     });
 
@@ -86,54 +109,74 @@ export const register = async (req, res) => {
 };
 
 /**
- * User Login
+ * User Login (Supports Email or Phone)
  */
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, phone, password } = req.body;
+    let identifier = email;
+    let column = 'email';
 
-    // Check if it's an admin login
-    const admin = await supabaseQuery.one('epanen_admins', {
-      where: [
-        { column: 'email', value: email },
-        { column: 'status', value: 'active' }
-      ]
-    });
+    // If no email, check if phone is provided
+    if (!identifier && phone) {
+      identifier = phone.replace(/\D/g, '').replace(/^62|^0/, '');
+      column = 'phone';
+    }
 
-    if (admin) {
-      const isValidPassword = await bcrypt.compare(password, admin.password);
-      if (isValidPassword) {
-        const token = generateToken(admin, 'admin');
+    if (!identifier || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email/Nomor WhatsApp dan password diperlukan'
+      });
+    }
 
-        return res.json({
-          success: true,
-          message: 'Login berhasil sebagai admin',
-          data: {
-            user: {
-              id: admin.id,
-              username: admin.username,
-              email: admin.email,
-              role: admin.role,
-              type: 'admin'
-            },
-            token
-          }
-        });
+    // Check if it's an admin login (only via email)
+    if (column === 'email') {
+      const admin = await supabaseQuery.one('epanen_admins', {
+        where: [
+          { column: 'email', value: identifier },
+          { column: 'status', value: 'active' }
+        ]
+      });
+
+      if (admin) {
+        const isValidPassword = await bcrypt.compare(password, admin.password);
+        if (isValidPassword) {
+          const token = generateToken(admin, 'admin');
+
+          return res.json({
+            success: true,
+            message: 'Login berhasil sebagai admin',
+            data: {
+              user: {
+                id: admin.id,
+                username: admin.username,
+                email: admin.email,
+                role: admin.role,
+                type: 'admin'
+              },
+              token
+            }
+          });
+        }
       }
     }
 
     // Check regular user
-    const user = await supabaseQuery.one('epanen_users', {
+    const { data: users } = await supabaseQuery.many('epanen_users', {
       where: [
-        { column: 'email', value: email },
+        { column: column, value: column === 'phone' ? `%${identifier}` : identifier, operator: column === 'phone' ? 'ilike' : 'eq' },
         { column: 'status', value: 'active' }
-      ]
+      ],
+      limit: 1
     });
+
+    const user = users && users.length > 0 ? users[0] : null;
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Email atau password salah'
+        message: `${column === 'email' ? 'Email' : 'Nomor WhatsApp'} atau password salah`
       });
     }
 
@@ -142,7 +185,7 @@ export const login = async (req, res) => {
     if (!isValidPassword) {
       return res.status(401).json({
         success: false,
-        message: 'Email atau password salah'
+        message: `${column === 'email' ? 'Email' : 'Nomor WhatsApp'} atau password salah`
       });
     }
 
@@ -178,6 +221,135 @@ export const login = async (req, res) => {
       success: false,
       message: 'Terjadi kesalahan saat login'
     });
+  }
+};
+
+/**
+ * Verify WhatsApp (Phone Number) - Step 1
+ */
+export const loginViaWhatsApp = async (req, res) => {
+  try {
+    const { phone } = req.body;
+    console.log('--- WA LOGIN VERIFICATION ---');
+    console.log('Original Phone:', phone);
+
+    if (!phone) {
+      return res.status(400).json({ success: false, message: 'Nomor WhatsApp diperlukan' });
+    }
+
+    // Normalization
+    const cleanNumber = phone.replace(/\D/g, '').replace(/^62|^0/, '');
+    console.log('Normalized Number:', cleanNumber);
+
+    // 1. Try finding in epanen_users
+    const { data: usersByPhone } = await supabaseQuery.many('epanen_users', {
+      where: [
+        { column: 'phone', value: `%${cleanNumber}`, operator: 'ilike' }
+      ],
+      limit: 1
+    });
+
+    let user = usersByPhone && usersByPhone.length > 0 ? usersByPhone[0] : null;
+
+    // 2. If not found, check Customer table
+    if (!user) {
+      const { data: customers } = await supabaseQuery.many('customer', {
+        where: [
+          { column: 'No Whatapps', value: `%${cleanNumber}`, operator: 'ilike' }
+        ],
+        limit: 1
+      });
+
+      if (customers && customers.length > 0) {
+        if (customers[0].user_id) {
+          user = await supabaseQuery.one('epanen_users', {
+            where: [{ column: 'id', value: customers[0].user_id }]
+          });
+        }
+      }
+    }
+
+    if (!user) {
+      console.log('RESULT: User not found - Redirecting to register');
+      return res.status(404).json({
+        success: false,
+        message: 'Nomor WhatsApp belum terdaftar. Silakan pendaftaran baru.',
+        code: 'USER_NOT_FOUND',
+        phone: phone // Return original phone for easier registration
+      });
+    }
+
+    console.log('RESULT: User found - Requesting password');
+    return res.json({
+      success: true,
+      message: 'Akun ditemukan. Silakan masukkan password Anda.',
+      requires_password: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        phone: user.phone
+      }
+    });
+  } catch (error) {
+    console.error('WA Login verification error:', error);
+    res.status(500).json({ success: false, message: 'Terjadi kesalahan: ' + error.message });
+  }
+};
+
+/**
+ * Complete Profile with Email (For WA Login)
+ */
+export const completeWhatsAppProfile = async (req, res) => {
+  try {
+    const { user_id, email, password } = req.body;
+
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ success: false, message: 'Alamat email tidak valid (harus mengandung @)' });
+    }
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password minimal 6 karakter' });
+    }
+
+    // Check if email already used
+    const existing = await supabaseQuery.one('epanen_users', {
+      where: [{ column: 'email', value: email }]
+    });
+
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'Email sudah terdaftar oleh akun lain' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user
+    const updatedUser = await supabaseQuery.update('epanen_users',
+      { email, password: hashedPassword, updated_at: new Date().toISOString() },
+      { where: [{ column: 'id', value: user_id }] }
+    );
+
+    const user = updatedUser[0];
+    const token = generateToken(user, 'user');
+
+    res.json({
+      success: true,
+      message: 'Profil diperbarui, selamat datang di ePanen!',
+      data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          type: 'user'
+        },
+        token
+      }
+    });
+  } catch (error) {
+    console.error('Complete WA Profile error:', error);
+    res.status(500).json({ success: false, message: 'Gagal memperbarui profil' });
   }
 };
 
@@ -258,11 +430,31 @@ export const updateProfile = async (req, res) => {
     const { name, phone } = req.body;
     const userId = req.user.id;
 
+    // Check if phone already used by someone else
+    let cleanPhone = null;
+    if (phone) {
+      cleanPhone = phone.replace(/\D/g, '').replace(/^62|^0/, '');
+
+      const { data: existingPhoneUser } = await supabase
+        .from('epanen_users')
+        .select('id')
+        .eq('phone', cleanPhone)
+        .neq('id', userId)
+        .single();
+
+      if (existingPhoneUser) {
+        return res.status(400).json({
+          success: false,
+          message: 'Nomor telepon sudah digunakan oleh akun lain'
+        });
+      }
+    }
+
     const updatedUser = await supabaseQuery.update(
       'epanen_users',
       {
         name,
-        phone: phone || null,
+        phone: cleanPhone,
         updated_at: new Date().toISOString()
       },
       { where: [{ column: 'id', value: userId }] }

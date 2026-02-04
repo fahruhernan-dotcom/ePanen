@@ -125,29 +125,68 @@ class N8nService {
   async handleIncomingWhatsAppMessage(payload) {
     try {
       const {
+        wa_identity,
         phone,
         message,
-        message_from, // customer name from n8n
-        session_id
+        pushName
       } = payload;
 
-      // Find or create user by phone number
-      let user = await supabaseQuery.one('epanen_users', {
-        where: [{ column: 'phone', value: phone }]
-      });
+      const whatsappNumber = wa_identity || phone;
 
-      // If user doesn't exist, you might want to create them
-      // or link to existing customer table
-      if (!user) {
-        // Option 1: Create new user
-        // Option 2: Link to existing customer from your database
-        console.log('User not found for phone:', phone);
-        return { success: false, message: 'User not found' };
+      // 1. Find or Create record in the Customer Table
+      let customer = await supabaseQuery.one('customer', {
+        where: [{ column: 'No Whatapps', value: whatsappNumber }]
+      }).catch(() => null);
+
+      if (!customer) {
+        // Create new customer if not exists
+        customer = await supabaseQuery.insert('customer', {
+          'No Whatapps': whatsappNumber,
+          'Nama': pushName || 'New WhatsApp Lead',
+          'Status': 'new',
+          'Created At': new Date().toISOString()
+        });
+        console.log('🆕 Created new customer for:', whatsappNumber);
       }
 
-      // Save WhatsApp message to chat history
+      let userId = customer.user_id;
+
+      // 1.5 Auto-Link Logic: If no user_id is set, try to match by phone
+      if (!userId) {
+        console.log('🔍 Attempting auto-link for:', whatsappNumber);
+
+        // Normalize: remove '62' or '+' and leading '0' to find common digits
+        const cleanNumber = whatsappNumber.replace(/^\+?62|^0/, '');
+
+        // Search in epanen_users for a matching phone
+        const { data: matchedUsers } = await supabase.from('epanen_users')
+          .select('id, name')
+          .or(`phone.like.%${cleanNumber},phone.eq.${whatsappNumber}`);
+
+        if (matchedUsers && matchedUsers.length > 0) {
+          userId = matchedUsers[0].id;
+          // Persist the link in customer table
+          await supabaseQuery.update('customer',
+            { user_id: userId },
+            { where: [{ column: 'id', value: customer.id }] }
+          );
+          console.log(`✅ Auto-linked WhatsApp ${whatsappNumber} to User: ${matchedUsers[0].name}`);
+        }
+      }
+
+      // 2. Fetch User metadata (optional but useful)
+      let userName = customer.Nama;
+      if (userId) {
+        const user = await supabaseQuery.one('epanen_users', {
+          where: [{ column: 'id', value: userId }]
+        });
+        if (user) userName = user.name;
+      }
+
+      // 3. Save WhatsApp message to chat history
       const chatMessage = await supabaseQuery.insert('epanen_chat_messages', {
-        user_id: user.id,
+        user_id: userId || 0, // 0 or specific unassigned ID if no user linked
+        customer_id: customer.id,
         role: 'user',
         message: message,
         category: 'whatsapp'
@@ -155,7 +194,8 @@ class N8nService {
 
       return {
         success: true,
-        user_id: user.id,
+        user_id: userId,
+        customer_id: customer.id,
         message_id: chatMessage.id
       };
     } catch (error) {
@@ -193,16 +233,41 @@ class N8nService {
         category: aiResult.category
       });
 
-      // Get user phone
-      const user = await supabaseQuery.one('epanen_users', {
-        where: [{ column: 'id', value: userId }]
+      // Update Memory Keys
+      if (aiResult.memory) {
+        for (const [key, value] of Object.entries(aiResult.memory)) {
+          await supabaseQuery.update('epanen_ai_memory',
+            { value: String(value), updated_at: new Date() },
+            {
+              where: [
+                { column: 'user_id', value: userId },
+                { column: 'key', value: key }
+              ]
+            }
+          ).catch(async () => {
+            // If doesn't exist, insert
+            await supabaseQuery.insert('epanen_ai_memory', {
+              user_id: userId,
+              key: key,
+              value: String(value)
+            });
+          });
+        }
+      }
+
+      // Get user's primary or latest WhatsApp identity from customer table
+      const customers = await supabaseQuery.many('customer', {
+        where: [{ column: 'user_id', value: userId }],
+        limit: 1
       });
 
+      const targetIdentity = customers.data?.[0]?.['No Whatapps'];
+
       // Send response back to WhatsApp via n8n
-      if (user?.phone) {
+      if (targetIdentity) {
         await this.sendToWhatsApp({
           type: 'ai_response',
-          phone: user.phone,
+          wa_identity: targetIdentity,
           message: aiResult.response,
           category: aiResult.category
         });

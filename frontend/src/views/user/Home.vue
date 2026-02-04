@@ -13,7 +13,7 @@
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-epanen-secondary opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-3 w-3 bg-epanen-secondary"></span>
               </span>
-              <span class="text-[11px] font-black text-epanen-primary dark:text-epanen-accent uppercase tracking-[0.2em]">Platform Tani Digital #1 Indonesia</span>
+              <span class="text-[11px] font-black text-epanen-primary dark:text-epanen-accent uppercase tracking-[0.2em]">Yakin Kita Bisa #1 Indonesia</span>
             </div>
 
             <h1 class="text-5xl md:text-7xl lg:text-8xl font-black leading-[1] tracking-tight text-main dark:text-white dark:drop-shadow-[0_4px_20px_rgba(255,255,255,0.15)]">
@@ -57,10 +57,8 @@
               <!-- Floating Glass Overlay -->
               <div class="absolute bottom-10 left-10 right-10 glass-panel p-8 rounded-[2.5rem] animate-float shadow-2xl border-2 border-white/50">
                 <div class="flex items-center space-x-5">
-                  <div class="w-14 h-14 bg-epanen-secondary rounded-2xl flex items-center justify-center shadow-lg">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                  <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+                    <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-10 h-10 object-contain" />
                   </div>
                   <div>
                     <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em]">Nala AI Pro</p>
@@ -82,96 +80,63 @@
       <!-- Background Glow for Section -->
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[80%] bg-epanen-primary/5 rounded-[10rem] blur-[100px] -z-10"></div>
 
-      <div class="text-center space-y-5 mb-20 animate-slide-up">
-        <h2 class="text-[12px] font-black text-epanen-secondary uppercase tracking-[0.5em]">Layanan Kami</h2>
-        <p class="text-4xl md:text-6xl font-black text-main dark:text-white tracking-tight">Solusi Digital <span class="text-gradient">Terpadu</span></p>
+      <div class="text-center space-y-4 mb-16 animate-slide-up">
+        <h2 class="text-[11px] font-black text-epanen-primary uppercase tracking-[0.6em] mb-3">Layanan Kami</h2>
+        <p class="text-4xl md:text-5xl font-black text-main dark:text-white tracking-tight leading-tight">
+          Solusi Digital <span class="text-gradient">Terpadu</span>
+        </p>
       </div>
 
-      <!-- Feature Cards with Automatic Staggered Slide In & Scale on Click -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-        <!-- Feature 1: AI Chat -->
-        <div class="animate-slide-in-right" style="animation-delay: 0.1s">
+      <!-- Feature Cards with Horizontal Scroll (PowerPoint Style) & Infinite Auto-Loop -->
+      <!-- Feature Cards with Horizontal Scroll (2 Cards Layout - Aligned) -->
+      <div 
+        ref="scrollContainer"
+        class="max-w-7xl mx-auto flex overflow-x-auto gap-8 md:gap-10 py-16 md:py-20 px-6 md:px-16 no-scrollbar scroll-smooth" 
+        style="scrollbar-width: none;"
+        @mouseenter="pauseAutoScroll"
+        @mouseleave="resumeAutoScroll"
+      >
+        <div 
+          v-for="(feature, index) in displayFeatures" 
+          :key="`${feature.title}-${index}`"
+          class="min-w-[85vw] md:min-w-[calc(50%-1rem)] flex-shrink-0 animate-slide-in-right flex flex-col justify-between"
+          :style="{ animationDelay: `${0.1 * (index % 4 + 1)}s` }"
+        >
           <router-link 
-            to="/chat" 
-            class="bg-white dark:bg-[#0D140D] p-10 rounded-[3rem] shadow-xl hover:shadow-2xl transition-all duration-500 block hover:-translate-y-4 active:scale-110 group border-2 border-transparent dark:border-white/5 hover:border-epanen-primary/30 animate-float-slow overflow-hidden relative"
-            style="animation-delay: 0s"
+            :to="feature.link" 
+            :class="[
+              'group relative bg-white dark:bg-white/5 rounded-[2.5rem] p-10 md:p-12',
+              'hover:shadow-2xl hover:shadow-gray-200/50 dark:hover:shadow-none',
+              'transition-all duration-700 ease-out',
+              'border-2 border-gray-100 dark:border-white/10',
+              'hover:-translate-y-2',
+              feature.borderClass
+            ]"
+            :style="{ animationDelay: `${index % 4}s` }"
           >
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-epanen-primary/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-            <div class="w-20 h-20 bg-gradient-to-br from-epanen-primary to-epanen-secondary rounded-[1.8rem] flex items-center justify-center mb-8 shadow-xl group-hover:rotate-12 transition-all duration-500">
-              <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
-            </div>
-            <h3 class="text-2xl font-black text-main dark:text-white mb-4">Nala AI</h3>
-            <p class="text-muted dark:text-emerald-100 font-bold leading-relaxed mb-8">Konsultasi cerdas 24 jam untuk menjawab keluhan tanaman Anda.</p>
-            <div class="flex items-center text-epanen-primary dark:text-epanen-accent font-black text-sm uppercase tracking-widest group-hover:translate-x-2 transition-transform">
-              Mulai Tanya
-              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" stroke-width="3"/></svg>
-            </div>
-          </router-link>
-        </div>
+            <!-- Modern Gradient Glow Background (Replaces 'Chopped' Bubble) -->
+            <div :class="['absolute top-0 right-0 w-[120%] h-[120%] bg-gradient-radial opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none -translate-y-1/2 translate-x-1/2', feature.gradientClass]"></div>
+            
+            <!-- Soft Ambient Orb (Fixed & Safe) -->
+            <div :class="['absolute -top-10 -right-10 w-40 h-40 rounded-full blur-[60px] opacity-30 transition-transform duration-1000 group-hover:scale-150', feature.bgClass]"></div>
 
-        <!-- Feature 2: Knowledge -->
-        <div class="animate-slide-in-right" style="animation-delay: 0.2s">
-          <router-link 
-            to="/articles" 
-            class="bg-white dark:bg-[#0D140D] p-10 rounded-[3rem] shadow-xl hover:shadow-2xl transition-all duration-500 block hover:-translate-y-4 active:scale-110 group border-2 border-transparent dark:border-white/5 hover:border-amber-500/30 animate-float-slow overflow-hidden relative"
-            style="animation-delay: 1s"
-          >
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-amber-500/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-            <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-[1.8rem] flex items-center justify-center mb-8 shadow-xl group-hover:rotate-12 transition-all duration-500">
-              <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
+            <div class="relative z-10">
+              <div :class="['w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center mb-6 md:mb-8 shadow-lg shadow-gray-200/50 dark:shadow-none transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 bg-gradient-to-br', feature.gradientClass]">
+                <img v-if="feature.useLogo" src="@/assets/images/logo.png" alt="ePanen Logo" class="w-9 h-9 md:w-12 md:h-12 object-contain drop-shadow-md" />
+                <div v-else v-html="feature.iconSvg" class="text-white w-8 h-8 md:w-10 md:h-10 [&>svg]:w-full [&>svg]:h-full drop-shadow-md"></div>
+              </div>
+              
+              <h3 class="text-2xl md:text-3xl font-black text-gray-900 dark:text-white mb-3 md:mb-4 tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-colors duration-300" :class="feature.textGradientClass">
+                {{ feature.title }}
+              </h3>
+              
+              <p class="text-base md:text-lg text-gray-600 dark:text-gray-400 font-semibold leading-relaxed mb-6 md:mb-8">
+                {{ feature.description }}
+              </p>
             </div>
-            <h3 class="text-2xl font-black text-main dark:text-white mb-4">Wawasan</h3>
-            <p class="text-muted dark:text-emerald-100 font-bold leading-relaxed mb-8">Perdalam ilmu budidaya dari para pakar pertanian Indonesia.</p>
-            <div class="flex items-center text-amber-600 dark:text-amber-400 font-black text-sm uppercase tracking-widest group-hover:translate-x-2 transition-transform">
-              Baca Artikel
-              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" stroke-width="3"/></svg>
-            </div>
-          </router-link>
-        </div>
 
-        <!-- Feature 3: Prices -->
-        <div class="animate-slide-in-right" style="animation-delay: 0.3s">
-          <router-link 
-            to="/prices" 
-            class="bg-white dark:bg-[#0D140D] p-10 rounded-[3rem] shadow-xl hover:shadow-2xl transition-all duration-500 block hover:-translate-y-4 active:scale-110 group border-2 border-transparent dark:border-white/5 hover:border-blue-500/30 animate-float-slow overflow-hidden relative"
-            style="animation-delay: 2s"
-          >
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-[1.8rem] flex items-center justify-center mb-8 shadow-xl group-hover:rotate-12 transition-all duration-500">
-              <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 class="text-2xl font-black text-main dark:text-white mb-4">Harga Pasar</h3>
-            <p class="text-muted dark:text-emerald-100 font-bold leading-relaxed mb-8">Update harga komoditas terkini untuk transaksi yang adil.</p>
-            <div class="flex items-center text-blue-600 dark:text-blue-400 font-black text-sm uppercase tracking-widest group-hover:translate-x-2 transition-transform">
-              Cek Harga
-              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" stroke-width="3"/></svg>
-            </div>
-          </router-link>
-        </div>
-
-        <!-- Feature 4: Community -->
-        <div class="animate-slide-in-right" style="animation-delay: 0.4s">
-          <router-link 
-            to="/discussions" 
-            class="bg-white dark:bg-[#0D140D] p-10 rounded-[3rem] shadow-xl hover:shadow-2xl transition-all duration-500 block hover:-translate-y-4 active:scale-110 group border-2 border-transparent dark:border-white/5 hover:border-purple-500/30 animate-float-slow overflow-hidden relative"
-            style="animation-delay: 3s"
-          >
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-purple-500/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
-            <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-[1.8rem] flex items-center justify-center mb-8 shadow-xl group-hover:rotate-12 transition-all duration-500">
-              <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            </div>
-            <h3 class="text-2xl font-black text-main dark:text-white mb-4">Forum</h3>
-            <p class="text-muted dark:text-emerald-100 font-bold leading-relaxed mb-8">Ruang diskusi terbuka untuk bertukar pengalaman bertani.</p>
-            <div class="flex items-center text-purple-600 dark:text-purple-400 font-black text-sm uppercase tracking-widest group-hover:translate-x-2 transition-transform">
-              Gabung Diskusi
+            <div class="relative z-10 flex items-center font-black text-sm uppercase tracking-widest transition-transform duration-300 group-hover:translate-x-3" :class="feature.textClass">
+              {{ feature.ctaText }}
               <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 12h14m-7-7l7 7-7 7" stroke-width="3"/></svg>
             </div>
           </router-link>
@@ -222,23 +187,21 @@
 
     <!-- Beautiful Quote Section -->
     <section class="container-custom pb-16">
-       <div class="max-w-5xl mx-auto text-center space-y-10 py-24 px-10 relative bg-epanen-primary/5 dark:bg-white/5 rounded-[5rem] border-2 border-dashed border-epanen-primary/10">
+       <div class="w-full text-center space-y-10 py-24 px-10 relative bg-epanen-primary/5 dark:bg-white/5 rounded-[5rem] border-2 border-dashed border-epanen-primary/10">
           <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-[15rem] leading-none text-epanen-primary/5 font-serif select-none pointer-events-none">“</div>
           <h2 class="text-3xl md:text-5xl font-black text-epanen-primary dark:text-epanen-accent italic leading-[1.3] relative z-10">
             "Pertanian adalah fondasi peradaban. Dengan teknologi, kita merawat masa depan agar tetap hijau dan berdaya."
           </h2>
-          <div class="flex flex-col items-center justify-center space-y-4">
-             <div class="w-24 h-1 bg-gradient-to-r from-transparent via-epanen-secondary to-transparent"></div>
-             <p class="font-black text-gray-900 dark:text-gray-400 uppercase tracking-[0.4em] text-xs">Innovation for Farmers • ePanen Team</p>
+          <div class="relative z-10">
+            <p class="text-sm font-black tracking-[0.3em] uppercase text-gray-400">Innovation for Farmers • ePanen Team</p>
           </div>
        </div>
     </section>
-
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useAuthStore } from '../../stores/auth';
 import { useThemeStore } from '../../stores/theme';
 
@@ -246,8 +209,159 @@ const authStore = useAuthStore();
 const themeStore = useThemeStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 
+const scrollContainer = ref(null);
+let scrollInterval = null;
+let isPaused = false;
+
+const features = [
+  {
+    title: 'Nala AI',
+    description: 'Konsultasi cerdas 24 jam untuk menjawab keluhan tanaman Anda.',
+    link: '/chat',
+    ctaText: 'Mulai Tanya',
+    useLogo: true, // Use ePanen logo instead of SVG icon
+    iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>',
+    gradientClass: 'from-epanen-primary to-epanen-secondary',
+    bgClass: 'bg-epanen-primary',
+    borderClass: 'hover:border-epanen-primary/30',
+    textClass: 'text-epanen-primary dark:text-epanen-accent',
+    textGradientClass: 'from-epanen-primary to-epanen-secondary'
+  },
+  {
+    title: 'Wawasan',
+    description: 'Perdalam ilmu budidaya dari para pakar pertanian Indonesia.',
+    link: '/articles',
+    ctaText: 'Baca Artikel',
+    iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>',
+    gradientClass: 'from-amber-400 to-orange-500',
+    bgClass: 'bg-amber-500',
+    borderClass: 'hover:border-amber-500/30',
+    textClass: 'text-amber-600 dark:text-amber-400',
+    textGradientClass: 'from-amber-400 to-orange-500'
+  },
+  {
+    title: 'Harga Pasar',
+    description: 'Update harga komoditas terkini untuk transaksi yang adil.',
+    link: '/prices',
+    ctaText: 'Cek Harga',
+    iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
+    gradientClass: 'from-blue-500 to-cyan-600',
+    bgClass: 'bg-blue-500',
+    borderClass: 'hover:border-blue-500/30',
+    textClass: 'text-blue-600 dark:text-blue-400',
+    textGradientClass: 'from-blue-500 to-cyan-600'
+  },
+  {
+    title: 'Forum',
+    description: 'Ruang diskusi terbuka untuk bertukar pengalaman bertani.',
+    link: '/discussions',
+    ctaText: 'Gabung Diskusi',
+    iconSvg: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>',
+    gradientClass: 'from-purple-500 to-pink-600',
+    bgClass: 'bg-purple-500',
+    borderClass: 'hover:border-purple-500/30',
+    textClass: 'text-purple-600 dark:text-purple-400',
+    textGradientClass: 'from-purple-500 to-pink-600'
+  }
+];
+
+// Duplicate features for infinite loop effect
+// We quintuple the list (5x) to ensure there's always enough content for a truly seamless loop
+// This reduces the frequency of position resets, making the infinite scroll feel more natural
+const displayFeatures = computed(() => [...features, ...features, ...features, ...features, ...features]);
+
+const smoothScrollTo = (element, target, duration) => {
+  const start = element.scrollLeft;
+  const change = target - start;
+  const startTime = performance.now();
+
+  const animateScroll = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Ease-in-out quadratic function for smooth acceleration and deceleration
+    const ease = progress < 0.5 
+      ? 2 * progress * progress 
+      : -1 + (4 - 2 * progress) * progress;
+
+    element.scrollLeft = start + change * ease;
+
+    if (progress < 1) {
+      requestAnimationFrame(animateScroll);
+    }
+  };
+
+  requestAnimationFrame(animateScroll);
+};
+
+const startAutoScroll = () => {
+  stopAutoScroll();
+  scrollInterval = setInterval(() => {
+    if (!scrollContainer.value || isPaused) return;
+    
+    const container = scrollContainer.value;
+    // Calculate width of one card + one gap
+    const cardWidth = container.children[0].offsetWidth + (window.innerWidth >= 768 ? 40 : 32); // 40px=gap-10, 32px=gap-8
+    
+    // For 5x duplication, reset after scrolling past 2 sets (40% of total width)
+    // This gives us a comfortable buffer before and after the reset point
+    const resetThreshold = (container.scrollWidth / 5) * 2;
+    
+    // Check if we need to reset position (seamless teleport)
+    if (container.scrollLeft >= resetThreshold) {
+       // Reset by one full set (20% of total), maintaining visual continuity
+       const resetAmount = container.scrollWidth / 5;
+       container.scrollTo({ left: container.scrollLeft - resetAmount, behavior: 'instant' });
+    }
+    
+    // Calculate target directly for stability
+    const targetScroll = container.scrollLeft + cardWidth;
+    
+    // Use custom smooth scroll instead of native behavior
+    smoothScrollTo(container, targetScroll, 1200);
+    
+  }, 4000); // 4 seconds interval
+};
+
+const stopAutoScroll = () => {
+  if (scrollInterval) clearInterval(scrollInterval);
+};
+
+const pauseAutoScroll = () => {
+  isPaused = true;
+};
+
+const resumeAutoScroll = () => {
+  isPaused = false;
+};
+
+// Check for loop reset on manual scroll as well
+const handleScroll = () => {
+  if (!scrollContainer.value) return;
+  const container = scrollContainer.value;
+  
+  // For 5x duplication: reset after 2 sets (40%) or before 1 set (20%)
+  const oneSetWidth = container.scrollWidth / 5;
+  const resetThresholdRight = oneSetWidth * 2;
+  const resetThresholdLeft = oneSetWidth * 0.5;
+  
+  // Reset when scrolling too far right
+  if (container.scrollLeft >= resetThresholdRight) {
+    container.scrollTo({ left: container.scrollLeft - oneSetWidth, behavior: 'instant' });
+  } 
+  // Reset when scrolling too far left (for bidirectional infinite scroll)
+  else if (container.scrollLeft <= resetThresholdLeft) {
+    container.scrollTo({ left: container.scrollLeft + oneSetWidth, behavior: 'instant' });
+  }
+};
+
 onMounted(() => {
   themeStore.initTheme();
+  startAutoScroll();
+});
+
+onUnmounted(() => {
+  stopAutoScroll();
 });
 </script>
 
@@ -312,5 +426,14 @@ onMounted(() => {
 
 .text-muted {
   color: var(--text-muted);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 </style>

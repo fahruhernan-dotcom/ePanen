@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="glass-panel sticky top-0 z-[1000] shadow-xl border-b border-white/10">
       <!-- Decorative farm pattern -->
-      <div class="absolute inset-0 opacity-10 pointer-events-none">
+      <div class="absolute inset-0 opacity-20 pointer-events-none text-epanen-primary">
         <svg class="w-full h-full" viewBox="0 0 1200 100" preserveAspectRatio="none">
           <path d="M0,50 Q100,30 200,50 T400,50 T600,50 T800,50 T1000,50 T1200,50 V100 H0 Z" fill="currentColor"/>
         </svg>
@@ -12,12 +12,12 @@
       <div class="container-custom relative">
         <div class="flex items-center justify-between h-16 md:h-20">
           <router-link to="/" class="flex items-center space-x-3 group">
-            <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all overflow-hidden border border-gray-100 dark:border-white/5">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-md shadow-inner overflow-hidden group-hover:scale-110 transition-all">
               <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-1.5" />
             </div>
             <div>
               <span class="text-xl md:text-2xl font-black tracking-tight text-gray-900 dark:text-white">ePanen</span>
-              <p class="text-[10px] md:text-xs text-epanen-primary dark:text-epanen-accent hidden md:block font-black uppercase tracking-widest">Platform Tani Digital</p>
+              <p class="text-[10px] md:text-xs text-epanen-primary dark:text-epanen-accent hidden md:block font-black uppercase tracking-widest">Yakin Kita Bisa</p>
             </div>
           </router-link>
 
@@ -131,7 +131,7 @@
     </header>
 
     <!-- Main content -->
-    <main class="py-6 md:py-8 container-custom">
+    <main class="container-custom">
       <router-view />
     </main>
 
@@ -149,15 +149,15 @@
         <div :class="['grid grid-cols-1 md:grid-cols-4 gap-24 border-b pb-20 mb-16', themeStore.isDarkMode ? 'border-white/10' : 'border-gray-100']">
           <div class="space-y-12 col-span-1 md:col-span-2">
             <div class="flex items-center space-x-4">
-              <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-xl overflow-hidden border border-gray-100 dark:border-white/5">
+              <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-inner overflow-hidden">
                 <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
               </div>
               <div>
-                <h3 class="text-3xl font-black text-gray-900 dark:text-white">ePanen</h3>
-                <p class="text-xs text-epanen-primary dark:text-epanen-accent font-black uppercase tracking-[0.3em] mt-1">Platform Tani Digital</p>
+                <h3 class="text-3xl font-black text-white">ePanen</h3>
+                <p class="text-xs text-epanen-primary dark:text-epanen-accent font-black uppercase tracking-[0.3em] mt-1">Yakin Kita Bisa</p>
               </div>
             </div>
-            <p class="text-lg text-gray-600 dark:text-emerald-50/70 leading-relaxed font-bold max-w-md">
+            <p class="text-lg text-gray-300 dark:text-emerald-50/70 leading-relaxed font-bold max-w-md">
               Membangun kemandirian pangan Indonesia melalui inovasi kecerdasan buatan dan literasi data untuk petani modern.
             </p>
           </div>

@@ -3,211 +3,177 @@
     <!-- Decorative farm pattern -->
     <div class="absolute inset-0 opacity-10">
       <svg class="w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="none">
-        <!-- Rice field waves -->
         <path d="M0,200 Q150,180 300,200 T600,200 T900,200 T1200,200 V800 H0 Z" fill="currentColor"/>
         <path d="M0,240 Q150,220 300,240 T600,240 T900,240 T1200,240 V800 H0 Z" fill="currentColor" opacity="0.5"/>
         <path d="M0,280 Q150,260 300,280 T600,280 T900,280 T1200,280 V800 H0 Z" fill="currentColor" opacity="0.3"/>
-        <!-- Wheat patterns -->
         <g fill="currentColor">
-          <circle cx="100" cy="150" r="8"/>
-          <circle cx="250" cy="120" r="6"/>
-          <circle cx="400" cy="140" r="7"/>
-          <circle cx="550" cy="130" r="5"/>
-          <circle cx="700" cy="145" r="8"/>
-          <circle cx="850" cy="125" r="6"/>
-          <circle cx="1000" cy="135" r="7"/>
-          <circle cx="1100" cy="145" r="5"/>
+          <circle cx="100" cy="150" r="8"/><circle cx="250" cy="120" r="6"/><circle cx="400" cy="140" r="7"/>
+          <circle cx="550" cy="130" r="5"/><circle cx="700" cy="145" r="8"/><circle cx="850" cy="125" r="6"/>
         </g>
       </svg>
     </div>
 
     <!-- Back Button -->
     <div class="absolute top-6 left-6 z-10">
-      <router-link
-        to="/"
-        class="inline-flex items-center text-white hover:text-epanen-accent transition-colors bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full hover:bg-opacity-30 shadow-lg"
-      >
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
+      <router-link to="/" class="inline-flex items-center text-white hover:text-epanen-accent transition-colors bg-white/20 backdrop-blur-sm px-5 py-2.5 rounded-full shadow-lg">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
         Beranda
       </router-link>
     </div>
 
-    <!-- Success/Error Notification Toast -->
+    <!-- Notification Toast -->
     <transition name="toast">
       <div v-if="notification" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[100] w-[90%] max-w-sm">
-        <div 
-          :class="[
-            'px-6 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 backdrop-blur-xl border border-white border-opacity-30 transition-all duration-300',
-            notification.type === 'success' ? 'bg-white bg-opacity-90' : 'bg-red-500 bg-opacity-95'
-          ]"
-        >
-          <div 
-            :class="[
-              'w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0',
-              notification.type === 'success' ? 'bg-epanen-light text-epanen-primary' : 'bg-white bg-opacity-20 text-white'
-            ]"
-          >
-            <svg v-if="notification.type === 'success'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-            </svg>
-            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        <div :class="['px-6 py-4 rounded-3xl shadow-2xl flex items-center space-x-4 backdrop-blur-xl border border-white/30 transition-all', notification.type === 'success' ? 'bg-white/90 text-epanen-primary' : 'bg-red-500/95 text-white']">
+          <div :class="['w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0', notification.type === 'success' ? 'bg-epanen-light' : 'bg-white/20']">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path v-if="notification.type === 'success'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+              <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
           <div class="flex-1">
-            <h3 :class="['font-black text-sm uppercase tracking-widest', notification.type === 'success' ? 'text-epanen-primary' : 'text-white']">
-              {{ notification.type === 'success' ? 'Berhasil' : 'Gagal' }}
-            </h3>
-            <p :class="['text-xs font-bold leading-tight mt-0.5', notification.type === 'success' ? 'text-gray-600' : 'text-red-50']">
-              {{ notification.message }}
-            </p>
+            <h3 class="font-black text-[10px] uppercase tracking-widest">{{ notification.type === 'success' ? 'Berhasil' : 'Gagal' }}</h3>
+            <p class="text-xs font-bold leading-tight mt-0.5">{{ notification.message }}</p>
           </div>
         </div>
       </div>
     </transition>
 
     <div class="max-w-md w-full relative z-10">
-      <!-- Logo Section with Animation -->
-      <div class="text-center mb-8">
-        <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-3xl shadow-2xl mb-4 transform hover:scale-105 transition-transform overflow-hidden">
-          <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-3" />
+      <!-- Logo Section -->
+      <div class="text-center mb-10">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-white rounded-[2.5rem] shadow-2xl mb-6 transform hover:scale-110 transition-all duration-700 overflow-hidden group">
+          <img src="@/assets/images/logo.png" alt="ePanen" class="w-full h-full object-contain p-4 group-hover:rotate-12 transition-transform" />
         </div>
-        <h1 class="text-3xl font-bold text-white mb-1">ePanen</h1>
-        <p class="text-sm text-epanen-accent font-medium">Solusi Tani Cerdas</p>
-        <p class="text-xs text-white text-opacity-80 mt-1 italic">"Yakin Kita Bisa"</p>
+        <h1 class="text-4xl font-black text-white tracking-tighter mb-1">Nala Office</h1>
+        <p class="text-[11px] text-epanen-accent font-black uppercase tracking-[0.4em]">Integrated Farm Meta</p>
       </div>
 
-      <!-- Login Card with Glass Effect -->
-      <div class="bg-white bg-opacity-95 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white border-opacity-30">
-        <div class="p-6 md:p-8">
-          <div class="flex items-center space-x-4 mb-10 group cursor-pointer" @click="router.push('/')">
-            <div class="w-14 h-14 bg-gradient-to-br from-epanen-primary to-epanen-secondary rounded-[1.25rem] flex items-center justify-center shadow-[0_10px_30px_-10px_rgba(45,90,39,0.4)] overflow-hidden group-hover:scale-110 transition-transform duration-500">
-              <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
-            </div>
-            <div>
-              <h1 class="text-2xl font-black text-gray-900 tracking-tighter leading-none">ePanen</h1>
-              <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] mt-1 opacity-60">Digital Modern</p>
-            </div>
+      <!-- Auth Card -->
+      <div class="bg-white/95 backdrop-blur-2xl rounded-[3rem] shadow-2xl overflow-hidden border border-white/40 p-1">
+        <div class="p-8 md:p-10">
+          
+          <!-- STEP 1: LOGIN MODE SELECTION -->
+          <div v-if="step === 'choice'" class="space-y-6">
+            <h2 class="text-2xl font-black text-gray-800 tracking-tight text-center mb-8">Pilih Metode Masuk</h2>
+            
+            <button @click="step = 'wa'" class="w-full group bg-green-500 hover:bg-green-600 p-5 rounded-3xl flex items-center justify-between transition-all shadow-lg shadow-green-100 hover:-translate-y-1">
+              <div class="flex items-center gap-4 text-white">
+                <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 2.73 1.984 5.001 4.6 5.591l.369.083.003.002.502 1.374 1.157-1.157.051-.051.458.054c2.16.255 4.31-.63 5.498-2.316 1.188-1.686 1.188-3.922 0-5.608-1.188-1.686-3.338-2.571-5.498-2.316l-.458.054-.051-.051-1.157-1.157-.502 1.374-.003.002-.369.083c-2.616.59-4.601 2.861-4.6 5.591 0 3.18 2.587 5.766 5.768 5.766 2.227 0 4.192-1.251 5.127-3.116.936-1.865.636-4.131-.762-5.608L12.031 6.172z"/></svg>
+                </div>
+                <div class="text-left">
+                  <p class="text-sm font-black uppercase tracking-widest">WhatsApp Auth</p>
+                  <p class="text-[10px] text-white/70 font-bold">Akses Aman & Terproteksi</p>
+                </div>
+              </div>
+              <svg class="w-6 h-6 text-white/50 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+
+            <button @click="step = 'email'" class="w-full group bg-gray-50 hover:bg-white p-5 rounded-3xl flex items-center justify-between transition-all border border-gray-100 hover:shadow-xl hover:-translate-y-1">
+              <div class="flex items-center gap-4 text-gray-800">
+                <div class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+                  <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                </div>
+                <div class="text-left">
+                  <p class="text-sm font-black uppercase tracking-widest">Email & Password</p>
+                  <p class="text-[10px] text-gray-400 font-bold">Metode Konvensional</p>
+                </div>
+              </div>
+              <svg class="w-6 h-6 text-gray-200 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
           </div>
-          <form @submit.prevent="handleLogin" class="space-y-5">
-            <!-- Email Field -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                <span class="flex items-center">
-                  <svg class="w-4 h-4 mr-1 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Email
-                </span>
-              </label>
-              <div class="relative">
-                <input
-                  v-model="email"
-                  type="email"
-                  placeholder="nama@email.com"
-                  class="w-full px-4 py-3 pl-11 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-epanen-primary focus:border-epanen-primary transition-all text-sm"
-                  required
-                />
-                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
+
+          <!-- STEP 2: WHATSAPP INPUT / PASSWORD -->
+          <form v-if="step === 'wa'" @submit.prevent="requiresPassword ? handlePhonePasswordLogin() : handleWhatsAppLogin()" class="space-y-6">
+            <button @click="resetWA" type="button" class="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1 hover:text-gray-600 transition-colors">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg> Kembali
+            </button>
+            <h2 class="text-2xl font-black text-gray-800 tracking-tight">{{ requiresPassword ? 'Konfirmasi Password' : 'Login WhatsApp' }}</h2>
+            <p class="text-xs text-gray-500 font-bold leading-relaxed">
+              {{ requiresPassword ? 'Nomor ditemukan! Masukkan password akun Anda untuk melanjutkan.' : 'Masukkan nomor WhatsApp yang terdaftar di ePanen/Nala Office.' }}
+            </p>
+            
+            <div class="space-y-4">
+              <div class="relative group">
+                <input v-model="phone" :disabled="requiresPassword" type="tel" placeholder="0821xxxxxxxx" class="w-full px-6 py-5 pl-16 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-green-500 font-bold text-sm transition-all outline-none disabled:opacity-70" required />
+                <svg class="w-6 h-6 text-green-500 absolute left-6 top-1/2 -translate-y-1/2 group-focus-within:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 2.73 1.984 5.001 4.6 5.591l.369.083.003.002.502 1.374 1.157-1.157.051-.051.458.054c2.16.255 4.31-.63 5.498-2.316 1.188-1.686 1.188-3.922 0-5.608-1.188-1.686-3.338-2.571-5.498-2.316l-.458.054-.051-.051-1.157-1.157-.502 1.374-.003.002-.369.083c-2.616.59-4.601 2.861-4.6 5.591 0 3.18 2.587 5.766 5.768 5.766 2.227 0 4.192-1.251 5.127-3.116.936-1.865.636-4.131-.762-5.608L12.031 6.172z"/></svg>
+              </div>
+
+              <div v-if="requiresPassword" class="relative group animate-fade-in">
+                <input v-model="password" type="password" placeholder="Password Anda" class="w-full px-6 py-5 pl-16 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all outline-none" required autoFocus />
+                <svg class="w-6 h-6 text-epanen-primary absolute left-6 top-1/2 -translate-y-1/2 group-focus-within:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
               </div>
             </div>
 
-            <!-- Password Field -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                <span class="flex items-center">
-                  <svg class="w-4 h-4 mr-1 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  Password
-                </span>
-              </label>
-              <div class="relative">
-                <input
-                  v-model="password"
-                  type="password"
-                  placeholder="Masukkan password"
-                  class="w-full px-4 py-3 pl-11 bg-gray-50 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-epanen-primary focus:border-epanen-primary transition-all text-sm"
-                  required
-                />
-                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-            </div>
-
-            <!-- Login Button -->
-            <button
-              type="submit"
-              :disabled="authStore.loading"
-              class="w-full bg-gradient-to-r from-epanen-primary to-epanen-secondary text-white py-3.5 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 font-medium text-sm transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center"
-            >
-              <span v-if="!authStore.loading" class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                </svg>
-                Masuk
-              </span>
-              <span v-else class="flex items-center">
-                <svg class="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Memuat...
+            <button :disabled="loading" class="w-full bg-green-500 text-white py-5 rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-green-100/50 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50">
+              <span v-if="!loading">{{ requiresPassword ? 'Masuk Sekarang' : 'Verifikasi Nomor' }}</span>
+              <span v-else class="flex items-center justify-center gap-2">
+                <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> 
+                {{ requiresPassword ? 'Memproses...' : 'Mencari Akun...' }}
               </span>
             </button>
           </form>
 
+          <!-- STEP 3: COMPLETE PROFILE (Still kept for legacy support if needed) -->
+          <form v-if="step === 'complete'" @submit.prevent="handleCompleteProfile" class="space-y-6">
+            <h2 class="text-2xl font-black text-gray-800 tracking-tight">Hampir Selesai!</h2>
+            <p class="text-xs text-gray-500 font-bold leading-relaxed">Nomor ditemukan, silakan masukkan alamat email yang valid untuk mengamankan akun Anda.</p>
+            
+            <div class="space-y-4">
+              <div class="relative">
+                <input v-model="email" type="email" placeholder="contoh@gmail.com" class="w-full px-6 py-4 pl-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
+                <svg class="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              </div>
+              <div class="relative">
+                <input v-model="password" type="password" placeholder="Buat Password Baru" class="w-full px-6 py-4 pl-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
+                <svg class="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              </div>
+            </div>
+
+            <button :disabled="loading" class="w-full bg-epanen-primary text-white py-5 rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-epanen-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50">
+              <span v-if="!loading">Selesaikan Pendaftaran</span>
+              <span v-else>Memproses...</span>
+            </button>
+          </form>
+
+          <!-- CONVENTIONAL EMAIL LOGIN -->
+          <form v-if="step === 'email'" @submit.prevent="handleLogin" class="space-y-6">
+            <button @click="step = 'choice'" type="button" class="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1 hover:text-gray-600 transition-colors">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg> Kembali
+            </button>
+            <h2 class="text-2xl font-black text-gray-800 tracking-tight">Login Email</h2>
+            
+            <div class="space-y-4">
+              <input v-model="email" type="email" placeholder="Email Anda" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
+              <input v-model="password" type="password" placeholder="Password" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
+            </div>
+
+            <button :disabled="loading" class="w-full bg-epanen-primary text-white py-5 rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-epanen-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+              Masuk Sekarang
+            </button>
+          </form>
+
           <!-- Register Link -->
-          <div class="mt-6 text-center">
-            <p class="text-sm text-gray-600">
+          <div v-if="step !== 'complete'" class="mt-8 text-center">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
               Belum punya akun?
-              <router-link to="/register" class="text-epanen-primary hover:text-epanen-secondary font-bold ml-1 inline-flex items-center">
+              <router-link :to="{ path: '/register', query: { phone: phone } }" class="text-epanen-primary hover:text-epanen-secondary transition-colors underline decoration-2 underline-offset-4 ml-1">
                 Daftar Sekarang
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
               </router-link>
             </p>
           </div>
 
-          <!-- Feature Highlights -->
-          <div class="mt-6 pt-6 border-t border-gray-200">
-            <div class="grid grid-cols-3 gap-3 text-center">
-              <div class="bg-green-50 rounded-lg p-3">
-                <svg class="w-6 h-6 mx-auto mb-1 text-epanen-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                </svg>
-                <p class="text-xs font-medium text-gray-700">Nala AI 24/7</p>
-              </div>
-              <div class="bg-amber-50 rounded-lg p-3">
-                <svg class="w-6 h-6 mx-auto mb-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p class="text-xs font-medium text-gray-700">Harga Pasar</p>
-              </div>
-              <div class="bg-blue-50 rounded-lg p-3">
-                <svg class="w-6 h-6 mx-auto mb-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <p class="text-xs font-medium text-gray-700">Komunitas</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
-
-      <!-- Footer Tagline -->
-      <p class="text-center text-white text-opacity-80 text-sm mt-6 flex items-center justify-center">
-        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-        Solusi Tani Cerdas untuk Indonesia
-      </p>
+      
+      <!-- Footer Info -->
+      <div class="mt-8 flex items-center justify-center gap-6">
+        <div class="flex flex-col items-center">
+          <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Nala Suite</p>
+          <p class="text-[9px] font-bold text-white/20 italic">"Yakin Kita Bisa"</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -215,58 +181,122 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../stores/auth';
+import { useAuthStore } from '@/stores/auth';
+import axios from 'axios';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
+const step = ref('choice'); // choice, wa, complete, email
+const loading = ref(false);
 const email = ref('');
 const password = ref('');
+const phone = ref('');
+const userId = ref(null);
 const notification = ref(null);
+const requiresPassword = ref(false);
 
 const showNotification = (message, type = 'success') => {
   notification.value = { message, type };
-  setTimeout(() => {
-    notification.value = null;
-  }, 4000);
+  setTimeout(() => notification.value = null, 4000);
+};
+
+const resetWA = () => {
+  step.value = 'choice';
+  requiresPassword.value = false;
+  password.value = '';
+};
+
+const handleWhatsAppLogin = async () => {
+  loading.value = true;
+  try {
+    const res = await axios.post(`${API_BASE}/auth/whatsapp-login`, { phone: phone.value });
+    
+    if (res.data.requires_password) {
+      requiresPassword.value = true;
+      showNotification(res.data.message);
+    } 
+  } catch (error) {
+    if (error.response?.status === 404) {
+      showNotification('Nomor belum terdaftar. Mengalihkan ke halaman pendaftaran...', 'error');
+      setTimeout(() => router.push({ path: '/register', query: { phone: phone.value } }), 2000);
+    } else {
+      showNotification(error.response?.data?.message || 'Terjadi kesalahan sistem', 'error');
+    }
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handlePhonePasswordLogin = async () => {
+  loading.value = true;
+  try {
+    const res = await axios.post(`${API_BASE}/auth/login`, {
+      phone: phone.value,
+      password: password.value
+    });
+    
+    if (res.data.success) {
+      authStore.setAuth(res.data.data.user, res.data.data.token);
+      showNotification('Login Berhasil!', 'success');
+      setTimeout(() => router.push(authStore.isAdmin() ? '/admin' : '/'), 1500);
+    }
+  } catch (error) {
+    showNotification(error.response?.data?.message || 'Password salah atau terjadi kesalahan', 'error');
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handleCompleteProfile = async () => {
+  // Manual Validation for Email
+  if (!email.value.includes('@')) {
+    showNotification('Email harus valid (mengandung @)', 'error');
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const res = await axios.post(`${API_BASE}/auth/whatsapp-complete`, {
+      user_id: userId.value,
+      email: email.value,
+      password: password.value
+    });
+    
+    if (res.data.success) {
+      authStore.setAuth(res.data.data.user, res.data.data.token);
+      showNotification('Profil Berhasil Dilengkapi!', 'success');
+      setTimeout(() => router.push('/'), 1500);
+    }
+  } catch (error) {
+    showNotification(error.response?.data?.message || 'Gagal melengkapi profil', 'error');
+  } finally {
+    loading.value = false;
+  }
 };
 
 const handleLogin = async () => {
+  loading.value = true;
   const result = await authStore.login({
     email: email.value,
     password: password.value
   });
+  loading.value = false;
 
   if (result.success) {
-    showNotification('Halo Petani! Login berhasil, mengalihkan...', 'success');
-    
-    // Smooth delay for user to read the success message
-    setTimeout(() => {
-      if (authStore.isAdmin()) {
-        router.push('/admin');
-      } else {
-        router.push('/');
-      }
-    }, 1500);
+    showNotification('Login berhasil!', 'success');
+    setTimeout(() => router.push(authStore.isAdmin() ? '/admin' : '/'), 1500);
   } else {
-    showNotification(result.message || 'Email atau password salah. Silakan coba lagi.', 'error');
+    showNotification(result.message || 'Email atau password salah', 'error');
   }
 };
 </script>
 
 <style scoped>
-.toast-enter-active,
-.toast-leave-active {
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.toast-enter-from {
-  opacity: 0;
-  transform: translate(-50%, -20px);
-}
-
-.toast-leave-to {
-  opacity: 0;
-  transform: translate(-50%, 20px);
-}
+.toast-enter-active, .toast-leave-active { transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.toast-enter-from { opacity: 0; transform: translate(-50%, -20px); }
+.toast-leave-to { opacity: 0; transform: translate(-50%, 20px); }
+.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 </style>
