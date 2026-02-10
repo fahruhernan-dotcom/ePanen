@@ -4,11 +4,11 @@
     <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 shadow-sm border border-gray-50 dark:border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors">
       <div>
         <h1 class="text-4xl font-black text-gray-800 dark:text-white tracking-tighter leading-none mb-2">Chat Logs</h1>
-        <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] opacity-60">Monitor Interaksi Nala AI & Farmer</p>
+        <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] opacity-60">Monitor Interaksi Kian AI & Farmer</p>
       </div>
       <div class="flex items-center space-x-3 bg-gray-50 dark:bg-gray-800 px-6 py-3 rounded-2xl shadow-inner border border-gray-100 dark:border-gray-700 transition-colors">
          <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
-         <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Nala System Monitor Live</span>
+         <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Kian System Monitor Live</span>
       </div>
     </div>
 

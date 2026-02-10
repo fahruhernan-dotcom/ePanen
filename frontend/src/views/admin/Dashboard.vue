@@ -9,7 +9,7 @@
         <div class="space-y-4">
           <div class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10">
             <span class="w-2 h-2 rounded-full bg-epanen-primary animate-pulse mr-3"></span>
-            <span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-80">Nala Office Active</span>
+            <span class="text-[10px] font-black uppercase tracking-[0.3em] opacity-80">Kian Office Active</span>
           </div>
           <h1 class="text-4xl lg:text-5xl font-black tracking-tighter leading-none">
             Welcome back,<br/>
@@ -61,7 +61,7 @@
           <div class="flex items-center justify-between mb-8">
             <div>
               <h3 class="text-xl font-black text-gray-800 dark:text-white tracking-tight">AI Categorization</h3>
-              <p class="text-[10px] font-black text-epanen-primary uppercase tracking-widest opacity-60">Nala Engine Analysis</p>
+              <p class="text-[10px] font-black text-epanen-primary uppercase tracking-widest opacity-60">Kian Engine Analysis</p>
             </div>
             <div class="w-10 h-10 bg-epanen-light dark:bg-epanen-primary/20 rounded-2xl flex items-center justify-center text-epanen-primary transition-colors">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"/></svg>

@@ -19,7 +19,7 @@ sequenceDiagram
     n8n->>Supa: Get/Create epanen_chat_sessions
     n8n->>Supa: Insert Incoming Message (category: whatsapp)
     Note over n8n: AI Context: Fetch History + Shared Memory
-    n8n->>AI: Generate Response (Nala)
+    n8n->>AI: Generate Response (Kian)
     AI-->>n8n: AI Response
     n8n->>Supa: Insert Response + Update epanen_ai_memory
     n8n->>WAHA: Send Message to User
@@ -49,11 +49,11 @@ To ensure the Web and WhatsApp chats don't conflict, we use a `category` discrim
 | `session_id` | UUID (Permanent WA Sync) | UUID (Web Session) |
 
 ### C. Persistent AI Context (`epanen_ai_memory`)
-Nala uses a "Key-Value" memory system stored in `epanen_ai_memory`.
+Kian uses a "Key-Value" memory system stored in `epanen_ai_memory`.
 - **Sync Logic**: 
   - If a Farmer discusses **"Melon Pests"** on WhatsApp, n8n writes: `{ key: 'pembahasan_hama', value: 'Melon' }`.
   - When the same Farmer logins to the Web, the `chatService` reads this key.
-  - Nala (on Web) says: *"Halo! Melanjutkan diskusi kita di WhatsApp tadi tentang hama Melon..."*
+  - Kian (on Web) says: *"Halo! Melanjutkan diskusi kita di WhatsApp tadi tentang hama Melon..."*
 
 ## 3. n8n Workflow Detail (Logic Nodes)
 
@@ -62,7 +62,7 @@ Nala uses a "Key-Value" memory system stored in `epanen_ai_memory`.
 3.  **Context Aggregator**:
     - Fetch last 5 messages from `epanen_chat_messages` where `user_id = $1`.
     - Fetch relevant entries from `epanen_ai_memory` (Context Persistence).
-4.  **AI Agent (Nala)**: Uses OpenRouter with the combined context.
+4.  **AI Agent (Kian)**: Uses OpenRouter with the combined context.
 5.  **Data Sink (Supabase Node)**:
     - Save User Message.
     - Save AI Response.
@@ -73,7 +73,7 @@ Nala uses a "Key-Value" memory system stored in `epanen_ai_memory`.
 - **Unregistered Phone**: If user chats from a new number, n8n can either create a new identity or the user can link it manually via the Web Portal by verifying the OTP.
 - **Session Conflicts**: WhatsApp uses a single permanent session per user, while the Web can have multiple. The logic will prioritize the **latest** memory key regardless of the platform.
 
-## 5. Admin Control (Nala Office)
+## 5. Admin Control (Kian Office)
 - **WhatsApp Manager**: A new section in the Admin Dashboard for:
     - **Inventory**: See all WhatsApp identities currently active in n8n.
     - **Relationship Management**: Admins can manually link an "Unknown" WhatsApp phone to an existing ePanen Web user.

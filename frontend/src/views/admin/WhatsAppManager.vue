@@ -182,7 +182,7 @@
       <div class="relative bg-white dark:bg-gray-900 rounded-[3rem] shadow-2xl max-w-lg w-full p-10 animate-scale-in border border-white/20 dark:border-gray-800 transition-colors">
         <div class="header mb-10">
           <h2 class="text-3xl font-black text-gray-800 dark:text-white tracking-tighter mb-2 transition-colors">Relasikan Akun</h2>
-          <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] opacity-60">Nala Intelligence Mapping</p>
+          <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] opacity-60">Kian Intelligence Mapping</p>
         </div>
         
         <form @submit.prevent="handleLink" class="space-y-8">

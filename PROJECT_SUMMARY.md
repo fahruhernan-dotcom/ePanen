@@ -89,7 +89,7 @@ epanen-web/
 | Community Forum | ✅ | Create discussions, reply to posts |
 | User Profile | ✅ | View/edit profile, chat history |
 
-### Admin Interface (Nala Office)
+### Admin Interface (Kian Office)
 | Feature | Status | Description |
 |---------|--------|-------------|
 | Dashboard Stats | ✅ | Overview: users, questions, AI usage |
@@ -148,7 +148,7 @@ docker-compose up -d
 
 ## 👤 Default Accounts
 
-- **Admin**: `admin` / `admin123` → Nala Office
+- **Admin**: `admin` / `admin123` → Kian Office
 - **Farmer**: Register at `/register` → ePanen
 
 ## 📡 API Endpoints
@@ -209,7 +209,7 @@ Your existing Supabase tables (`chat_history`, `customer`, `workflow_logs`, etc.
 
 ## 🎉 Ready to Use!
 
-The complete ePanen Web Platform + Nala Office Admin Dashboard is now ready for development and testing.
+The complete ePanen Web Platform + Kian Office Admin Dashboard is now ready for development and testing.
 
 ---
 

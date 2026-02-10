@@ -340,7 +340,7 @@ pm2 status
 | Service | URL |
 |---------|-----|
 | Frontend (ePanen) | https://your-domain.com |
-| Admin (Nala Office) | https://your-domain.com/admin |
+| Admin (Kian Office) | https://your-domain.com/admin |
 | API Base | https://your-domain.com/api |
 | Health Check | https://your-domain.com/api/health |
 

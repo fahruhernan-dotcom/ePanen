@@ -6,7 +6,7 @@
         <h1 class="text-4xl font-black text-gray-800 dark:text-white tracking-tight mb-2">User Management</h1>
         <p class="text-gray-500 dark:text-gray-400 font-bold tracking-wide uppercase text-[10px] flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-epanen-primary animate-pulse"></span>
-          Kelola dan monitor semua pengguna ePanen Nala Office
+          Kelola dan monitor semua pengguna ePanen Kian Office
         </p>
       </div>
       <div class="flex items-center space-x-3 bg-white/50 dark:bg-gray-800/50 backdrop-blur-md px-5 py-3 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm transition-colors">
@@ -240,7 +240,7 @@
             <div v-for="(msg, index) in userChats" :key="index" :class="['flex', msg.role === 'user' ? 'justify-end' : 'justify-start']">
               <div :class="['max-w-[75%] rounded-[2rem] p-6 shadow-sm', msg.role === 'user' ? 'bg-epanen-primary text-white rounded-br-none' : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-100 dark:border-gray-700 transition-colors']">
                 <div class="flex items-center justify-between mb-2 gap-4">
-                  <span class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60">{{ msg.role === 'user' ? 'Farmer Input' : 'Nala AI Response' }}</span>
+                  <span class="text-[9px] font-black uppercase tracking-[0.2em] opacity-60">{{ msg.role === 'user' ? 'Farmer Input' : 'Kian AI Response' }}</span>
                   <span class="text-[9px] font-bold opacity-40">{{ formatTime(msg.created_at) }}</span>
                 </div>
                 <p class="text-sm font-bold leading-relaxed whitespace-pre-wrap">{{ msg.message }}</p>

@@ -27,7 +27,7 @@
               <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
             </div>
             <div>
-              <h1 class="text-2xl font-black tracking-tight">Nala Office</h1>
+              <h1 class="text-2xl font-black tracking-tight">Kian Office</h1>
               <p class="text-[10px] uppercase font-black tracking-widest text-epanen-accent opacity-80">Management Suite</p>
             </div>
           </div>
@@ -204,7 +204,7 @@
                 <svg class="w-4 h-4 mr-2 text-epanen-primary opacity-50" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C8 6 4 10 4 14c0 4 3.5 8 8 8s8-4 8-8c0-4-4-8-8-12z"/>
                 </svg>
-                © {{ new Date().getFullYear() }} ePanen Nala Office
+                © {{ new Date().getFullYear() }} ePanen Kian Office
               </p>
               <p class="text-[10px] font-black text-epanen-secondary uppercase tracking-[0.2em]">
                 Yakin Kita Bisa

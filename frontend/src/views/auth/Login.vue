@@ -45,7 +45,7 @@
         <div class="inline-flex items-center justify-center w-24 h-24 bg-white rounded-[2.5rem] shadow-2xl mb-6 transform hover:scale-110 transition-all duration-700 overflow-hidden group">
           <img src="@/assets/images/logo.png" alt="ePanen" class="w-full h-full object-contain p-4 group-hover:rotate-12 transition-transform" />
         </div>
-        <h1 class="text-4xl font-black text-white tracking-tighter mb-1">Nala Office</h1>
+        <h1 class="text-4xl font-black text-white tracking-tighter mb-1">Kian Office</h1>
         <p class="text-[11px] text-epanen-accent font-black uppercase tracking-[0.4em]">Integrated Farm Meta</p>
       </div>
 
@@ -91,7 +91,7 @@
             </button>
             <h2 class="text-2xl font-black text-gray-800 tracking-tight">{{ requiresPassword ? 'Konfirmasi Password' : 'Login WhatsApp' }}</h2>
             <p class="text-xs text-gray-500 font-bold leading-relaxed">
-              {{ requiresPassword ? 'Nomor ditemukan! Masukkan password akun Anda untuk melanjutkan.' : 'Masukkan nomor WhatsApp yang terdaftar di ePanen/Nala Office.' }}
+              {{ requiresPassword ? 'Nomor ditemukan! Masukkan password akun Anda untuk melanjutkan.' : 'Masukkan nomor WhatsApp yang terdaftar di ePanen/Kian Office.' }}
             </p>
             
             <div class="space-y-4">
@@ -170,7 +170,7 @@
       <!-- Footer Info -->
       <div class="mt-8 flex items-center justify-center gap-6">
         <div class="flex flex-col items-center">
-          <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Nala Suite</p>
+          <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Kian Suite</p>
           <p class="text-[9px] font-bold text-white/20 italic">"Yakin Kita Bisa"</p>
         </div>
       </div>

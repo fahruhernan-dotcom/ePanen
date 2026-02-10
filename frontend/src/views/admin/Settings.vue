@@ -4,7 +4,7 @@
     <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-10 shadow-sm border border-gray-50 dark:border-gray-800 flex flex-col md:flex-row items-center justify-between gap-6 transition-colors">
       <div class="text-center md:text-left">
         <h1 class="text-4xl font-black text-gray-800 dark:text-white tracking-tighter">Pengaturan Sistem</h1>
-        <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] mt-1 opacity-60">Pusat Kendali ePanen Nala Office</p>
+        <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] mt-1 opacity-60">Pusat Kendali ePanen Kian Office</p>
       </div>
       <div class="w-20 h-20 bg-indigo-50 dark:bg-indigo-900/20 rounded-[2rem] flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-xl shadow-indigo-100 dark:shadow-none transition-transform hover:rotate-12">
         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">

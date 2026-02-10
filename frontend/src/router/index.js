@@ -67,7 +67,7 @@ const router = createRouter({
       ]
     },
 
-    // Admin routes (Nala Office)
+    // Admin routes (Kian Office)
     {
       path: '/admin',
       component: () => import('../components/admin/AdminLayout.vue'),

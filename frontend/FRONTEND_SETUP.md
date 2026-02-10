@@ -21,13 +21,13 @@ Frontend akan jalan di: **http://localhost:5173**
 
 Buka salah satu:
 - **ePanen (User):** http://localhost:5173
-- **Nala Office (Admin):** http://localhost:5173/admin
+- **Kian Office (Admin):** http://localhost:5173/admin
 
 ---
 
 ## Default Login
 
-### Admin (Nala Office)
+### Admin (Kian Office)
 - Email: `admin@epanen.id`
 - Password: `admin123`
 
@@ -46,7 +46,7 @@ Buka salah satu:
 - ✅ Komunitas/Diskusi
 - ✅ Profil
 
-### Nala Office (Admin)
+### Kian Office (Admin)
 - ✅ Dashboard statistik
 - ✅ Chat Logs (semua chat user-AI)
 - ✅ User management

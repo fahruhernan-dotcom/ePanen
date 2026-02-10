@@ -13,7 +13,7 @@
         </div>
         <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight mb-4">Profil Saya</h1>
         <p class="text-emerald-100/70 text-lg font-bold max-w-xl leading-relaxed">
-          Kelola informasi identitas Anda dan pantau riwayat interaksi cerdas bersama Nala AI.
+          Kelola informasi identitas Anda dan pantau riwayat interaksi cerdas bersama Kian AI.
         </p>
       </div>
     </div>
@@ -217,7 +217,7 @@
           <div class="flex items-center justify-between mb-10">
             <div>
               <h3 class="text-2xl font-black text-gray-900 dark:text-white">Log Interaksi</h3>
-              <p class="text-sm text-muted dark:text-gray-500 font-bold">Pantau pertanyaan terakhir Anda ke Nala AI</p>
+              <p class="text-sm text-muted dark:text-gray-500 font-bold">Pantau pertanyaan terakhir Anda ke Kian AI</p>
             </div>
             <button
               @click="clearHistory"
@@ -245,7 +245,7 @@
             >
               <div class="flex items-start justify-between mb-3">
                  <span :class="['text-[10px] font-black uppercase tracking-[0.3em]', msg.role === 'user' ? 'text-epanen-primary dark:text-epanen-accent' : 'text-gray-400']">
-                   {{ msg.role === 'user' ? 'Pertanyaan Anda' : 'Respon Nala AI' }}
+                   {{ msg.role === 'user' ? 'Pertanyaan Anda' : 'Respon Kian AI' }}
                  </span>
                  <span class="text-[9px] font-black text-gray-400 uppercase">{{ formatTime(msg.created_at) }}</span>
               </div>

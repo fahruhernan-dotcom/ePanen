@@ -8,7 +8,7 @@
       </div>
       <div class="flex items-center space-x-3 bg-gray-50 dark:bg-gray-800 px-6 py-3 rounded-2xl shadow-inner border border-gray-100 dark:border-gray-700 transition-colors">
          <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
-         <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Nala Forum Gatekeeper Active</span>
+         <span class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Kian Forum Gatekeeper Active</span>
       </div>
     </div>
 

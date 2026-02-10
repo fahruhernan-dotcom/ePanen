@@ -166,7 +166,7 @@
         <div class="px-10 py-8 border-b border-gray-50 dark:border-gray-800 flex items-center justify-between bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 transition-colors">
           <div>
             <h2 class="text-3xl font-black text-gray-800 dark:text-white tracking-tighter">{{ isEditing ? 'Edit Content' : 'Compose New Article' }}</h2>
-            <p class="text-[10px] text-epanen-primary font-black uppercase tracking-[0.3em] mt-1">Nala Office Editorial Suite</p>
+            <p class="text-[10px] text-epanen-primary font-black uppercase tracking-[0.3em] mt-1">Kian Office Editorial Suite</p>
           </div>
           <button @click="showArticleDialog = false" class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400 hover:text-red-500 rounded-2xl transition-all border border-gray-100 dark:border-gray-700">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -372,7 +372,7 @@ const saveArticle = async () => {
       await axios.put(`${API_BASE}/admin/articles/${articleForm.value.id}`, articleForm.value, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      showPremiumAlert('Berhasil', 'Konten telah diperbarui di database Nala Office');
+      showPremiumAlert('Berhasil', 'Konten telah diperbarui di database Kian Office');
     } else {
       await axios.post(`${API_BASE}/admin/articles`, articleForm.value, {
         headers: { Authorization: `Bearer ${token}` }

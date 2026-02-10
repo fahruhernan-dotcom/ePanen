@@ -1,4 +1,4 @@
-# ePanen Web Platform + Nala Office Admin Dashboard
+# ePanen Web Platform + Kian Office Admin Dashboard
 
 Platform digital untuk petani Indonesia dengan AI-powered assistant dan admin dashboard.
 
@@ -13,7 +13,7 @@ Platform digital untuk petani Indonesia dengan AI-powered assistant dan admin da
 - **Komunitas** - Forum diskusi antar petani
 - **Profil** - Kelola profil dan lihat riwayat chat
 
-### Nala Office (Admin Interface)
+### Kian Office (Admin Interface)
 - **Dashboard** - Statistik dan analitik platform
 - **Chat Logs** - Pantau semua percakapan farmer-AI
 - **User Management** - Kelola user petani
@@ -96,7 +96,7 @@ docker-compose down
 ### Admin
 - **Email:** `admin@epanen.id`
 - **Password:** `admin123`
-- **Akses:** Nala Office (http://localhost:5173/admin)
+- **Akses:** Kian Office (http://localhost:5173/admin)
 
 ### Farmer
 - Register melalui `/register` atau http://localhost:5173/register
