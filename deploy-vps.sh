@@ -77,8 +77,8 @@ echo ""
 ssh ubuntu@129.226.201.183 <<'ENDSSH'
 cd ~/epanen-web
 
-# Pull latest images (optional)
-# docker-compose pull
+# Pull latest code from GitHub
+git pull origin main
 
 # Build and start
 docker-compose up -d --build
