@@ -12,7 +12,9 @@ export default {
           primary: '#2D5A27',
           secondary: '#52A446',
           accent: '#A8D5A2',
-          light: '#E8F5E9'
+          light: '#E8F5E9',
+          dark: '#122612',
+          gold: '#D4AF37'
         }
       }
     },

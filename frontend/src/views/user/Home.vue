@@ -57,8 +57,8 @@
               <!-- Floating Glass Overlay -->
               <div class="absolute bottom-10 left-10 right-10 glass-panel p-8 rounded-[2.5rem] animate-float shadow-2xl border-2 border-white/50">
                 <div class="flex items-center space-x-5">
-                  <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-                    <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-10 h-10 object-contain" />
+                  <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg overflow-hidden">
+                    <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
                   </div>
                   <div>
                     <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em]">Kian AI Pro</p>
@@ -121,8 +121,8 @@
             <div :class="['absolute -top-10 -right-10 w-40 h-40 rounded-full blur-[60px] opacity-30 transition-transform duration-1000 group-hover:scale-150', feature.bgClass]"></div>
 
             <div class="relative z-10">
-              <div :class="['w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center mb-6 md:mb-8 shadow-lg shadow-gray-200/50 dark:shadow-none transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 bg-gradient-to-br', feature.gradientClass]">
-                <img v-if="feature.useLogo" src="@/assets/images/logo.png" alt="ePanen Logo" class="w-9 h-9 md:w-12 md:h-12 object-contain drop-shadow-md" />
+              <div :class="['w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center mb-6 md:mb-8 shadow-lg shadow-gray-200/50 dark:shadow-none transition-transform duration-500 group-hover:rotate-6 group-hover:scale-110 bg-gradient-to-br overflow-hidden', feature.gradientClass]">
+                <img v-if="feature.useLogo" src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
                 <div v-else v-html="feature.iconSvg" class="text-white w-8 h-8 md:w-10 md:h-10 [&>svg]:w-full [&>svg]:h-full drop-shadow-md"></div>
               </div>
               
@@ -193,7 +193,7 @@
             "Pertanian adalah fondasi peradaban. Dengan teknologi, kita merawat masa depan agar tetap hijau dan berdaya."
           </h2>
           <div class="relative z-10">
-            <p class="text-sm font-black tracking-[0.3em] uppercase text-gray-400">Innovation for Farmers • ePanen Team</p>
+            <p class="text-sm font-black tracking-[0.3em] uppercase text-gray-400">Innovation for Users • ePanen Team</p>
           </div>
        </div>
     </section>

@@ -4,7 +4,7 @@
     <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 shadow-sm border border-gray-50 dark:border-gray-800 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors">
       <div>
         <h1 class="text-4xl font-black text-gray-800 dark:text-white tracking-tighter leading-none mb-2">Chat Logs</h1>
-        <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] opacity-60">Monitor Interaksi Kian AI & Farmer</p>
+        <p class="text-[10px] font-black text-epanen-primary uppercase tracking-[0.3em] opacity-60">Monitor Interaksi Kian AI & User</p>
       </div>
       <div class="flex items-center space-x-3 bg-gray-50 dark:bg-gray-800 px-6 py-3 rounded-2xl shadow-inner border border-gray-100 dark:border-gray-700 transition-colors">
          <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
@@ -27,47 +27,85 @@
 
     <!-- Filters Panel -->
     <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-sm border border-gray-50 dark:border-gray-800 p-8 transition-colors">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Search -->
+        <div class="md:col-span-3">
           <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-2">User Identification</label>
-          <input
-            v-model="filters.userId"
-            type="text"
-            placeholder="Search by ID/Name..."
-            class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none text-sm font-bold shadow-inner text-gray-800 dark:text-white"
-          />
+          <div class="relative group">
+            <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-600 group-focus-within:text-epanen-primary transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            </span>
+            <input
+              v-model="filters.userId"
+              type="text"
+              placeholder="Search by ID/Name..."
+              class="w-full pl-12 pr-6 py-4 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none text-sm font-bold shadow-inner text-gray-800 dark:text-white"
+            />
+          </div>
         </div>
-        <div>
+
+        <!-- Category Dropdown -->
+        <div class="md:col-span-3">
           <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-2">Topic Category</label>
-          <select
+          <Dropdown
             v-model="filters.category"
-            class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none text-xs font-black text-gray-700 dark:text-gray-300 appearance-none shadow-sm"
+            :options="categories"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Pilih Kategori"
+            class="premium-select w-full px-4 py-1 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl shadow-sm"
           >
-            <option value="">Semua Kategori</option>
-            <option value="budidaya">Budidaya</option>
-            <option value="hama-penyakit">Hama & Penyakit</option>
-            <option value="cuaca">Cuaca</option>
-            <option value="teknologi">Teknologi</option>
-            <option value="pasar">Pasar</option>
-            <option value="general">General</option>
-          </select>
+            <template #value="slotProps">
+              <div v-if="slotProps.value" class="flex items-center gap-3">
+                <span>{{ categories.find(c => c.value === slotProps.value)?.icon }}</span>
+                <span class="text-xs font-black uppercase tracking-widest">{{ categories.find(c => c.value === slotProps.value)?.label }}</span>
+              </div>
+              <span v-else class="text-xs font-black text-gray-400 dark:text-gray-600">{{ slotProps.placeholder }}</span>
+            </template>
+            <template #option="slotProps">
+              <div class="flex items-center gap-3">
+                <span class="text-lg">{{ slotProps.option.icon }}</span>
+                <span class="text-xs font-black uppercase tracking-widest">{{ slotProps.option.label }}</span>
+                <span v-if="filters.category === slotProps.option.value" class="ml-auto text-epanen-primary">✓</span>
+              </div>
+            </template>
+          </Dropdown>
         </div>
-        <div>
-          <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-2">Specific Date</label>
-          <input
-            v-model="dateFilter"
-            type="text"
-            placeholder="YYYY-MM-DD"
-            class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none text-sm font-bold shadow-inner text-gray-800 dark:text-white"
-          />
-        </div>
-        <div class="flex items-end">
-          <button
-            @click="applyFilters"
-            class="w-full bg-gray-800 dark:bg-white text-white dark:text-black py-4 rounded-2xl hover:bg-black dark:hover:bg-gray-200 transition-all font-black text-[10px] uppercase tracking-widest shadow-lg hover:-translate-y-1"
-          >
-            Sync Filtered Data
-          </button>
+
+        <!-- Quick & Custom Date -->
+        <div class="md:col-span-6">
+          <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-2">Timeline Analysis</label>
+          <div class="flex flex-wrap gap-2">
+            <button 
+              v-for="qf in quickFilters" 
+              :key="qf.value"
+              @click="setQuickFilter(qf.value)"
+              :class="['px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all', 
+                activeQuickFilter === qf.value ? 'bg-epanen-primary border-epanen-primary text-white shadow-lg' : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-epanen-primary']"
+            >
+              {{ qf.label }}
+            </button>
+            
+            <div class="relative flex-1 min-w-[200px]" v-if="activeQuickFilter === 'custom'">
+              <Calendar
+                v-model="dateRange"
+                selectionMode="range"
+                :manualInput="false"
+                placeholder="Select Range (From - To)"
+                dateFormat="yy-mm-dd"
+                class="w-full premium-calendar"
+                @hide="applyRangeFilter"
+              />
+            </div>
+            
+            <button
+              @click="loadChatLogs"
+              class="ml-auto bg-gray-800 dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-xl hover:bg-black dark:hover:bg-gray-200 transition-all font-black text-[9px] uppercase tracking-widest shadow-lg flex items-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              Sync Stream
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -106,34 +144,36 @@
                  <p class="text-sm font-black uppercase tracking-widest italic text-gray-400">No packets captured in this stream</p>
               </td>
             </tr>
-            <tr v-else v-for="log in paginatedLogs" :key="log.id" class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-all group">
+            <tr v-else v-for="log in paginatedLogs" :key="log.id" class="hover:bg-gray-50/50 dark:hover:bg-cyan-900/10 transition-all group">
               <td class="px-10 py-6 whitespace-nowrap text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">
                 {{ formatTime(log.created_at) }}
               </td>
               <td class="px-6 py-6 whitespace-nowrap">
                 <div class="flex items-center">
-                   <div :class="['w-10 h-10 rounded-xl flex items-center justify-center mr-3 font-black text-[10px] shadow-sm', log.role === 'user' ? 'bg-indigo-50 dark:bg-indigo-950/20 text-indigo-500' : 'bg-green-50 dark:bg-green-950/20 text-green-500']">
-                    {{ log.role === 'user' ? 'USR' : 'NLA' }}
+                   <div :class="['w-10 h-10 rounded-xl avatar-centered mr-3 shadow-sm bg-gray-100 dark:bg-gray-800 border border-gray-50 dark:border-gray-700']">
+                    <span :class="['text-[11px] font-black initial-avatar', log.role === 'user' ? 'text-indigo-500' : 'text-green-500']">
+                      {{ (log.user_name || 'A').charAt(0).toUpperCase() }}
+                    </span>
                   </div>
                   <div>
-                    <span class="text-xs font-black text-gray-700 dark:text-gray-100 block">{{ log.user_name || 'Anonymous' }}</span>
-                    <span class="text-[8px] font-black text-gray-400 dark:text-gray-500 mt-0.5 uppercase tracking-tighter">{{ log.role === 'user' ? 'External' : 'System Intelligence' }}</span>
+                    <span class="text-xs font-black text-gray-800 dark:text-white block">{{ log.user_name || 'Anonymous' }}</span>
+                    <span class="text-[9px] font-bold text-gray-400 dark:text-epanen-accent mt-0.5 uppercase tracking-tighter">{{ log.role === 'user' ? formatPhone(log.phone) || 'External' : 'System Intelligence' }}</span>
                   </div>
                 </div>
               </td>
               <td class="px-6 py-6 text-sm text-gray-500 dark:text-gray-400 max-w-md">
                 <div class="flex items-center">
-                  <div class="mr-4 flex-shrink-0 opacity-40 group-hover:opacity-100 transition-opacity">
-                    <svg v-if="log.category === 'whatsapp' || log.whatsapp_number" class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 2.73 1.984 5.001 4.6 5.591l.369.083.003.002.502 1.374 1.157-1.157.051-.051.458.054c2.16.255 4.31-.63 5.498-2.316 1.188-1.686 1.188-3.922 0-5.608-1.188-1.686-3.338-2.571-5.498-2.316l-.458.054-.051-.051-1.157-1.157-.502 1.374-.003.002-.369.083c-2.616.59-4.601 2.861-4.6 5.591 0 3.18 2.587 5.766 5.768 5.766 2.227 0 4.192-1.251 5.127-3.116.936-1.865.636-4.131-.762-5.608L12.031 6.172z"/></svg>
+                  <div class="mr-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity">
+                    <svg v-if="log.phone" class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 2.73 1.984 5.001 4.6 5.591l.369.083.003.002.502 1.374 1.157-1.157.051-.051.458.054c2.16.255 4.31-.63 5.498-2.316 1.188-1.686 1.188-3.922 0-5.608-1.188-1.686-3.338-2.571-5.498-2.316l-.458.054-.051-.051-1.157-1.157-.502 1.374-.003.002-.369.083c-2.616.59-4.601 2.861-4.6 5.591 0 3.18 2.587 5.766 5.768 5.766 2.227 0 4.192-1.251 5.127-3.116.936-1.865.636-4.131-.762-5.608L12.031 6.172z"/></svg>
                     <svg v-else class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3.651 9h16.698M3.651 15h16.698M12 3v18M12 3A9.54 9.54 0 018.607 12a9.54 9.54 0 013.393 9m0-18a9.54 9.54 0 003.393 9 9.54 9.54 0 00-3.393 9" /></svg>
                   </div>
-                  <p class="truncate font-medium text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{{ log.message }}</p>
+                  <p class="truncate font-bold text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{{ log.message }}</p>
                 </div>
               </td>
               <td class="px-6 py-6 text-center">
-                <span v-if="log.category" class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-lg text-[9px] font-black uppercase tracking-widest border border-gray-200 dark:border-gray-700 group-hover:border-indigo-200 dark:group-hover:border-indigo-900 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/50 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-all">
-                  {{ log.category }}
-                </span>
+                 <div v-if="getAdaptiveTopic(log)" :class="['inline-flex items-center px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border transition-all', getTopicStyle(getAdaptiveTopic(log))]">
+                  {{ getAdaptiveTopic(log) }}
+                </div>
                 <span v-else class="text-gray-200 dark:text-gray-700 text-xs">-</span>
               </td>
               <td class="px-10 py-6 text-right">
@@ -246,19 +286,106 @@ const chatStats = ref({
 const filters = ref({
   userId: '',
   category: '',
-  date: ''
+  dateStart: '',
+  dateEnd: ''
 });
 
-const dateFilter = ref('');
+const dateFilter = ref(''); // Keep for existing logic if any
+const dateRange = ref([]);
+const activeQuickFilter = ref('30days');
 const currentPage = ref(1);
 const showMessageDialog = ref(false);
 const selectedMessage = ref(null);
 
+const categories = [
+  { label: 'Semua Kategori', value: '', icon: '🔍' },
+  { label: 'Budidaya', value: 'budidaya', icon: '🌱' },
+  { label: 'Hama & Penyakit', value: 'hama', icon: '🐛' },
+  { label: 'Cuaca', value: 'cuaca', icon: '☁️' },
+  { label: 'Teknologi', value: 'teknologi', icon: '💻' },
+  { label: 'Pasar', value: 'pasar', icon: '💰' },
+  { label: 'General', value: 'general', icon: '📋' }
+];
+
+const quickFilters = [
+  { label: 'Hari Ini', value: 'today' },
+  { label: '7 Hari', value: '7days' },
+  { label: '30 Hari', value: '30days' },
+  { label: 'Kustom', value: 'custom' }
+];
+
+const topicKeywords = {
+  'budidaya': ['tanam', 'panen', 'benih', 'bibit', 'pupuk', 'irigasi', 'lahan', 'sawah', 'kebun', 'tanaman', 'pertumbuhan', 'musim tanam', 'harvest'],
+  'hama': ['hama', 'penyakit', 'wereng', 'ulat', 'jamur', 'virus', 'bakteri', 'pestisida', 'fungisida', 'insektisida', 'layu', 'busuk', 'kutu'],
+  'cuaca': ['cuaca', 'hujan', 'kemarau', 'angin', 'suhu', 'kelembaban', 'iklim', 'musim', 'banjir', 'kekeringan', 'prakiraan'],
+  'teknologi': ['alat', 'mesin', 'traktor', 'drone', 'sensor', 'aplikasi', 'teknologi', 'inovasi', 'digital', 'otomasi', 'sprayer'],
+  'pasar': ['harga', 'jual', 'beli', 'pasar', 'ekspor', 'impor', 'distributor', 'tengkulak', 'modal', 'untung', 'rugi', 'komoditas', 'nilai'],
+  'general': []
+};
+
+const classifyTopic = (content) => {
+  if (!content) return 'general';
+  const msg = content.toLowerCase();
+  for (const [topic, keywords] of Object.entries(topicKeywords)) {
+    if (keywords.some(k => msg.includes(k))) return topic;
+  }
+  return 'general';
+};
+
+const getAdaptiveTopic = (log) => {
+  if (log.category && log.category !== 'whatsapp') return log.category;
+  return classifyTopic(log.message);
+};
+
+const getTopicStyle = (topic) => {
+  const t = (topic || 'general').toLowerCase();
+  const styles = {
+    'budidaya': 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-100 dark:border-green-800',
+    'hama': 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-100 dark:border-red-800',
+    'cuaca': 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-800',
+    'teknologi': 'bg-purple-50 dark:bg-purple-900/10 text-purple-600 dark:text-purple-400 border-purple-100 dark:border-purple-800',
+    'pasar': 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800',
+    'general': 'bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700'
+  };
+  return styles[t] || styles['general'];
+};
+
+const formatPhone = (phone) => {
+  if (!phone) return null;
+  const p = phone.toString();
+  if (p.startsWith('0') || p.startsWith('+')) return p;
+  return '0' + p;
+};
+
+const setQuickFilter = (val) => {
+  activeQuickFilter.value = val;
+  if (val === 'custom') return;
+  
+  const now = new Date();
+  let start = new Date();
+  
+  if (val === 'today') start.setHours(0,0,0,0);
+  if (val === '7days') start.setDate(now.getDate() - 7);
+  if (val === '30days') start.setDate(now.getDate() - 30);
+  
+  filters.value.dateStart = start.toISOString().split('T')[0];
+  filters.value.dateEnd = now.toISOString().split('T')[0];
+  loadChatLogs();
+};
+
+const applyRangeFilter = () => {
+  if (dateRange.value && dateRange.value[0] && dateRange.value[1]) {
+    filters.value.dateStart = dateRange.value[0].toISOString().split('T')[0];
+    filters.value.dateEnd = dateRange.value[1].toISOString().split('T')[0];
+    loadChatLogs();
+  }
+};
+
 const statCards = computed(() => [
-  { label: 'Total Handled', value: chatStats.value.totalMessages || 0, icon: 'M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z', bg: 'bg-blue-50', text: 'text-blue-500' },
-  { label: 'Farmer Outreach', value: getUserCount('user'), icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', bg: 'bg-indigo-50', text: 'text-indigo-500' },
-  { label: 'AI Intelligence', value: getUserCount('assistant'), icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', bg: 'bg-green-50', text: 'text-green-500' },
-  { label: 'Live Sessions', value: chatStats.value.activeUsers || 0, icon: 'M13 10V3L4 14h7v7l9-11h-7z', bg: 'bg-amber-50', text: 'text-amber-500' }
+  { label: 'Total Handled', value: chatStats.value.totalMessages || 0, icon: 'M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z', bg: 'bg-blue-50 dark:bg-blue-900/20', text: 'text-blue-500' },
+  { label: 'User Outreach', value: getUserCount('user'), icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', bg: 'bg-indigo-50 dark:bg-indigo-900/20', text: 'text-indigo-500' },
+  { label: 'AI Intelligence', value: getUserCount('assistant'), icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', bg: 'bg-green-50 dark:bg-green-900/20', text: 'text-green-500' },
+  { label: 'Live Sessions', value: chatStats.value.activeUsers || 0, icon: 'M13 10V3L4 14h7v7l9-11h-7z', bg: 'bg-amber-50 dark:bg-amber-900/20', text: 'text-amber-500' }
 ]);
 
 const paginatedLogs = computed(() => {
@@ -275,7 +402,8 @@ const loadChatLogs = async () => {
     const params = {};
     if (filters.value.userId) params.userId = filters.value.userId;
     if (filters.value.category) params.category = filters.value.category;
-    if (dateFilter.value) params.date = dateFilter.value;
+    if (filters.value.dateStart) params.startDate = filters.value.dateStart;
+    if (filters.value.dateEnd) params.endDate = filters.value.dateEnd;
 
     const [logsRes, statsRes] = await Promise.all([
       axios.get(`${API_BASE}/admin/chatlogs`, { params, headers: { Authorization: `Bearer ${token}` } }),

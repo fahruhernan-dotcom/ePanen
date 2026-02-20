@@ -10,13 +10,13 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
           </router-link>
-          <div class="flex items-center space-x-3">
-             <div class="w-10 h-10 bg-epanen-primary rounded-xl flex items-center justify-center shadow-lg">
-                <img src="/src/assets/images/ai-avatar.png" class="w-8 h-8 object-contain" />
+          <div class="flex items-center space-x-4">
+             <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center bg-epanen-primary">
+                <img src="/src/assets/images/ai-avatar.png" class="w-full h-full object-cover" />
              </div>
-             <div>
-                <h1 class="text-lg md:text-xl font-black text-gray-900 dark:text-white leading-none">Kian AI</h1>
-                <p class="text-[10px] md:text-xs text-epanen-primary dark:text-epanen-accent font-black uppercase tracking-widest mt-1">Pakar Pertanian Digital</p>
+             <div class="flex flex-col justify-center">
+                <h1 class="text-lg md:text-xl font-black text-gray-900 dark:text-white leading-tight">Kian AI</h1>
+                <p class="text-[9px] uppercase font-black tracking-[0.2em] text-epanen-primary dark:text-epanen-accent opacity-80">Pakar Pertanian Digital</p>
              </div>
           </div>
         </div>
@@ -49,8 +49,8 @@
           <!-- Empty State / Welcome -->
           <div v-if="messages.length === 0 && !isLoading" class="text-center py-20 space-y-10 animate-slide-up">
             <div class="relative inline-block animate-float">
-               <div class="w-40 h-40 md:w-56 md:h-56 bg-white/70 shadow-2xl dark:bg-emerald-950/20 rounded-[4rem] p-6 mx-auto mb-8 relative overflow-hidden backdrop-blur-2xl border-2 border-white/20">
-                  <img src="/src/assets/images/ai-avatar.png" alt="Kian" class="w-full h-full object-contain filter drop-shadow-2xl" />
+               <div class="w-40 h-40 md:w-56 md:h-56 bg-white shadow-2xl dark:bg-emerald-950/20 rounded-[4rem] mx-auto mb-8 relative overflow-hidden backdrop-blur-2xl border-2 border-white/20">
+                  <img src="/src/assets/images/ai-avatar.png" alt="Kian" class="w-full h-full object-cover filter drop-shadow-2xl" />
                </div>
                <div class="absolute -bottom-2 -right-2 bg-white dark:bg-epanen-dark p-4 rounded-[1.5rem] shadow-2xl border border-gray-100 dark:border-white/5">
                   <span class="flex h-5 w-5 relative">
@@ -90,7 +90,7 @@
             <div :class="['flex w-full', msg.role === 'user' ? 'justify-end' : 'justify-start']">
               <div :class="['flex max-w-[90%] sm:max-w-[80%] items-end space-x-4', msg.role === 'user' ? 'flex-row-reverse space-x-reverse' : 'flex-row']">
                 <!-- Avatar Bubble -->
-                <div :class="['w-12 h-12 md:w-14 md:h-14 rounded-[1.5rem] flex-shrink-0 shadow-2xl flex items-center justify-center overflow-hidden border-2 transition-transform duration-500 hover:rotate-6 touch-none', msg.role === 'user' ? 'bg-epanen-primary border-white/20' : 'glass-panel border-white/40']">
+                <div :class="['w-12 h-12 md:w-14 md:h-14 rounded-full flex-shrink-0 shadow-2xl flex items-center justify-center overflow-hidden border-2 transition-transform duration-500 hover:rotate-6 touch-none', msg.role === 'user' ? 'bg-epanen-primary border-white/20' : 'glass-panel border-white/40']">
                    <img v-if="msg.role === 'assistant'" src="/src/assets/images/ai-avatar.png" class="w-full h-full object-cover" />
                    <div v-else class="text-white font-black text-xl uppercase">{{ authStore.user?.name?.charAt(0) || 'P' }}</div>
                 </div>
@@ -132,7 +132,7 @@
 
           <!-- Loading State (Skeleton Loader) -->
           <div v-if="isLoading" class="flex justify-start items-end space-x-4 animate-pulse">
-            <div class="w-12 h-12 md:w-14 md:h-14 rounded-[1.5rem] glass-panel border-2 border-white/40 shadow-2xl flex items-center justify-center overflow-hidden">
+            <div class="w-12 h-12 md:w-14 md:h-14 rounded-full glass-panel border-2 border-white/40 shadow-2xl flex items-center justify-center overflow-hidden">
                <img src="/src/assets/images/ai-avatar.png" class="w-full h-full object-cover grayscale opacity-50" />
             </div>
             <div class="glass-panel px-8 py-8 rounded-[3rem] rounded-tl-sm w-full max-w-md space-y-4 shadow-2xl border-2 border-white/20">
@@ -160,12 +160,12 @@
           <!-- Ambient Glow behind input -->
           <div class="absolute -inset-2 bg-gradient-to-r from-epanen-primary/10 to-emerald-500/10 blur-2xl rounded-[4rem] opacity-0 group-focus-within:opacity-100 transition-opacity"></div>
           
-          <div class="command-center relative flex items-end rounded-[3.5rem] p-3 transition-all">
+          <div class="command-center relative flex items-end rounded-[2.5rem] p-2 md:p-3 transition-all">
             <textarea
               v-model="newMessage"
               rows="1"
               placeholder="Tanya Kian tentang pertanian..."
-              class="flex-1 bg-transparent border-none focus:ring-0 px-8 py-5 text-lg md:text-xl font-medium text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none max-h-48 min-h-[72px] custom-scrollbar"
+              class="flex-1 bg-transparent border-none focus:ring-0 outline-none px-6 md:px-8 py-4 md:py-5 text-lg md:text-xl font-medium text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none max-h-48 min-h-[64px] custom-scrollbar selection:bg-epanen-primary/20"
               :disabled="isLoading"
               @keydown.enter.prevent="handleEnter"
               @input="autoResize"
@@ -175,12 +175,12 @@
             <button 
               type="submit" 
               :disabled="!newMessage.trim() || isLoading"
-              class="w-16 h-16 bg-epanen-primary text-white rounded-[2rem] flex items-center justify-center transition-all disabled:opacity-30 transform hover:scale-110 active:scale-95 shadow-xl hover:shadow-epanen-primary/40 flex-shrink-0 cursor-pointer"
+              class="w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-epanen-primary to-epanen-secondary text-white rounded-2xl md:rounded-[1.8rem] flex items-center justify-center transition-all disabled:opacity-20 disabled:scale-95 disabled:grayscale transform hover:scale-110 active:scale-95 shadow-xl hover:shadow-epanen-primary/40 flex-shrink-0 cursor-pointer group/btn"
             >
-              <svg v-if="!isLoading" class="w-8 h-8 rotate-45 transform -translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg v-if="!isLoading" class="w-7 h-7 md:w-8 md:h-8 rotate-45 transform -translate-x-0.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="white" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 19l9 2-9-18-9 9 9-2zm0 0v-8" />
               </svg>
-              <svg v-else class="animate-spin w-8 h-8" fill="none" viewBox="0 0 24 24">
+              <svg v-else class="animate-spin w-7 h-7 md:w-8 md:h-8 text-white" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -556,24 +556,31 @@ onMounted(() => {
 
 /* Input Center - Premium Floating */
 .command-center {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dark .command-center {
-  background: rgba(20, 30, 20, 0.7);
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  background: rgba(15, 25, 15, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.5);
 }
 
 .command-center:focus-within {
-  border-color: #1B4332;
-  box-shadow: 0 0 0 10px rgba(27, 67, 50, 0.04), 0 30px 60px -15px rgba(0, 0, 0, 0.2);
-  transform: translateY(-4px);
+  border-color: #2D5A27;
+  background: #FFFFFF;
+  box-shadow: 0 20px 60px -15px rgba(45, 90, 39, 0.2);
+  transform: translateY(-8px) scale(1.01);
+}
+
+.dark .command-center:focus-within {
+  background: rgba(20, 35, 20, 0.95);
+  border-color: rgba(168, 213, 162, 0.3);
+  box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.6);
 }
 
 /* Background Blobs */

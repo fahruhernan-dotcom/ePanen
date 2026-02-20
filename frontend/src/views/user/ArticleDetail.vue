@@ -307,6 +307,17 @@ const updateProgress = () => {
   if (bar) bar.style.width = `${progress}%`;
 };
 
+const incrementView = async (id) => {
+  try {
+    const res = await axios.post(`${API_BASE}/articles/${id}/view`);
+    if (res.data.success && article.value) {
+      // article.value.views++ // Increment locally for responsiveness
+    }
+  } catch (err) {
+    // Silent fail
+  }
+};
+
 const loadArticle = async (id) => {
   loading.value = true;
   error.value = false;
@@ -330,6 +341,7 @@ const loadArticle = async (id) => {
     } finally {
       loading.value = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      incrementView(id);
     }
   }, 300);
 };

@@ -77,15 +77,49 @@
               </div>
             </div>
 
+            <!-- Password -->
             <div>
               <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-2">Password</label>
               <div class="relative group">
-                <input v-model="password" type="password" placeholder="Minimal 6 karakter" class="w-full px-6 py-4 pl-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all outline-none" required />
+                <input v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="Minimal 6 karakter" class="w-full px-6 py-4 pl-14 pr-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all outline-none" required />
                 <svg class="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2 group-focus-within:text-epanen-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                <button type="button" @click="showPassword = !showPassword" class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-epanen-primary transition-colors focus:outline-none">
+                  <!-- Eye open (password hidden) -->
+                  <svg v-if="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <!-- Eye closed (password visible) -->
+                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                </button>
               </div>
             </div>
 
-            <button :disabled="authStore.loading" class="w-full bg-gradient-to-r from-epanen-primary to-epanen-secondary text-white py-5 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-epanen-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 mt-4">
+            <!-- Konfirmasi Password -->
+            <div>
+              <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-2">Konfirmasi Password</label>
+              <div class="relative group">
+                <input v-model="confirmPassword" :type="showConfirmPassword ? 'text' : 'password'" placeholder="Ulangi password Anda" class="w-full px-6 py-4 pl-14 pr-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all outline-none" :class="{ 'ring-2 ring-red-400 focus:ring-red-400': confirmPassword && !passwordsMatch }" required />
+                <svg class="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2 group-focus-within:text-epanen-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-epanen-primary transition-colors focus:outline-none">
+                  <svg v-if="!showConfirmPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                </button>
+              </div>
+              <!-- Password mismatch error -->
+              <transition name="fade">
+                <p v-if="confirmPassword && !passwordsMatch" class="text-red-500 text-xs font-bold mt-2 ml-2 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                  Password tidak cocok
+                </p>
+              </transition>
+              <!-- Password match success -->
+              <transition name="fade">
+                <p v-if="confirmPassword && passwordsMatch" class="text-green-500 text-xs font-bold mt-2 ml-2 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                  Password cocok
+                </p>
+              </transition>
+            </div>
+
+            <button :disabled="authStore.loading || !passwordsMatch || !confirmPassword" class="w-full bg-gradient-to-r from-epanen-primary to-epanen-secondary text-white py-5 rounded-[2rem] font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-epanen-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 mt-4">
               <span v-if="!authStore.loading">Daftar Sekarang</span>
               <span v-else class="flex items-center justify-center gap-2">
                 <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -109,7 +143,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
@@ -121,7 +155,12 @@ const name = ref('');
 const email = ref('');
 const phone = ref('');
 const password = ref('');
+const confirmPassword = ref('');
 const notification = ref(null);
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+
+const passwordsMatch = computed(() => password.value === confirmPassword.value);
 
 onMounted(() => {
   if (route.query.phone) {
@@ -135,6 +174,11 @@ const showNotification = (message, type = 'success') => {
 };
 
 const handleRegister = async () => {
+  if (!passwordsMatch.value) {
+    showNotification('Password dan konfirmasi password tidak cocok', 'error');
+    return;
+  }
+
   // Strict Email Validation
   if (!email.value.includes('@')) {
     showNotification('Alamat email harus valid (mengandung @)', 'error');
@@ -161,4 +205,6 @@ const handleRegister = async () => {
 .toast-enter-active, .toast-leave-active { transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
 .toast-enter-from { opacity: 0; transform: translate(-50%, -20px); }
 .toast-leave-to { opacity: 0; transform: translate(-50%, 20px); }
+.fade-enter-active, .fade-leave-active { transition: all 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(-4px); }
 </style>

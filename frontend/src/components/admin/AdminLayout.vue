@@ -23,12 +23,12 @@
         <!-- Logo Section -->
         <div class="p-8 border-b border-white/10">
           <div class="flex items-center space-x-4 mb-2">
-            <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-inner overflow-hidden">
+            <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-inner overflow-hidden border border-white/20">
               <img src="@/assets/images/logo.png" alt="ePanen Logo" class="w-full h-full object-contain p-2" />
             </div>
             <div>
-              <h1 class="text-2xl font-black tracking-tight">Kian Office</h1>
-              <p class="text-[10px] uppercase font-black tracking-widest text-epanen-accent opacity-80">Management Suite</p>
+              <h1 class="text-2xl font-black tracking-tight">ePanen</h1>
+              <p class="text-[10px] uppercase font-black tracking-widest text-white/60">Internal Suite</p>
             </div>
           </div>
         </div>
@@ -38,13 +38,13 @@
           <router-link
             to="/admin"
             class="flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
-            active-class="bg-white/20 shadow-lg text-white font-black scale-105"
+            exact-active-class="bg-white/20 shadow-lg text-white font-black scale-105"
           >
             <svg class="w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             <span class="text-sm uppercase tracking-widest font-bold">Dashboard</span>
-            <div class="absolute left-0 w-1.5 h-8 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0"></div>
+            <div class="absolute left-0 w-1.5 h-6 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-exact-active]:translate-x-0 top-1/2 -translate-y-1/2"></div>
           </router-link>
 
           <router-link
@@ -56,7 +56,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
             <span class="text-sm uppercase tracking-widest font-bold">Chat Logs</span>
-            <div class="absolute left-0 w-1.5 h-8 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0"></div>
+            <div class="absolute left-0 w-1.5 h-6 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0 top-1/2 -translate-y-1/2"></div>
           </router-link>
 
           <router-link
@@ -68,7 +68,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
             <span class="text-sm uppercase tracking-widest font-bold">Users</span>
-            <div class="absolute left-0 w-1.5 h-8 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0"></div>
+            <div class="absolute left-0 w-1.5 h-6 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0 top-1/2 -translate-y-1/2"></div>
           </router-link>
 
           <router-link
@@ -80,7 +80,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span class="text-sm uppercase tracking-widest font-bold">Content</span>
-            <div class="absolute left-0 w-1.5 h-8 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0"></div>
+            <div class="absolute left-0 w-1.5 h-6 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0 top-1/2 -translate-y-1/2"></div>
           </router-link>
 
           <router-link
@@ -92,7 +92,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             <span class="text-sm uppercase tracking-widest font-bold">Discussions</span>
-            <div class="absolute left-0 w-1.5 h-8 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0"></div>
+            <div class="absolute left-0 w-1.5 h-6 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0 top-1/2 -translate-y-1/2"></div>
           </router-link>
 
           <router-link
@@ -148,7 +148,7 @@
 
         <!-- Tagline -->
         <div class="p-4 text-center">
-          <p class="text-xs text-epanen-accent font-medium opacity-60">"Yakin Kita Bisa"</p>
+          <p class="text-xs text-white/80 font-black italic tracking-widest uppercase">"Yakin Kita Bisa"</p>
         </div>
       </div>
     </aside>

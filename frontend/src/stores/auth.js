@@ -113,7 +113,7 @@ export const useAuthStore = defineStore('auth', {
       return this.user?.role === 'admin' || this.user?.type === 'admin';
     },
 
-    isFarmer() {
+    isUser() {
       return this.user?.role === 'farmer' || this.user?.type === 'user';
     },
 

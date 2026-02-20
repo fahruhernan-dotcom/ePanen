@@ -1,21 +1,21 @@
 <template>
   <div class="space-y-12 animate-slide-up pb-20">
     <!-- Premium Header -->
-    <div class="relative bg-gradient-to-br from-blue-700 via-blue-800 to-cyan-900 rounded-[2.5rem] p-10 md:p-20 overflow-hidden shadow-2xl text-white">
-      <div class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-blue-500/20 rounded-full blur-2xl"></div>
+    <div class="relative bg-gradient-to-br from-epanen-dark via-epanen-primary to-emerald-900 rounded-[2.5rem] p-10 md:p-20 overflow-hidden shadow-2xl text-white">
+      <div class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-epanen-accent/20 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-epanen-secondary/20 rounded-full blur-2xl"></div>
       
       <div class="relative z-10 max-w-4xl">
         <div class="flex items-center space-x-3 mb-6">
-          <span class="w-12 h-[2px] bg-cyan-400"></span>
-          <span class="text-cyan-400 font-black uppercase tracking-[0.3em] text-xs">Informasi Komoditas</span>
+          <span class="w-12 h-[2px] bg-epanen-accent"></span>
+          <span class="text-epanen-accent font-black uppercase tracking-[0.3em] text-xs">Informasi Komoditas</span>
         </div>
         <h1 class="text-4xl md:text-7xl font-black tracking-tight mb-8 leading-[1.1]">
           Pantau Harga <br/>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-300">Pasar Real-Time.</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-epanen-accent to-white">Pasar Real-Time.</span>
         </h1>
-        <p class="text-xl text-blue-100/80 font-medium leading-relaxed max-w-2xl">
-          Jangan biarkan hasil jerih payah Anda dihargai rendah. Cek referensi harga pasar terkini untuk berbagai komoditas pertanian.
+        <p class="text-xl text-emerald-50/80 font-medium leading-relaxed max-w-2xl font-bold">
+          Jangan biarkan hasil jerih payah Anda dihargai rendah. Cek referensi harga pasar terkini untuk berbagai komoditas pertanian demi transaksi yang adil.
         </p>
       </div>
     </div>
@@ -46,8 +46,8 @@
             :class="[
               'px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all whitespace-nowrap border-2',
               selectedCategory === cat.slug 
-                ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-100' 
-                : 'bg-white border-gray-100 text-gray-400 hover:border-blue-200 hover:text-blue-600'
+                ? 'bg-epanen-primary border-epanen-primary text-white shadow-xl shadow-epanen-primary/20' 
+                : 'bg-white dark:bg-white/5 border-gray-100 dark:border-white/5 text-gray-400 hover:border-epanen-primary hover:text-epanen-primary'
             ]"
           >
             {{ cat.name }}
@@ -72,18 +72,18 @@
       <div
         v-for="price in prices"
         :key="price.id"
-        class="group glass-card p-10 rounded-[3rem] premium-shadow-hover border border-white hover:border-blue-100 flex flex-col justify-between"
+        class="group glass-card p-10 rounded-[3rem] premium-shadow-hover border border-white/40 dark:border-white/10 hover:border-epanen-primary transition-all duration-500 flex flex-col justify-between"
       >
         <div class="space-y-6">
           <div class="flex items-center justify-between">
-            <span class="px-4 py-1.5 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-xl">
+            <span class="px-4 py-1.5 bg-epanen-primary/10 dark:bg-epanen-accent/10 text-epanen-primary dark:text-epanen-accent text-[10px] font-black uppercase tracking-widest rounded-xl">
               {{ price.category }}
             </span>
             
             <div :class="[
-              'flex items-center space-x-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider',
-              price.trend === 'up' ? 'bg-red-50 text-red-600' : 
-              price.trend === 'down' ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-500'
+              'flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider',
+              price.trend === 'up' ? 'bg-red-500/10 text-red-500' : 
+              price.trend === 'down' ? 'bg-epanen-secondary/10 text-epanen-secondary' : 'bg-gray-500/10 text-gray-500'
             ]">
                <span v-if="price.trend === 'up'">▲ Naik</span>
                <span v-else-if="price.trend === 'down'">▼ Turun</span>
@@ -91,26 +91,26 @@
             </div>
           </div>
 
-          <h3 class="text-2xl font-black text-gray-800 tracking-tight group-hover:text-blue-600 transition-colors">{{ price.name }}</h3>
+          <h3 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight group-hover:text-epanen-primary transition-colors">{{ price.name }}</h3>
           
-          <div class="space-y-1">
-            <p class="text-4xl font-black text-gray-900 tracking-tighter">
-              <span class="text-sm font-bold text-gray-400 mr-1 italic">Rp</span>{{ formatPrice(price.price) }}
+          <div class="space-y-2">
+            <p class="text-5xl font-black text-epanen-primary dark:text-epanen-accent tracking-tighter shadow-sm">
+              <span class="text-lg font-bold mr-1 italic opacity-60">Rp</span>{{ formatPrice(price.price) }}
             </p>
-            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Harga per {{ price.unit }}</p>
+            <p class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Estimasi Harga per {{ price.unit }}</p>
           </div>
         </div>
 
-        <div class="mt-10 pt-8 border-t border-gray-50 flex items-center justify-between">
-          <div class="flex items-center space-x-2 text-gray-400">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <div class="mt-10 pt-8 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
+          <div class="flex items-center space-x-2 text-gray-400 dark:text-gray-500">
+            <svg class="w-5 h-5 text-epanen-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             </svg>
-            <span class="text-[10px] font-bold uppercase tracking-widest">{{ price.location || 'Nasional' }}</span>
+            <span class="text-[11px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400">{{ price.location || 'Nasional' }}</span>
           </div>
-          <button class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all transform hover:rotate-45">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          <button class="w-12 h-12 rounded-2xl bg-epanen-primary/5 dark:bg-white/5 text-epanen-primary dark:text-epanen-accent flex items-center justify-center group-hover:bg-epanen-primary group-hover:text-white transition-all transform hover:rotate-45 shadow-sm">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </button>
         </div>

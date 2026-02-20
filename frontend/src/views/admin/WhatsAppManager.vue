@@ -41,7 +41,7 @@
           </div>
           <h2 class="text-4xl font-black mb-4 tracking-tighter">CRM Integration v2</h2>
           <p class="text-gray-400 text-sm leading-relaxed font-bold opacity-80">
-            Sistem sekarang terhubung langsung ke tabel <span class="text-white">Customer Intelligence</span>. Anda dapat memantau Lead Score, lokasi presisi, dan segmentasi minat setiap farmer secara real-time.
+            Sistem sekarang terhubung langsung ke tabel <span class="text-white">Customer Intelligence</span>. Anda dapat memantau Lead Score, lokasi presisi, dan segmentasi minat setiap user secara real-time.
           </p>
         </div>
         
@@ -132,13 +132,14 @@
              </div>
           </div>
 
-          <div v-if="link.user_id" class="animate-fade-in bg-indigo-50/40 dark:bg-indigo-900/10 p-5 rounded-[1.5rem] border border-indigo-100/50 dark:border-indigo-800/50 relative overflow-hidden group/link transition-colors">
-            <div class="absolute -right-4 -top-4 opacity-[0.05] group-hover/link:opacity-20 transition-opacity">
-               <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+          <div v-if="link.user_id" class="animate-fade-in bg-indigo-50/40 dark:bg-indigo-900/10 p-5 rounded-[2rem] border border-indigo-100/50 dark:border-indigo-800/50 relative overflow-hidden group/link transition-colors">
+            <!-- Refined Background Watermark (Fine-tuned position) -->
+            <div class="absolute right-3 bottom-0 opacity-[0.03] group-hover/link:opacity-10 transition-opacity translate-y-1/4">
+               <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
             </div>
-            <h4 class="text-[9px] font-black text-indigo-400 dark:text-indigo-500 uppercase tracking-widest mb-2 transition-colors">Web Account Link</h4>
-            <div class="flex items-center">
-               <div class="w-6 h-6 bg-indigo-500 rounded-full flex items-center justify-center text-white text-[8px] font-black mr-2">
+            <h4 class="text-[9px] font-black text-indigo-400 dark:text-indigo-500 uppercase tracking-widest mb-3 transition-colors">Web Account Link</h4>
+            <div class="flex items-center relative z-10">
+               <div class="w-8 h-8 bg-indigo-500 rounded-xl flex items-center justify-center text-white text-[10px] font-black mr-3 shadow-lg shadow-indigo-500/20">
                  {{ link.user_name?.charAt(0) }}
                </div>
                <p class="text-xs font-black text-indigo-700 dark:text-indigo-400 truncate tracking-tight transition-colors">{{ link.user_name }}</p>
@@ -200,17 +201,23 @@
           <div class="group">
             <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 ml-2">Target Web Account</label>
             <div class="relative">
-              <select 
+              <Dropdown 
                 v-model="newLink.user_id"
-                class="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none text-xs font-black text-gray-700 dark:text-gray-200 appearance-none shadow-sm"
+                :options="users"
+                optionLabel="name"
+                optionValue="id"
+                filter
+                placeholder="Pilih User Destination..."
+                class="w-full px-4 py-1 bg-gray-50 dark:bg-gray-800 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary transition-all outline-none shadow-sm"
                 required
               >
-                <option value="" disabled class="bg-white dark:bg-gray-800">Pilih Farmer Destination...</option>
-                <option v-for="user in users" :key="user.id" :value="user.id" class="bg-white dark:bg-gray-800">{{ user.name }} ({{ user.email }})</option>
-              </select>
-              <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none opacity-30">
-                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-              </div>
+                <template #option="slotProps">
+                  <div class="flex flex-col py-1">
+                    <span class="font-black text-xs">{{ slotProps.option.name }}</span>
+                    <span class="text-[10px] opacity-50">{{ slotProps.option.email }}</span>
+                  </div>
+                </template>
+              </Dropdown>
             </div>
           </div>
 
@@ -336,7 +343,7 @@ const handleLink = async () => {
   saving.value = true;
   try {
     await axios.post(`${API_BASE}/admin/whatsapp/link`, newLink.value, { headers: { Authorization: `Bearer ${token}` } });
-    showPremiumAlert('Bridge Built', 'Identitas WhatsApp kini terhubung dengan akun web farmer');
+    showPremiumAlert('Bridge Built', 'Identitas WhatsApp kini terhubung dengan akun web user');
     showLinkDialog.value = false;
     newLink.value = { user_id: '', wa_identity: '' };
     loadData();
@@ -350,7 +357,7 @@ const handleLink = async () => {
 const confirmUnlink = (link) => {
   showPremiumConfirm(
     'Hapus Relasi?',
-    `Apakah Anda yakin ingin memutuskan hubungan antara Farmer "${link.user_name}" dengan WhatsApp identitas ini? Data history tidak akan hilang, namun akses login otomatis akan terputus.`,
+    `Apakah Anda yakin ingin memutuskan hubungan antara User "${link.user_name}" dengan WhatsApp identitas ini? Data history tidak akan hilang, namun akses login otomatis akan terputus.`,
     () => handleUnlink(link)
   );
 };
@@ -363,6 +370,13 @@ const handleUnlink = async (link) => {
   } catch (error) {
     showPremiumAlert('Gagal', 'Sistem gagal memproses permintaan disconnect', 'error');
   }
+};
+
+const formatPhone = (phone) => {
+  if (!phone) return '-';
+  const p = phone.toString();
+  if (p.startsWith('0') || p.startsWith('+')) return p;
+  return '0' + p;
 };
 
 const formatDate = (dateStr) => {

@@ -42,6 +42,7 @@ router.post('/chat/guest', validate, validationRules.sendMessage, questionContro
 // Content routes (public)
 router.get('/articles', optionalAuth, contentController.getAllArticles);
 router.get('/articles/:id', optionalAuth, contentController.getArticleById);
+router.post('/articles/:id/view', contentController.incrementArticleViews);
 router.get('/categories', optionalAuth, contentController.getAllCategories);
 
 // Content management (admin only)

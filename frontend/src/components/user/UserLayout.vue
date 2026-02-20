@@ -28,7 +28,8 @@
               :key="i"
               :to="link.to"
               class="flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-epanen-light dark:hover:bg-white/5 transition-all font-black text-sm tracking-wide text-gray-700 dark:text-gray-300"
-              active-class="bg-epanen-primary !text-white"
+              :exact-active-class="link.to === '/' ? 'bg-epanen-primary !text-white' : ''"
+              :active-class="link.to !== '/' ? 'bg-epanen-primary !text-white' : ''"
             >
               <div v-html="link.iconSvg" class="w-4 h-4"></div>
               <span>{{ link.label }}</span>
@@ -120,7 +121,8 @@
             :key="i"
             :to="link.to" 
             class="flex items-center space-x-4 py-4 px-5 rounded-2xl hover:bg-green-50 dark:hover:bg-white/5 transition-all font-black text-gray-700 dark:text-gray-300"
-            active-class="bg-epanen-primary !text-white"
+            :exact-active-class="link.to === '/' ? 'bg-epanen-primary !text-white' : ''"
+            :active-class="link.to !== '/' ? 'bg-epanen-primary !text-white' : ''"
             @click="showMobileMenu = false"
           >
             <div v-html="link.iconSvg" class="w-5 h-5"></div>
@@ -154,7 +156,7 @@
               </div>
               <div>
                 <h3 class="text-3xl font-black text-white">ePanen</h3>
-                <p class="text-xs text-epanen-primary dark:text-epanen-accent font-black uppercase tracking-[0.3em] mt-1">Yakin Kita Bisa</p>
+                <p class="text-xs text-epanen-accent font-black uppercase tracking-[0.3em] mt-1">Yakin Kita Bisa</p>
               </div>
             </div>
             <p class="text-lg text-gray-300 dark:text-emerald-50/70 leading-relaxed font-bold max-w-md">
@@ -190,7 +192,7 @@
         <div class="flex flex-col md:flex-row items-center justify-between text-gray-400 font-bold text-xs uppercase tracking-widest">
           <p>© {{ new Date().getFullYear() }} ePanen Team. Berbakti untuk Negeri 🌱</p>
           <div class="flex items-center space-x-6 mt-6 md:mt-0">
-             <span class="text-epanen-accent">YAKIN KITA BISA</span>
+             <span class="text-epanen-accent font-black">YAKIN KITA BISA</span>
           </div>
         </div>
       </div>

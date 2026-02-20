@@ -156,9 +156,10 @@ export const getDashboardStats = async (req, res) => {
       );
     } catch (err) { console.error('Error fetching top discussions:', err.message); }
 
-    // Recent activity (last 20)
+    // Recent activity (Combine logs and chat interactions)
     let formattedActivity = [];
     try {
+      // 1. Get explicit activity logs
       const { data: recentActivity } = await supabase
         .from('epanen_activity_logs')
         .select(`
@@ -166,13 +167,44 @@ export const getDashboardStats = async (req, res) => {
           user:epanen_users(name)
         `)
         .order('created_at', { ascending: false })
-        .limit(20);
+        .limit(10);
 
-      formattedActivity = (recentActivity || []).map(log => ({
-        ...log,
-        user_name: log.user?.name || 'System'
+      const logs = (recentActivity || []).map(log => ({
+        id: `log-${log.id}`,
+        user_name: log.user?.name || 'System',
+        action: log.action,
+        created_at: log.created_at,
+        type: 'log'
       }));
-    } catch (err) { console.error('Error fetching recent activity:', err.message); }
+
+      // 2. Get recent chat interactions (user only)
+      const { data: recentChats } = await supabase
+        .from('epanen_chat_messages')
+        .select(`
+          id,
+          message,
+          created_at,
+          category,
+          user:epanen_users(name),
+          customer:customer(Nama)
+        `)
+        .eq('role', 'user')
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      const chats = (recentChats || []).map(chat => ({
+        id: `chat-${chat.id}`,
+        user_name: chat.customer?.Nama || chat.user?.name || 'Anonymous',
+        action: `Bertanya tentang ${chat.category || 'pertanian'}: "${chat.message.substring(0, 40)}${chat.message.length > 40 ? '...' : ''}"`,
+        created_at: chat.created_at,
+        type: 'chat'
+      }));
+
+      // Combine and sort by date
+      formattedActivity = [...logs, ...chats]
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 20);
+    } catch (err) { console.error('Error fetching combined activity:', err.message); }
 
     res.json({
       success: true,

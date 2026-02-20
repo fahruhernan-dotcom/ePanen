@@ -235,3 +235,37 @@ export const getAllCategories = async (req, res) => {
     });
   }
 };
+
+/**
+ * Increment article views
+ */
+export const incrementArticleViews = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // We use Supabase RPC for atomic increment if possible
+    // Table: epanen_articles, Column: views
+    const { data, error } = await supabase.rpc('increment_article_views', { article_id: id });
+
+    // Fallback if RPC is not defined
+    if (error && error.code === 'PGRST202') {
+      const { data: current, error: getError } = await supabase
+        .from('epanen_articles')
+        .select('views')
+        .eq('id', id)
+        .single();
+
+      if (!getError) {
+        await supabase
+          .from('epanen_articles')
+          .update({ views: (current.views || 0) + 1 })
+          .eq('id', id);
+      }
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    // Silent fail as requested
+    res.json({ success: false });
+  }
+};

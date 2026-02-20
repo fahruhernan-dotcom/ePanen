@@ -26,12 +26,12 @@
           <div class="absolute -top-10 -right-10 w-32 h-32 bg-epanen-primary/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
           
           <div class="relative mb-8">
-            <div class="w-32 h-32 bg-gradient-to-br from-epanen-primary to-epanen-secondary rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl rotate-3 group-hover:rotate-12 transition-all duration-500">
-              <span class="text-5xl font-black text-white">
+            <div class="w-32 h-32 bg-gradient-to-br from-epanen-primary to-epanen-secondary rounded-[2.5rem] avatar-centered mx-auto shadow-2xl rotate-3 group-hover:rotate-12 transition-all duration-500">
+              <span class="text-5xl font-black text-white initial-avatar">
                 {{ user?.name?.charAt(0).toUpperCase() }}
               </span>
             </div>
-            <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-epanen-accent rounded-xl flex items-center justify-center border-4 border-white dark:border-[#0D1A0D] shadow-lg">
+            <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-epanen-accent rounded-xl flex items-center justify-center border-4 border-white dark:border-gray-900 shadow-lg">
                <svg class="w-5 h-5 text-epanen-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                </svg>
@@ -39,9 +39,9 @@
           </div>
           
           <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-2 leading-tight">{{ user?.name }}</h2>
-          <p class="text-muted dark:text-emerald-100/60 font-bold mb-6 truncate">{{ user?.email }}</p>
+          <p class="text-gray-500 dark:text-emerald-100/60 font-bold mb-6 truncate">{{ user?.email }}</p>
           
-          <div class="inline-flex items-center px-6 py-2 bg-epanen-primary/10 dark:bg-epanen-accent/10 text-epanen-primary dark:text-epanen-accent rounded-full text-xs font-black uppercase tracking-widest border border-epanen-primary/20">
+          <div class="inline-flex items-center px-6 py-2 bg-epanen-primary/10 dark:bg-epanen-accent/10 text-epanen-primary dark:text-epanen-accent rounded-full text-[10px] font-black uppercase tracking-widest border border-epanen-primary/20">
             Anggota Platinum
           </div>
         </div>
@@ -53,7 +53,7 @@
             <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl">
               <div class="flex items-center space-x-4">
                 <div class="p-3 bg-blue-500/10 text-blue-500 rounded-xl"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-width="2.5"/></svg></div>
-                <span class="text-muted dark:text-gray-400 font-bold">Tanya AI</span>
+                <span class="text-gray-500 dark:text-gray-400 font-bold text-sm">Tanya AI</span>
               </div>
               <span class="text-xl font-black text-gray-900 dark:text-white">{{ stats.questions }}</span>
             </div>
@@ -61,7 +61,7 @@
             <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl">
               <div class="flex items-center space-x-4">
                 <div class="p-3 bg-purple-500/10 text-purple-500 rounded-xl"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-width="2.5"/></svg></div>
-                <span class="text-muted dark:text-gray-400 font-bold">Diskusi</span>
+                <span class="text-gray-500 dark:text-gray-400 font-bold text-sm">Diskusi</span>
               </div>
               <span class="text-xl font-black text-gray-900 dark:text-white">{{ stats.discussions }}</span>
             </div>
@@ -69,7 +69,7 @@
             <div class="flex items-center justify-between p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
               <div class="flex items-center space-x-4">
                 <div class="p-3 bg-emerald-500/10 text-emerald-500 rounded-xl"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-width="2.5"/></svg></div>
-                <span class="text-muted dark:text-gray-400 font-bold">Bergabung Sejak</span>
+                <span class="text-gray-500 dark:text-gray-400 font-bold text-sm">Bergabung Sejak</span>
               </div>
               <span class="text-[11px] font-black uppercase text-epanen-primary dark:text-epanen-accent">{{ formatDate(user?.created_at) }}</span>
             </div>
@@ -152,7 +152,7 @@
                   <InputText
                     v-model="passwordForm.oldPassword"
                     type="password"
-                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 !border-0 focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold"
+                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 border border-gray-200 dark:border-transparent focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold text-gray-900 dark:text-white"
                     placeholder="••••••••"
                     required
                   />
@@ -168,7 +168,7 @@
                    <InputText
                     v-model="passwordForm.newPassword"
                     type="password"
-                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 !border-0 focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold"
+                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 border border-gray-200 dark:border-transparent focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold text-gray-900 dark:text-white"
                     placeholder="Min. 6 karakter"
                     required
                   />
@@ -184,7 +184,7 @@
                    <InputText
                     v-model="passwordForm.confirmPassword"
                     type="password"
-                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 !border-0 focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold"
+                    class="w-full !rounded-2xl !p-4 !bg-gray-50 dark:!bg-white/5 border border-gray-200 dark:border-transparent focus:!ring-2 focus:!ring-epanen-primary transition-all font-bold text-gray-900 dark:text-white"
                     placeholder="Ulangi password baru"
                     required
                   />
@@ -199,7 +199,7 @@
               <Button
                 type="submit"
                 :loading="changingPassword"
-                class="!bg-epanen-dark !text-white !px-12 !py-5 !rounded-3xl !font-black !w-full md:!w-auto !shadow-xl hover:!scale-105 transition-all"
+                class="!bg-epanen-primary !text-white !px-12 !py-5 !rounded-3xl !font-black !w-full md:!w-auto !shadow-xl hover:!scale-105 transition-all"
               >
                 <template #default>
                    <span class="flex items-center">
@@ -393,11 +393,18 @@ const formatTime = (dateStr) => {
   });
 };
 
+const formatPhone = (phone) => {
+  if (!phone) return '';
+  const p = phone.toString();
+  if (p.startsWith('0') || p.startsWith('+')) return p;
+  return '0' + p;
+};
+
 // Re-sync local profile state when authStore user updates
 watch(user, (newUser) => {
   if (newUser) {
     profile.value.name = newUser.name || '';
-    profile.value.phone = newUser.phone || '';
+    profile.value.phone = formatPhone(newUser.phone);
     profile.value.email = newUser.email || '';
   }
 }, { immediate: true });

@@ -101,8 +101,12 @@
               </div>
 
               <div v-if="requiresPassword" class="relative group animate-fade-in">
-                <input v-model="password" type="password" placeholder="Password Anda" class="w-full px-6 py-5 pl-16 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all outline-none" required autoFocus />
+                <input v-model="password" :type="showWaPassword ? 'text' : 'password'" placeholder="Password Anda" class="w-full px-6 py-5 pl-16 pr-16 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all outline-none" required autoFocus />
                 <svg class="w-6 h-6 text-epanen-primary absolute left-6 top-1/2 -translate-y-1/2 group-focus-within:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                <button type="button" @click="showWaPassword = !showWaPassword" class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-epanen-primary transition-colors focus:outline-none">
+                  <svg v-if="!showWaPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                </button>
               </div>
             </div>
 
@@ -125,9 +129,13 @@
                 <input v-model="email" type="email" placeholder="contoh@gmail.com" class="w-full px-6 py-4 pl-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
                 <svg class="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
               </div>
-              <div class="relative">
-                <input v-model="password" type="password" placeholder="Buat Password Baru" class="w-full px-6 py-4 pl-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
+              <div class="relative group">
+                <input v-model="password" :type="showCompletePassword ? 'text' : 'password'" placeholder="Buat Password Baru" class="w-full px-6 py-4 pl-14 pr-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
                 <svg class="w-5 h-5 text-gray-400 absolute left-5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                <button type="button" @click="showCompletePassword = !showCompletePassword" class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-epanen-primary transition-colors focus:outline-none">
+                  <svg v-if="!showCompletePassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                </button>
               </div>
             </div>
 
@@ -146,7 +154,13 @@
             
             <div class="space-y-4">
               <input v-model="email" type="email" placeholder="Email Anda" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
-              <input v-model="password" type="password" placeholder="Password" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
+              <div class="relative group">
+                <input v-model="password" :type="showEmailPassword ? 'text' : 'password'" placeholder="Password" class="w-full px-6 py-4 pr-14 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-epanen-primary font-bold text-sm transition-all shadow-inner" required />
+                <button type="button" @click="showEmailPassword = !showEmailPassword" class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-epanen-primary transition-colors focus:outline-none">
+                  <svg v-if="!showEmailPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                </button>
+              </div>
             </div>
 
             <button :disabled="loading" class="w-full bg-epanen-primary text-white py-5 rounded-3xl font-black text-xs uppercase tracking-widest shadow-xl shadow-epanen-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
@@ -197,6 +211,11 @@ const userId = ref(null);
 const notification = ref(null);
 const requiresPassword = ref(false);
 
+// Show/hide password toggles for each form
+const showEmailPassword = ref(false);
+const showWaPassword = ref(false);
+const showCompletePassword = ref(false);
+
 const showNotification = (message, type = 'success') => {
   notification.value = { message, type };
   setTimeout(() => notification.value = null, 4000);
@@ -206,6 +225,7 @@ const resetWA = () => {
   step.value = 'choice';
   requiresPassword.value = false;
   password.value = '';
+  showWaPassword.value = false;
 };
 
 const handleWhatsAppLogin = async () => {
