@@ -38,19 +38,36 @@
           />
         </div>
 
-        <div class="flex gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar w-full lg:w-auto px-2 lg:px-0">
+        <div class="flex flex-wrap lg:flex-nowrap gap-4 items-center">
+          <div class="flex gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar w-full lg:w-auto px-2 lg:px-0">
+            <button 
+              v-for="cat in categories" 
+              :key="cat.slug"
+              @click="selectCategory(cat.slug)"
+              :class="[
+                'px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all whitespace-nowrap border-2',
+                selectedCategory === cat.slug 
+                  ? 'bg-epanen-primary border-epanen-primary text-white shadow-xl shadow-epanen-primary/20' 
+                  : 'bg-white dark:bg-white/5 border-gray-100 dark:border-white/5 text-gray-400 hover:border-epanen-primary hover:text-epanen-primary'
+              ]"
+            >
+              {{ cat.name }}
+            </button>
+          </div>
+          
           <button 
-            v-for="cat in categories" 
-            :key="cat.slug"
-            @click="selectCategory(cat.slug)"
-            :class="[
-              'px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all whitespace-nowrap border-2',
-              selectedCategory === cat.slug 
-                ? 'bg-epanen-primary border-epanen-primary text-white shadow-xl shadow-epanen-primary/20' 
-                : 'bg-white dark:bg-white/5 border-gray-100 dark:border-white/5 text-gray-400 hover:border-epanen-primary hover:text-epanen-primary'
-            ]"
+            @click="syncPrices"
+            :disabled="syncing"
+            class="flex items-center space-x-2 px-6 py-4 bg-emerald-50 text-epanen-primary rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-epanen-primary hover:text-white transition-all disabled:opacity-50 border-2 border-emerald-100"
           >
-            {{ cat.name }}
+            <svg v-if="syncing" class="animate-spin h-4 w-4" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>{{ syncing ? 'Singkron...' : 'Update Data' }}</span>
           </button>
         </div>
       </div>
@@ -82,8 +99,8 @@
             
             <div :class="[
               'flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider',
-              price.trend === 'up' ? 'bg-red-500/10 text-red-500' : 
-              price.trend === 'down' ? 'bg-epanen-secondary/10 text-epanen-secondary' : 'bg-gray-500/10 text-gray-500'
+              price.trend === 'up' ? 'bg-emerald-500/10 text-emerald-600' : 
+              price.trend === 'down' ? 'bg-rose-500/10 text-rose-600' : 'bg-gray-500/10 text-gray-500'
             ]">
                <span v-if="price.trend === 'up'">▲ Naik</span>
                <span v-else-if="price.trend === 'down'">▼ Turun</span>
@@ -93,11 +110,26 @@
 
           <h3 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight group-hover:text-epanen-primary transition-colors">{{ price.name }}</h3>
           
-          <div class="space-y-2">
-            <p class="text-5xl font-black text-epanen-primary dark:text-epanen-accent tracking-tighter shadow-sm">
-              <span class="text-lg font-bold mr-1 italic opacity-60">Rp</span>{{ formatPrice(price.price) }}
-            </p>
-            <p class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">Estimasi Harga per {{ price.unit }}</p>
+          <div class="space-y-3">
+            <div class="flex flex-col">
+              <p class="text-5xl font-black text-epanen-primary dark:text-epanen-accent tracking-tighter shadow-sm flex items-baseline">
+                <span class="text-lg font-bold mr-1 italic opacity-60">Rp</span>{{ formatPrice(price.price) }}
+              </p>
+              <div v-if="price.previous_price" class="flex items-center space-x-2 mt-1">
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Kemarin:</span>
+                <span class="text-[11px] font-black text-gray-500 flex items-center">
+                  Rp {{ formatPrice(price.previous_price) }}
+                  <span v-if="price.trend === 'up'" class="ml-1.5 text-[9px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.5 rounded-md">
+                    +{{ Math.round((price.price - price.previous_price) / price.previous_price * 100) }}%
+                  </span>
+                  <span v-else-if="price.trend === 'down'" class="ml-1.5 text-[9px] text-rose-600 font-bold bg-rose-50 px-1.5 py-0.5 rounded-md">
+                    {{ Math.round((price.price - price.previous_price) / price.previous_price * 100) }}%
+                  </span>
+                </span>
+              </div>
+            </div>
+            
+            <p class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] pt-1">Estimasi Harga per {{ price.unit }}</p>
           </div>
         </div>
 
@@ -151,9 +183,26 @@ const categories = ref([
   { name: 'Protein', slug: 'Protein' }
 ]);
 
+const syncing = ref(false);
 const loading = ref(false);
 const searchQuery = ref('');
 const selectedCategory = ref('');
+
+const syncPrices = async () => {
+  syncing.value = true;
+  try {
+    const response = await axios.post(`${API_BASE}/market/prices/sync`);
+    if (response.data.success) {
+      alert(response.data.message);
+      await loadPrices();
+    }
+  } catch (error) {
+    console.error('Sync failed:', error);
+    alert('Gagal memperbarui data harga. Pastikan server backend berjalan.');
+  } finally {
+    syncing.value = false;
+  }
+};
 
 const loadPrices = async () => {
   loading.value = true;

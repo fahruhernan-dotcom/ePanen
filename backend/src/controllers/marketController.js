@@ -1,8 +1,92 @@
+import { exec } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { supabase } from '../config/supabase.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Get commodity prices
  */
+// ... (keep existing getCommodityPrices, updateCommodityPrice, deleteCommodityPrice, getPriceTrends)
+
+/**
+ * Internal function to perform the sync
+ */
+export const performSync = async () => {
+  return new Promise((resolve, reject) => {
+    const scriptPath = path.join(__dirname, '../../scripts/fetch_prices.py');
+    console.log(`[Job] Running background sync: python "${scriptPath}"`);
+
+    exec(`python "${scriptPath}"`, async (error, stdout, stderr) => {
+      if (error) {
+        console.error('[Job] Exec error:', error);
+        return reject(error);
+      }
+
+      try {
+        const prices = JSON.parse(stdout);
+        if (prices.error) return reject(new Error(prices.error));
+
+        console.log(`[Job] Fetched ${prices.length} commodities. Updating database...`);
+
+        for (const price of prices) {
+          const { data: existing } = await supabase
+            .from('epanen_commodity_prices')
+            .select('id')
+            .match({ name: price.name, date: price.date, location: price.location })
+            .maybeSingle();
+
+          if (existing) {
+            await supabase
+              .from('epanen_commodity_prices')
+              .update({
+                price: price.price,
+                trend: price.trend,
+                unit: price.unit
+              })
+              .eq('id', existing.id);
+          } else {
+            await supabase
+              .from('epanen_commodity_prices')
+              .insert(price);
+          }
+        }
+        console.log(`[Job] Background sync completed successfully (${prices.length} items)`);
+        resolve(prices.length);
+      } catch (parseError) {
+        console.error('[Job] Parse error:', parseError);
+        reject(parseError);
+      }
+    });
+  });
+};
+
+/**
+ * Sync commodity prices from external source (Python script)
+ */
+export const syncCommodityPrices = async (req, res) => {
+  try {
+    const count = await performSync();
+    res.json({
+      success: true,
+      message: `Berhasil sinkronisasi ${count} data komoditas`,
+      count
+    });
+  } catch (error) {
+    console.error('Sync prices error:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Terjadi kesalahan saat sinkronisasi harga'
+    });
+  }
+};
+
+// Start background job (every 6 hours)
+setInterval(() => {
+  performSync().catch(err => console.error('[Job] Scheduled sync failed:', err));
+}, 6 * 60 * 60 * 1000);
 export const getCommodityPrices = async (req, res) => {
   try {
     const { category, location, search } = req.query;
@@ -26,9 +110,6 @@ export const getCommodityPrices = async (req, res) => {
     const { data: prices, error } = await query.order('date', { ascending: false });
     if (error) throw error;
 
-    // If it's an admin request (checked via the route but we can also check req.path or a query param)
-    // or if we explicitly want all prices, skip grouping.
-    // In this case, since we added /admin/market/prices, we should probably return everything for that route.
     const isAdminView = req.path.includes('/admin/');
 
     if (isAdminView) {
@@ -41,17 +122,22 @@ export const getCommodityPrices = async (req, res) => {
     }
 
     // Group by commodity name for latest prices (for public/farmer view)
-    const latestPrices = {};
+    // Since it's ordered by date DESC, the first one for each name is the latest
+    const processedPrices = {};
     (prices || []).forEach(price => {
-      if (!latestPrices[price.name] || new Date(price.date) > new Date(latestPrices[price.name].date)) {
-        latestPrices[price.name] = price;
+      const key = `${price.name}_${price.location}`; // Group by name and location
+      if (!processedPrices[key]) {
+        processedPrices[key] = { ...price, previous_price: null };
+      } else if (processedPrices[key].previous_price === null) {
+        // The second one we encounter is the "yesterday" or previous recorded price
+        processedPrices[key].previous_price = price.price;
       }
     });
 
     res.json({
       success: true,
       data: {
-        prices: Object.values(latestPrices)
+        prices: Object.values(processedPrices)
       }
     });
   } catch (error) {

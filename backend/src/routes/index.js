@@ -53,6 +53,7 @@ router.delete('/admin/articles/:id', authenticate, isAdmin, contentController.de
 
 // Market/Price routes (public)
 router.get('/market/prices', optionalAuth, marketController.getCommodityPrices);
+router.post('/market/prices/sync', marketController.syncCommodityPrices);
 router.get('/market/prices/:name/trends', optionalAuth, marketController.getPriceTrends);
 
 // Market management (admin only)
