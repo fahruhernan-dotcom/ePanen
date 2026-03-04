@@ -177,11 +177,12 @@ const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 const prices = ref([]);
 const categories = ref([
   { name: 'Semua Kategori', slug: '' },
+  { name: 'Pertanian', slug: 'Pertanian' },
   { name: 'Bahan Pokok', slug: 'Bahan Pokok' },
   { name: 'Sayuran', slug: 'Sayuran' },
-  { name: 'Buah', slug: 'Buah' },
   { name: 'Protein', slug: 'Protein' }
 ]);
+
 
 const syncing = ref(false);
 const loading = ref(false);
