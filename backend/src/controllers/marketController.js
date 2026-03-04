@@ -31,7 +31,60 @@ export const performSync = async () => {
 
         console.log(`[Job] Fetched ${prices.length} commodities. Updating database...`);
 
+        // Get aiService for categorization
+        const aiService = (await import('../services/aiService.js')).default;
+
+        // Cache to prevent duplicate AI calls or DB queries during the loop
+        const categoryCache = new Map();
+
         for (const price of prices) {
+          let finalCategory = 'Pertanian';
+
+          if (categoryCache.has(price.name)) {
+            finalCategory = categoryCache.get(price.name);
+          } else {
+            // Check if exists for same name to retrieve existing category (prevent redundant AI calls)
+            const { data: existingCatData } = await supabase
+              .from('epanen_commodity_prices')
+              .select('category')
+              .eq('name', price.name)
+              .neq('category', 'Pertanian')
+              .limit(1)
+              .maybeSingle();
+
+            if (existingCatData && existingCatData.category) {
+              finalCategory = existingCatData.category;
+            } else {
+              // Use AI ONLY ONCE to categorize because we don't have it saved yet
+              console.log(`[Job] Categorizing new commodity via AI: ${price.name}`);
+              try {
+                const prompt = `Kategorikan komoditas pertanian berikut ini: "${price.name}". 
+Pilih SALAH SATU kategori yang paling tepat dari daftar ini: "Bahan Pokok", "Sayuran", "Buah", "Protein".
+HANYA balas dengan NAMA KATEGORI SAJA, tanpa penjelasan tambahan.`;
+
+                const aiResult = await aiService.askAI(prompt, [], []);
+                const responseText = aiResult.response.trim();
+
+                // Validate response
+                const validCategories = ["Bahan Pokok", "Sayuran", "Buah", "Protein"];
+                const matchedCat = validCategories.find(c => responseText.toLowerCase().includes(c.toLowerCase()));
+
+                if (matchedCat) {
+                  finalCategory = matchedCat;
+                } else {
+                  finalCategory = "Sayuran"; // safe fallback
+                }
+                console.log(`[Job] Assigned category: ${finalCategory} for ${price.name}`);
+              } catch (error) {
+                console.error(`[Job] AI categorization failed for ${price.name}`, error);
+                finalCategory = "Bahan Pokok"; // fallback
+              }
+            }
+            categoryCache.set(price.name, finalCategory);
+          }
+
+          price.category = finalCategory;
+
           const { data: existing } = await supabase
             .from('epanen_commodity_prices')
             .select('id')
@@ -44,6 +97,7 @@ export const performSync = async () => {
               .update({
                 price: price.price,
                 trend: price.trend,
+                category: price.category,
                 unit: price.unit
               })
               .eq('id', existing.id);
@@ -53,8 +107,10 @@ export const performSync = async () => {
               .insert(price);
           }
         }
+
         console.log(`[Job] Background sync completed successfully (${prices.length} items)`);
         resolve(prices.length);
+
       } catch (parseError) {
         console.error('[Job] Parse error:', parseError);
         reject(parseError);
