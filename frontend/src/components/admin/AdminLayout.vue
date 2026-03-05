@@ -28,7 +28,7 @@
             </div>
             <div>
               <h1 class="text-2xl font-black tracking-tight">ePanen</h1>
-              <p class="text-[10px] uppercase font-black tracking-widest text-white/60">Internal Suite</p>
+              <p class="text-[10px] uppercase font-black tracking-widest text-white/60">Kian Suite</p>
             </div>
           </div>
         </div>
@@ -71,17 +71,7 @@
             <div class="absolute left-0 w-1.5 h-6 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0 top-1/2 -translate-y-1/2"></div>
           </router-link>
 
-          <router-link
-            to="/admin/content"
-            class="flex items-center space-x-4 px-5 py-4 rounded-2xl hover:bg-white/10 transition-all group relative overflow-hidden"
-            active-class="bg-white/20 shadow-lg text-white font-black scale-105"
-          >
-            <svg class="w-6 h-6 opacity-80 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span class="text-sm uppercase tracking-widest font-bold">Content</span>
-            <div class="absolute left-0 w-1.5 h-6 bg-epanen-accent rounded-r-full transform -translate-x-full transition-transform group-[.router-link-active]:translate-x-0 top-1/2 -translate-y-1/2"></div>
-          </router-link>
+
 
           <router-link
             to="/admin/discussions"

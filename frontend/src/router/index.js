@@ -34,6 +34,7 @@ const router = createRouter({
           component: () => import('../views/user/Home.vue')
         },
         // Removed Chat from here
+        /*
         {
           path: 'articles',
           name: 'Articles',
@@ -46,11 +47,12 @@ const router = createRouter({
           component: () => import('../views/user/ArticleDetail.vue'),
           meta: { requiresAuth: true }
         },
+        */
         {
           path: 'prices',
           name: 'Prices',
           component: () => import('../views/user/Prices.vue'),
-          meta: { requiresAuth: true }
+          meta: { requiresAuth: false }
         },
         {
           path: 'discussions',
